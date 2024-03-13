@@ -5,26 +5,23 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import spharos.msg.domain.cart.dto.CartRequestDto;
-import spharos.msg.domain.cart.repository.CartRepository;
 import spharos.msg.domain.cart.service.CartService;
 import spharos.msg.global.dto.BasicResponseDto;
-import spharos.msg.global.entity.BaseEntity;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/cart")
 public class CartController {
-    private final CartRepository cartRepository;
     private final CartService cartService;
 
     @PostMapping
-    public BasicResponseDto<?> createCart(
+    public BasicResponseDto<?> addCart(
             @RequestBody CartRequestDto cartRequestDto
     ) {
-        cartService.createCart(cartRequestDto);
+        cartService.addCart(cartRequestDto);
         return null;
     }
-//장바구니 전체 조회
+    //장바구니 전체 조회
     @GetMapping
     public BasicResponseDto<?> getCart(
             @AuthenticationPrincipal UserDetails userDetails

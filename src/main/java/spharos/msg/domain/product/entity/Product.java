@@ -1,4 +1,4 @@
-package spharos.msg.domain.product;
+package spharos.msg.domain.product.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

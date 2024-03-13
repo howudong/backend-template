@@ -1,4 +1,4 @@
-package spharos.msg.domain.cart;
+package spharos.msg.domain.cart.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,6 +12,5 @@ public class Cart extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartId;
     private Integer cartProductQuantity;
-    private boolean isChecked;
-    private boolean cartIsCheck;
+    private boolean cartIsChecked;
 }
