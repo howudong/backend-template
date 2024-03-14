@@ -53,6 +53,14 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
                 e, responseBody, HttpHeaders.EMPTY, errorStatus.getHttpStatus(), request);
     }
 
+    @ExceptionHandler
+    public ResponseEntity<Object> test(IllegalArgumentException e, WebRequest request) {
+        ErrorStatus errorStatus = ErrorStatus.INTERNAL_SERVER_ERROR;
+        ApiResponse<Object> responseBody = createResponseBody(errorStatus, null);
+        return super.handleExceptionInternal(
+            e, responseBody, HttpHeaders.EMPTY, errorStatus.getHttpStatus(), request);
+    }
+
     /*
     데이터베이스 유효성 검증 실패시 호출
      */

@@ -12,7 +12,9 @@ public enum SuccessStatus implements BaseCode {
 
     SIGN_UP_SUCCESS_UNION(HttpStatus.CREATED, "USER201", "통합 회원가입 성공"),
     SIGN_UP_SUCCESS_EASY(HttpStatus.CREATED, "USER202", "간편 회원가입 성공"),
-    LOGIN_SUCCESS(HttpStatus.ACCEPTED, "USER203", "로그인 성공");
+    LOGIN_SUCCESS(HttpStatus.ACCEPTED, "USER203", "통합 로그인 성공"),
+    LOGIN_SUCCESS_UNION(HttpStatus.ACCEPTED, "USER203", "통합 로그인 성공"),
+    LOGIN_SUCCESS_EASY(HttpStatus.ACCEPTED, "USER203", "간편 로그인 성공");
 
 
     private final HttpStatus httpStatus;

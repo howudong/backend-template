@@ -1,7 +1,13 @@
 package spharos.msg.domain.users.controller;
 
+import static org.springframework.http.HttpHeaders.SET_COOKIE;
+
 import io.swagger.v3.oas.annotations.Operation;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +21,7 @@ import spharos.msg.domain.users.service.UsersService;
 import spharos.msg.global.api.ApiResponse;
 import spharos.msg.global.api.code.status.SuccessStatus;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
@@ -32,16 +39,27 @@ public class  UsersController {
     @PostMapping("signup/easy")
     public ApiResponse<SignUpResponseDto> signUpEasy(@RequestBody SignUpRequestDto signUpRequestDto){
         //todo : signup 구현
-        //usersService.createAccessToken()
         return null;
     }
 
     @Operation(summary = "로그인", description = "통합회원 로그인", tags = { "User Login" })
     @PostMapping("/login/union")
-    public ApiResponse<LoginResponseDto> loginUnion(@RequestBody LoginRequestDto loginRequestDto){
+    public ResponseEntity<LoginResponseDto> loginUnion(@RequestBody LoginRequestDto loginRequestDto){
 
         //todo : service.login 구현
         Users loginUsers = usersService.login(loginRequestDto);
-        return null;
+
+        String accessToken = "Bearer " + usersService.createAccessToken(loginUsers);
+        String refreshToken = "Bearer " + usersService.createRefreshToken(loginUsers);
+
+        LoginResponseDto loginResponseDto = LoginResponseDto.builder()
+            .status("USER203").message("통합 로그인 성공").build();
+        ResponseCookie responseCookie = ResponseCookie.from("refreshToken", refreshToken)
+            .httpOnly(true).secure(true).path("/").build();
+
+        return ResponseEntity.ok()
+            .header(SET_COOKIE, responseCookie.toString())
+            .header("accessToken", accessToken)
+            .body(loginResponseDto);
     }
 }

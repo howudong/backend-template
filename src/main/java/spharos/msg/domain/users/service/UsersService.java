@@ -30,8 +30,10 @@ public class UsersService {
 
     @Transactional
     public void signUp(SignUpRequestDto signUpRequestDto) {
+        //todo : exception handler 처리
         if(usersRepository.findByLoginId(signUpRequestDto.getLogin_id()).isPresent()){
             throw new IllegalArgumentException("중복된 아이디 입니다.");
+
         }
         Users users = createUsers(signUpRequestDto);
     }
@@ -53,6 +55,7 @@ public class UsersService {
                 loginRequestDto.getPassword()
             )
         );
+
         return users;
     }
 
