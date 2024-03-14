@@ -1,9 +1,13 @@
 package spharos.msg.domain.product.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import spharos.msg.global.entity.BaseEntity;
 
 @Entity
+@Getter
+@Setter
 public class Product extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
