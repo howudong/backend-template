@@ -1,9 +1,11 @@
 package spharos.msg.domain.product.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.context.annotation.PropertySource;
 import spharos.msg.domain.product.entity.Product;
 
 @Getter
@@ -16,6 +18,7 @@ public class ProductInfo {
     @Schema(description = "상품 가격")
     private Integer productPrice;
     @Schema(description = "좋아요 여부")
+    @JsonProperty("isLike")
     private boolean isLike;
     @Schema(description = "상품 이미지")
     private String image;

@@ -28,8 +28,8 @@ public class ProductController {
     description = "랜덤으로 12개의 상품을 조회합니다")
     @GetMapping("/product-list")
     public ResponseEntity<Object> getRandomProducts(@RequestParam("state") String state, @RequestParam("index")int index) {
-        Logger logger = LoggerFactory.getLogger(ProductController.class);
-        logger.info("getRandomProducts 메서드 호출됨");
+//        Logger logger = LoggerFactory.getLogger(ProductController.class);
+//        logger.info("getRandomProducts 메서드 호출됨");
 
         try {
             ProductDto productDto = productService.getProductDto();
