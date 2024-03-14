@@ -1,7 +1,7 @@
 package spharos.msg.domain.cart.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
+//import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import spharos.msg.domain.cart.dto.CartRequestDto;
 import spharos.msg.domain.cart.repository.CartRepository;
@@ -14,7 +14,7 @@ public class CartService {
         //상품 옵션 없는 경우 바로 add
         //
     }
-
+/*
     public void getCart(UserDetails userDetails) {
     }
 
@@ -26,4 +26,5 @@ public class CartService {
 
     public void getCartOption(UserDetails userDetails, Long productId) {
     }
+*/
 }
