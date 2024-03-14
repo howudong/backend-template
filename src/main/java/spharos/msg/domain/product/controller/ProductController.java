@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import spharos.msg.domain.product.entity.Product;
 import spharos.msg.domain.product.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.List;
 @RequiredArgsConstructor
 @RestController
@@ -29,7 +30,10 @@ public class ProductController {
     @Operation(summary = "랜덤 상품 조회",
     description = "랜덤으로 12개의 상품을 조회합니다")
     @GetMapping("/product-list")
-    public List<Product> getRandom12Products(@RequestParam("param") String state, @RequestParam("index")int index) {
+    public List<Product> getRandom12Products(@RequestParam("state") String state, @RequestParam("index")int index) {
+        Logger logger = LoggerFactory.getLogger(ProductController.class);
+        logger.info("getRandom12Products 메서드 호출됨");
+
         if ("HOME".equals(state) && index == 0) {
             return productService.getRandom12Products();
         } else {
