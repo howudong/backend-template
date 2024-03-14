@@ -14,17 +14,16 @@ public class CartService {
         //상품 옵션 없는 경우 바로 add
         //
     }
-/*
-    public void getCart(UserDetails userDetails) {
+ public void getCart() {
     }
 
-    public void updateCart(CartRequestDto cartRequestDto, UserDetails userDetails, Long cartId) {
+    public void updateCart(CartRequestDto cartRequestDto,Long cartId) {
     }
 
-    public void deleteCart(UserDetails userDetails, Long cartId) {
+    public void deleteCart(Long cartId) {
     }
 
-    public void getCartOption(UserDetails userDetails, Long productId) {
+    public void getCartOption(Long productId) {
     }
-*/
+
 }
