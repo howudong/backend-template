@@ -23,7 +23,9 @@ public class CartController {
     //장바구니 전체 조회
     @GetMapping
     public ApiResponse<?> getCart(
+            @AuthenticationPrincipal UserDetails userDetails
     ) {
+        cartService.getCart(userDetails);
         return null;
     }
 
@@ -32,24 +34,28 @@ public class CartController {
             @RequestBody CartRequestDto cartRequestDto,
             @PathVariable Long cartId
     ) {
-//        cartService.updateCart(cartRequestDto, cartId);
         return null;
     }
 
     @DeleteMapping("/{cartId}")
     public ApiResponse<?> deleteCart(
             @PathVariable Long cartId
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable Long cartId
     ) {
-//        cartService.deleteCart(cartId);
+        cartService.deleteCart(userDetails, cartId);
         return null;
     }
 
     //장바구니 상품 옵션 조회
     @GetMapping("/option/{productId}")
     public ApiResponse<?> getCartOption(
+            @PathVariable Long productId 
+            @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable Long productId
     ) {
-//        cartService.getCartOption(productId);
+        cartService.getCartOption(userDetails, productId);
+
         return null;
     }
 }
