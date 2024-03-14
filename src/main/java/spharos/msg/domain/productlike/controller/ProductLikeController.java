@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import spharos.msg.domain.product.entity.Product;
 import spharos.msg.domain.productlike.dto.ProductLikeResponseDto;
 import spharos.msg.domain.productlike.service.ProductLikeService;
+import spharos.msg.global.api.ApiResponse;
 
 import java.util.List;
 
@@ -14,14 +15,14 @@ import java.util.List;
 public class ProductLikeController {
     private final ProductLikeService productLikeService;
     @PostMapping("/{productId}/{userId}")
-    private void likeProduct(
+    private ApiResponse<?> likeProduct(
             @PathVariable Long productId,
             @PathVariable Long userId){
-        productLikeService.likeProduct(productId,userId);
+        return productLikeService.likeProduct(productId,userId);
     }
 
     @GetMapping("/{userId}")
-    private List<ProductLikeResponseDto> getProductLikeList(
+    private ApiResponse<?> getProductLikeList(
             @PathVariable Long userId
             ){
         return productLikeService.getProductLikeList(userId);

@@ -10,6 +10,7 @@ import spharos.msg.domain.product.entity.Product;
 import spharos.msg.domain.product.repository.ProductRepository;
 import spharos.msg.domain.users.entity.Users;
 import spharos.msg.domain.users.repository.UserRepository;
+import spharos.msg.global.api.ApiResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ public class ProductLikeService {
 
     //상품에 좋아요 등록
     @Transactional
-    public void likeProduct(Long productId, Long userId) {
+    public ApiResponse<?> likeProduct(Long productId, Long userId) {
         //todo 로그인 안되어 있으면 로그인 페이지로 이동
         Product product = productRepository.findById(productId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 상품입니다.")
@@ -34,6 +35,7 @@ public class ProductLikeService {
         if (productLikeRepository.existsByUsersAndProduct(users, product)) {
             ProductLike productLike = productLikeRepository.findByUsersAndProduct(users, product).orElseThrow();
             productLikeRepository.delete(productLike);
+            return new ApiResponse<>("200","좋아요 해제 성공",null);
         } else {
             ProductLike like = ProductLike.builder()
                     .product(product)
@@ -41,19 +43,24 @@ public class ProductLikeService {
                     .isLike(true)
                     .build();
             productLikeRepository.save(like);
+            return new ApiResponse<>("200","좋아요 등록 성공",null);
         }
+
     }
 
     @Transactional
-    public List<ProductLikeResponseDto> getProductLikeList(Long usersId) {
+    public ApiResponse<?> getProductLikeList(Long usersId) {
         Users users = userRepository.findById(usersId).orElseThrow();
         List<ProductLike> productLikeList = new ArrayList<>();
 
         productLikeList = productLikeRepository.findByUsers(users);
 
-        return productLikeRepository.findByUsers(users)
+        return new ApiResponse<>(
+                "200",
+                "좋아요 상품 리스트 조회 성공",
+                productLikeRepository.findByUsers(users)
                 .stream()
                 .map(ProductLikeResponseDto::new)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 }
