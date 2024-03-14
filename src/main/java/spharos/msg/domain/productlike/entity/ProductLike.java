@@ -18,16 +18,16 @@ public class ProductLike {
     private boolean isLike;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId")
-    private Users user;
+    @JoinColumn(name = "usersId")
+    private Users users;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "productId")
     private Product product;
 
     @Builder
-    public ProductLike(Users user, Product product, boolean isLike) {
-        this.user = user;
+    public ProductLike(Users users, Product product, boolean isLike) {
+        this.users = users;
         this.product = product;
         this.isLike = isLike;
     }

@@ -8,17 +8,12 @@ import spharos.msg.domain.productlike.service.ProductLikeService;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/like")
 public class ProductLikeController {
-    private final ProductLikeService likeService;
+    private final ProductLikeService productLikeService;
     @PostMapping("/{productId}/{userId}")
     private void likeProduct(
             @PathVariable Long productId,
             @PathVariable Long userId){
-        likeService.likeProduct(productId,userId);
+        productLikeService.likeProduct(productId,userId);
     }
-    @DeleteMapping("/{productId}/{userId}")
-    private void deleteLikeProduct(
-            @PathVariable Long productId,
-            @PathVariable Long userId) {
-        likeService.deleteLikeProduct(productId, userId);
-    }
+
 }
