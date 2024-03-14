@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface ProductLikeRepository extends JpaRepository<ProductLike, Long> {
     boolean existsByUsersAndProduct(Users users, Product product);
     Optional<ProductLike> findByUsersAndProduct(Users users, Product product);
+    List<ProductLike> findByUsers(Users users);
 }

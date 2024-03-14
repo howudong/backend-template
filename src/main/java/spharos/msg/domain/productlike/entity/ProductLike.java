@@ -17,7 +17,7 @@ public class ProductLike {
     @Column(columnDefinition = "boolean default false")
     private boolean isLike;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "usersId")
     private Users users;
 
