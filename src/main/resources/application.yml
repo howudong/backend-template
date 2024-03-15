@@ -1,8 +1,14 @@
 spring:
   datasource:
+<<<<<<< HEAD
     url: jdbc:mysql://127.0.0.1:3306/ssg?createDatabaseIfNotExist=true
     username: root
     password: root
+=======
+    url: ${DB_ADDRESS}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+>>>>>>> dd4c220d6ab9247c01b57cfbf6a7aee3997198d5
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
