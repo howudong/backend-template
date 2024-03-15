@@ -3,10 +3,12 @@ package spharos.msg.domain.category.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
 import spharos.msg.domain.product.entity.Product;
 import spharos.msg.global.entity.BaseEntity;
 
 @Entity
+@Getter
 public class CategoryProduct extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

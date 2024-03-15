@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
+@Getter
 public class Vendor extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

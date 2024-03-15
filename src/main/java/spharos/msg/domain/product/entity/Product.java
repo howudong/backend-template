@@ -3,12 +3,14 @@ package spharos.msg.domain.product.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
 import spharos.msg.global.entity.BaseEntity;
 import spharos.msg.global.entity.Vendor;
 
 import java.math.BigDecimal;
 
 @Entity
+@Getter
 public class Product extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

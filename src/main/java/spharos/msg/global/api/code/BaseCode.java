@@ -1,6 +1,6 @@
 package spharos.msg.global.api.code;
 
-import spharos.msg.global.dto.ReasonDto;
+import spharos.msg.global.api.dto.ReasonDto;
 
 public interface BaseCode {
     ReasonDto getReason();

@@ -2,10 +2,12 @@ package spharos.msg.domain.users.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
 import spharos.msg.domain.coupon.entity.Coupon;
 import spharos.msg.global.entity.BaseEntity;
 
 @Entity
+@Getter
 public class UserCoupon extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

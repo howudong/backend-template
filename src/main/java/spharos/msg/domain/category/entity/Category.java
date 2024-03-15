@@ -2,11 +2,13 @@ package spharos.msg.domain.category.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
 import spharos.msg.global.entity.BaseEntity;
 
 import java.util.List;
 
 @Entity
+@Getter
 public class Category extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

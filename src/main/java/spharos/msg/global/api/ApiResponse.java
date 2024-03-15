@@ -1,6 +1,7 @@
 package spharos.msg.global.api;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import spharos.msg.global.api.code.BaseCode;
 @Getter
 @AllArgsConstructor
 public class ApiResponse<T> {
+    @JsonProperty("isSuccess")
     private final String status;
     private final String message;
     @JsonInclude(JsonInclude.Include.NON_NULL)

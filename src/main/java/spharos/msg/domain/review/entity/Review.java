@@ -2,6 +2,7 @@ package spharos.msg.domain.review.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.Getter;
 import spharos.msg.domain.orders.entity.OrderDetail;
 import spharos.msg.domain.users.entity.Users;
 import spharos.msg.global.entity.BaseEntity;
@@ -9,6 +10,7 @@ import spharos.msg.global.entity.BaseEntity;
 import java.math.BigDecimal;
 
 @Entity
+@Getter
 public class Review extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

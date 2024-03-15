@@ -2,15 +2,18 @@ package spharos.msg.domain.cart.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
 import spharos.msg.domain.product.entity.ProductOption;
 import spharos.msg.domain.users.entity.Users;
 import spharos.msg.global.entity.BaseEntity;
 
 @Entity
+@Getter
 public class CartProduct extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long cartId;
+    @Column(name = "cart_product_id")
+    private Long id;
 
     @Column(columnDefinition = "integer default 0")
     @NotNull

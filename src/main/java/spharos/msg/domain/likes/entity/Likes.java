@@ -10,7 +10,6 @@ import spharos.msg.domain.product.entity.Product;
 import spharos.msg.domain.users.entity.Users;
 import spharos.msg.global.entity.BaseEntity;
 
-@Entity
 @Builder
 @Getter
 @NoArgsConstructor
