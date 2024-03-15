@@ -10,10 +10,9 @@ import spharos.msg.domain.product.entity.Product;
 import spharos.msg.domain.users.entity.Users;
 import spharos.msg.global.entity.BaseEntity;
 
-@Builder
+@Entity
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Likes extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,4 +30,11 @@ public class Likes extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
+
+    @Builder
+    public Likes(Users users, Product product, boolean isLike) {
+        this.users = users;
+        this.product = product;
+        this.isLike = isLike;
+    }
 }
