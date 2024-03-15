@@ -1,4 +1,4 @@
-package spharos.msg.global.configuration;
+package spharos.msg.global.config;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
