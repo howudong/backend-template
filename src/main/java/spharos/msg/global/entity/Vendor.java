@@ -2,6 +2,7 @@ package spharos.msg.global.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
 
 @Entity
 @Getter

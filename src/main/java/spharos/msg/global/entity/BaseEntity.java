@@ -1,5 +1,6 @@
 package spharos.msg.global.entity;
 
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -12,8 +13,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @MappedSuperclass
-@Entity
-@GetterListeners(AuditingEntityListener.class)
+@EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)

@@ -13,7 +13,7 @@ public class LikesResponseDto {
     private boolean isLike;
 
     public LikesResponseDto(Likes likes) {
-        this.productId = likes.getProduct().getProductId();
+        this.productId = likes.getProduct().getId();
         this.productName = likes.getProduct().getProductName();
         this.productPrice = likes.getProduct().getProductPrice();
         this.isLike = likes.isLike();
