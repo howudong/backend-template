@@ -1,4 +1,4 @@
-package spharos.msg.global.dto;
+package spharos.msg.global.api.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

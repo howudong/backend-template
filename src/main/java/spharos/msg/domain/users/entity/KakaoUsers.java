@@ -1,4 +1,4 @@
-package spharos.msg.domain.bundle.entity;
+package spharos.msg.domain.users.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -7,15 +7,11 @@ import spharos.msg.global.entity.BaseEntity;
 
 @Entity
 @Getter
-public class Bundle extends BaseEntity {
+public class KakaoUsers extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "bundle_id")
+    @Column(name = "kakao_user_id")
     private Long id;
-
     @NotNull
-    private String bundleName;
-
-    @NotNull
-    private Long vendorId;
+    private Long userId;
 }

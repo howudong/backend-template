@@ -1,10 +1,6 @@
 package spharos.msg.domain.users.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import java.util.Collection;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -15,6 +11,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import spharos.msg.global.entity.BaseEntity;
 
 @Entity
@@ -24,26 +24,31 @@ import spharos.msg.global.entity.BaseEntity;
 @AllArgsConstructor
 public class Users extends BaseEntity implements UserDetails {
 
-    //todo : 연관관계 Mapping 필요.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "USER_ID")
-    private Long usersId;
+    @Column(name = "user_id")
+    private Long id;
 
-    @Column(name = "LOGIN_ID", nullable = false)
+    @NotBlank
+    @Size(min = 5, max = 20)
     private String loginId;
 
     @Column(name = "USER_UUID", nullable = false)
     private String uuid;
 
-    @Column(name = "PASSWORD", nullable = false)
+    @NotBlank
     private String password;
 
-    @Column(name = "PHONE_NUMBER", nullable = false)
+    @NotBlank()
+    @Pattern(regexp = "^\\d{10,11}$")
     private String phoneNumber;
 
-    @Column(name = "EMAIL", nullable = false)
+    @Email
     private String email;
+    
+    @NotBlank
+    @Size(min = 2, max = 50)
+    private String userName;
 
     @Override
     public String toString() {
@@ -54,9 +59,7 @@ public class Users extends BaseEntity implements UserDetails {
             ", userName='" + userName + '\'' +
             '}';
     }
-
-    @Column(name = "USER_NAME", nullable = false)
-    private String userName;
+    
 
     public void hashPassword(String password) {
         this.password = new BCryptPasswordEncoder().encode(password);

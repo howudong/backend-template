@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import spharos.msg.global.api.code.BaseCode;
-import spharos.msg.global.dto.ReasonDto;
+import spharos.msg.global.api.dto.ReasonDto;
 
 @Getter
 @RequiredArgsConstructor
