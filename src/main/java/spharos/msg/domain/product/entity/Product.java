@@ -19,6 +19,6 @@ public class Product extends BaseEntity {
     private Integer defaultImageIndex;
     private Integer minDeliveryFee;
     private double discountRate;
-    @ManyToOne
-    private Vender venderId;
+//    @ManyToOne
+//    private Vendor vendorId;
 }
