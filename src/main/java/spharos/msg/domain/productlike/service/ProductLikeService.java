@@ -60,6 +60,4 @@ public class ProductLikeService {
                         .map(ProductLikeResponseDto::new)
                         .collect(Collectors.toList()));
     }
-
-
 }

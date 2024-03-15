@@ -14,7 +14,7 @@ public class ProductLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long likeId;
-    @Column(columnDefinition = "boolean default false")
+    @Column(columnDefinition = "boolean default true")
     private boolean isLike;
 
     @ManyToOne
