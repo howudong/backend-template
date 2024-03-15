@@ -1,4 +1,30 @@
 package spharos.msg.domain.coupon.entity;
 
-public class Coupon {
+import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import spharos.msg.global.entity.BaseEntity;
+
+import java.math.BigDecimal;
+
+@Entity
+public class Coupon extends BaseEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "discount_coupon_id")
+    private Long id;
+
+    @NotNull
+    @DecimalMin("0.0")
+    @DecimalMax("100.0")
+    @Column(columnDefinition = "decimal default 0.0")
+    private BigDecimal couponDiscountRate;
+
+    @NotBlank
+    private String couponName;
+
+    @NotNull(message = "쿠폰 만료 기간은 필수입니다.")
+    private Integer couponExpiration;
 }
