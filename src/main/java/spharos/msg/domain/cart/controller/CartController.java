@@ -12,20 +12,19 @@ import spharos.msg.global.api.ApiResponse;
 public class CartController {
     private final CartService cartService;
 
-    @PostMapping
+    @PostMapping("/option/{productOptionId}")
     public ApiResponse<?> addCart(
-            @RequestBody CartRequestDto cartRequestDto
+            @PathVariable Long productOptionId
     ) {
-        cartService.addCart(cartRequestDto);
-        return null;
+
+        return cartService.addCart(productOptionId);
     }
 
     //장바구니 전체 조회
     @GetMapping
     public ApiResponse<?> getCart(
-            @AuthenticationPrincipal UserDetails userDetails
     ) {
-        cartService.getCart(userDetails);
+
         return null;
     }
 
@@ -40,21 +39,17 @@ public class CartController {
     @DeleteMapping("/{cartId}")
     public ApiResponse<?> deleteCart(
             @PathVariable Long cartId
-            @AuthenticationPrincipal UserDetails userDetails,
-            @PathVariable Long cartId
     ) {
-        cartService.deleteCart(userDetails, cartId);
+        cartService.deleteCart(cartId);
         return null;
     }
 
     //장바구니 상품 옵션 조회
     @GetMapping("/option/{productId}")
     public ApiResponse<?> getCartOption(
-            @PathVariable Long productId 
-            @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable Long productId
     ) {
-        cartService.getCartOption(userDetails, productId);
+        cartService.getCartOption(productId);
 
         return null;
     }
