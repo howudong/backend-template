@@ -12,18 +12,19 @@ import spharos.msg.global.api.ApiResponse;
 public class CartController {
     private final CartService cartService;
 
-    @PostMapping
+    @PostMapping("/option/{productOptionId}")
     public ApiResponse<?> addCart(
-            @RequestBody CartRequestDto cartRequestDto
+            @PathVariable Long productOptionId
     ) {
-        cartService.addCart(cartRequestDto);
-        return null;
+
+        return cartService.addCart(productOptionId);
     }
 
     //장바구니 전체 조회
     @GetMapping
     public ApiResponse<?> getCart(
     ) {
+
         return null;
     }
 
