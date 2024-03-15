@@ -27,40 +27,39 @@ public class ProductLikeService {
     @Transactional
     public ApiResponse<?> likeProduct(Long productId, Long userId) {
         //todo 로그인 안되어 있으면 로그인 페이지로 이동
-        Product product = productRepository.findById(productId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 상품입니다.")
-        );
+        Product product = productRepository.findById(productId).orElseThrow();
         Users users = userRepository.findById(userId).orElseThrow();
 
-        if (productLikeRepository.existsByUsersAndProduct(users, product)) {
-            ProductLike productLike = productLikeRepository.findByUsersAndProduct(users, product).orElseThrow();
-            productLikeRepository.delete(productLike);
-            return new ApiResponse<>("200","좋아요 해제 성공",null);
-        } else {
-            ProductLike like = ProductLike.builder()
-                    .product(product)
-                    .users(users)
-                    .isLike(true)
-                    .build();
-            productLikeRepository.save(like);
-            return new ApiResponse<>("200","좋아요 등록 성공",null);
-        }
+        ProductLike like = ProductLike.builder()
+                .product(product)
+                .users(users)
+                .isLike(true)
+                .build();
+        productLikeRepository.save(like);
+        return new ApiResponse<>("200", "좋아요 등록 성공", null);
+    }
 
+    @Transactional
+    public ApiResponse<?> deleteLikeProduct(Long productId, Long userId) {
+        Product product = productRepository.findById(productId).orElseThrow();
+        Users users = userRepository.findById(userId).orElseThrow();
+
+        ProductLike productLike = productLikeRepository.findByUsersAndProduct(users, product).orElseThrow();
+        productLikeRepository.delete(productLike);
+        return new ApiResponse<>("200", "좋아요 해제 성공", null);
     }
 
     @Transactional
     public ApiResponse<?> getProductLikeList(Long usersId) {
         Users users = userRepository.findById(usersId).orElseThrow();
-        List<ProductLike> productLikeList = new ArrayList<>();
-
-        productLikeList = productLikeRepository.findByUsers(users);
-
         return new ApiResponse<>(
                 "200",
                 "좋아요 상품 리스트 조회 성공",
                 productLikeRepository.findByUsers(users)
-                .stream()
-                .map(ProductLikeResponseDto::new)
-                .collect(Collectors.toList()));
+                        .stream()
+                        .map(ProductLikeResponseDto::new)
+                        .collect(Collectors.toList()));
     }
+
+
 }

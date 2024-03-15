@@ -16,7 +16,12 @@ public class ProductLikeController {
             @PathVariable Long userId){
         return productLikeService.likeProduct(productId,userId);
     }
-
+    @DeleteMapping("/{productId}/{userId}")
+    private ApiResponse<?> deleteLikeProduct(
+            @PathVariable Long productId,
+            @PathVariable Long userId){
+        return productLikeService.deleteLikeProduct(productId,userId);
+    }
     @GetMapping("/{userId}")
     private ApiResponse<?> getProductLikeList(
             @PathVariable Long userId
