@@ -72,7 +72,7 @@ public class UsersController {
     @PostMapping("/login/easy")
     public ResponseEntity<LoginResponseDto> loginEasy(
         @RequestBody LoginRequestDto loginRequestDto) {
-        //todo :
+        //todo : 간편 로그인 구현
         return null;
     }
 }
