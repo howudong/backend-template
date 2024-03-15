@@ -1,34 +1,30 @@
-package spharos.msg.domain.likes.entity;
+package spharos.msg.domain.category.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import spharos.msg.domain.product.entity.Product;
-import spharos.msg.domain.users.entity.Users;
 import spharos.msg.global.entity.BaseEntity;
 
-@Builder
+@Entity
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
-public class Likes extends BaseEntity {
+public class CategoryProduct extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "like_id")
+    @Column(name = "category_product_id")
     private Long id;
 
     @NotNull
-    @Column(columnDefinition = "boolean default false")
-    private boolean isLike;
+    @Max(4)
+    private Integer productCategoryLevel;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private Users users;
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
+
 }
