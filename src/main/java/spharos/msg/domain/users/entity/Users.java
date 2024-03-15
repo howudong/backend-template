@@ -11,7 +11,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +23,7 @@ import spharos.msg.global.entity.BaseEntity;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Users extends BaseEntity implements UserDetails {
+
     //todo : 연관관계 Mapping 필요.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,7 +58,7 @@ public class Users extends BaseEntity implements UserDetails {
     @Column(name = "USER_NAME", nullable = false)
     private String userName;
 
-    public void hashPassword(String password){
+    public void hashPassword(String password) {
         this.password = new BCryptPasswordEncoder().encode(password);
     }
 

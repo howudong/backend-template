@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import spharos.msg.domain.users.dto.LoginRequestDto;
 import spharos.msg.domain.users.dto.LoginResponseDto;
 import spharos.msg.domain.users.dto.SignUpRequestDto;
-import spharos.msg.domain.users.dto.SignUpResponseDto;
 import spharos.msg.domain.users.entity.Users;
 import spharos.msg.domain.users.service.UsersService;
 import spharos.msg.global.api.ApiResponse;
@@ -26,29 +25,28 @@ import spharos.msg.global.api.code.status.SuccessStatus;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/users")
-public class  UsersController {
+public class UsersController {
+
     private final UsersService usersService;
 
-    @Operation(summary = "통합회원가입", description = "통합회원가입", tags = { "User Signup" })
+    @Operation(summary = "통합회원가입", description = "통합회원가입", tags = {"User Signup"})
     @PostMapping("signup/union")
-    public ApiResponse<?> signUpUnion(@RequestBody SignUpRequestDto signUpRequestDto){
+    public ApiResponse<?> signUpUnion(@RequestBody SignUpRequestDto signUpRequestDto) {
         usersService.signUp(signUpRequestDto);
         return ApiResponse.of(SuccessStatus.SIGN_UP_SUCCESS_UNION, null);
     }
 
-    @Operation(summary = "간편회원가입", description = "간편회원가입", tags = { "User Signup" })
+    @Operation(summary = "간편회원가입", description = "간편회원가입", tags = {"User Signup"})
     @PostMapping("signup/easy")
-    public ApiResponse<?> signUpEasy(@RequestBody SignUpRequestDto signUpRequestDto){
+    public ApiResponse<?> signUpEasy(@RequestBody SignUpRequestDto signUpRequestDto) {
         //todo : signup 구현
         return null;
     }
 
-    @Operation(summary = "로그인", description = "통합회원 로그인", tags = { "User Login" })
+    @Operation(summary = "로그인", description = "통합회원 로그인", tags = {"User Login"})
     @PostMapping("/login/union")
     public ResponseEntity<LoginResponseDto> loginUnion(
-        @RequestBody LoginRequestDto loginRequestDto){
-
-        //todo : service.login 구현
+        @RequestBody LoginRequestDto loginRequestDto) {
         Users loginUsers = usersService.login(loginRequestDto);
 
         String accessToken = "Bearer " + usersService.createAccessToken(loginUsers);
@@ -57,7 +55,8 @@ public class  UsersController {
         Cookie cookie = new Cookie("refreshToken", refreshToken);
         HttpHeaders headers = new HttpHeaders();
         headers.add("accessToken", accessToken);
-        headers.add(HttpHeaders.SET_COOKIE, cookie.getName() + "=" + cookie.getValue() + "; Secure; HttpOnly");
+        headers.add(HttpHeaders.SET_COOKIE,
+            cookie.getName() + "=" + cookie.getValue() + "; Secure; HttpOnly");
 
         return ResponseEntity
             .status(HttpStatus.OK)
@@ -69,7 +68,7 @@ public class  UsersController {
                 .build());
     }
 
-    @Operation(summary = "로그인", description = "간편회원 로그인", tags = { "User Login" })
+    @Operation(summary = "로그인", description = "간편회원 로그인", tags = {"User Login"})
     @PostMapping("/login/easy")
     public ResponseEntity<LoginResponseDto> loginEasy(
         @RequestBody LoginRequestDto loginRequestDto) {

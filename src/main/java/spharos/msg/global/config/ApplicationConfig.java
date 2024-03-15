@@ -16,6 +16,7 @@ import spharos.msg.domain.users.repository.UsersRepository;
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
+
     private final UsersRepository usersRepository;
 
     @Bean
