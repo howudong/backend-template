@@ -7,5 +7,4 @@ import lombok.Setter;
 @Setter
 public class SignUpResponseDto {
     //todo : 테이터 추가되면 추가
-    //test
 }

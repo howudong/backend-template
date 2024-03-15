@@ -19,6 +19,10 @@ public enum ErrorStatus implements BaseErrorCode {
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "COMMON401", "인증이 필요합니다."),
     FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
 
+    DuplicateId(HttpStatus.BAD_REQUEST, "USER401", "통합 회원가입 실패"),
+    //todo: (HttpStatus.BAD_REQUEST, "USER402", "간편 회원가입 실패"),
+    EntityNotFoundId(HttpStatus.BAD_REQUEST, "USER403", "통합 로그인 실패"),
+
     EXAMPLE_EXCEPTION(HttpStatus.BAD_REQUEST, "EXAMPLE400", "샘플 에러 메시지입니다");
 
     private final HttpStatus httpStatus;

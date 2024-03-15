@@ -40,14 +40,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         jwt = authHeader.substring(7);
 
-        //todo : exception 공통 처리 필요.
         try{
             userUuid = jwtTokenProvider.validateAndGetUserUuid(jwt);
         }catch (Exception e){
             throw new IllegalArgumentException("jwt 유효성 검증 실패");
         }
-
-        //holder에 인증관련 정보가 없고, 토큰이 발급되어 있는 경우 //EX)로그인
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userUuid);
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(

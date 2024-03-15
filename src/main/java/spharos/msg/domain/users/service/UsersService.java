@@ -1,14 +1,19 @@
 package spharos.msg.domain.users.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import jakarta.validation.ConstraintViolationException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import spharos.msg.domain.users.dto.LoginRequestDto;
 import spharos.msg.domain.users.dto.SignUpRequestDto;
 import spharos.msg.domain.users.entity.Users;
@@ -29,23 +34,22 @@ public class UsersService {
     private long refresh_token_expiration;
 
     @Transactional
-    public void signUp(SignUpRequestDto signUpRequestDto) {
-        //todo : exception handler 처리
+    public void signUp(SignUpRequestDto signUpRequestDto){
         if(usersRepository.findByLoginId(signUpRequestDto.getLogin_id()).isPresent()){
-            throw new IllegalArgumentException("중복된 아이디 입니다.");
-
+            throw new DuplicateKeyException("중복된 아이디입니다.");
         }
-        Users users = createUsers(signUpRequestDto);
+        createUsers(signUpRequestDto);
     }
 
     public Users login(LoginRequestDto loginRequestDto) {
+        log.info("try login id={}", loginRequestDto.getLogin_id());
         Users users = usersRepository.findByLoginId(loginRequestDto.getLogin_id())
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 아이디입니다"));
+            .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 아이디입니다"));
 
         //비밀번호 검증
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if (!encoder.matches(loginRequestDto.getPassword(), users.getPassword())) {
-            throw new IllegalArgumentException("사용자 아이디와 패스워드가 매칭되지 않습니다.");
+            throw new EntityNotFoundException("사용자 아이디와 패스워드가 매칭되지 않습니다.");
         }
 
         //적합한 인증 provider 찾기
@@ -75,7 +79,6 @@ public class UsersService {
         //
 
         users.hashPassword(signUpRequestDto.getPassword());
-        log.info("users: {}", users.toString());
         return usersRepository.save(users);
     }
 

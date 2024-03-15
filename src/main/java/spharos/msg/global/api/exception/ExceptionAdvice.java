@@ -1,8 +1,10 @@
 package spharos.msg.global.api.exception;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -53,9 +55,23 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
                 e, responseBody, HttpHeaders.EMPTY, errorStatus.getHttpStatus(), request);
     }
 
+    /**
+     * 회원 가입 시, Login Id 중복 시,
+     */
     @ExceptionHandler
-    public ResponseEntity<Object> test(IllegalArgumentException e, WebRequest request) {
-        ErrorStatus errorStatus = ErrorStatus.INTERNAL_SERVER_ERROR;
+    public ResponseEntity<Object> duplicationIdException(DuplicateKeyException e, WebRequest request) {
+        ErrorStatus errorStatus = ErrorStatus.DuplicateId;
+        ApiResponse<Object> responseBody = createResponseBody(errorStatus, null);
+        return super.handleExceptionInternal(
+            e, responseBody, HttpHeaders.EMPTY, errorStatus.getHttpStatus(), request);
+    }
+
+    /**
+     * 로그인 시, 잘못된 아이디 혹은 Id<->Pw 매칭 안될 시,
+     */
+    @ExceptionHandler
+    public ResponseEntity<Object> loginFailException(EntityNotFoundException e, WebRequest request) {
+        ErrorStatus errorStatus = ErrorStatus.EntityNotFoundId;
         ApiResponse<Object> responseBody = createResponseBody(errorStatus, null);
         return super.handleExceptionInternal(
             e, responseBody, HttpHeaders.EMPTY, errorStatus.getHttpStatus(), request);

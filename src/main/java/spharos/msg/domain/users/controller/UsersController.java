@@ -1,12 +1,13 @@
 package spharos.msg.domain.users.controller;
 
-import static org.springframework.http.HttpHeaders.SET_COOKIE;
+import static spharos.msg.global.api.code.status.SuccessStatus.LOGIN_SUCCESS_UNION;
 
 import io.swagger.v3.oas.annotations.Operation;
-import java.util.UUID;
+import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseCookie;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +25,7 @@ import spharos.msg.global.api.code.status.SuccessStatus;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/users")
+@RequestMapping("/api/v1/users")
 public class  UsersController {
     private final UsersService usersService;
 
@@ -37,14 +38,15 @@ public class  UsersController {
 
     @Operation(summary = "간편회원가입", description = "간편회원가입", tags = { "User Signup" })
     @PostMapping("signup/easy")
-    public ApiResponse<SignUpResponseDto> signUpEasy(@RequestBody SignUpRequestDto signUpRequestDto){
+    public ApiResponse<?> signUpEasy(@RequestBody SignUpRequestDto signUpRequestDto){
         //todo : signup 구현
         return null;
     }
 
     @Operation(summary = "로그인", description = "통합회원 로그인", tags = { "User Login" })
     @PostMapping("/login/union")
-    public ResponseEntity<LoginResponseDto> loginUnion(@RequestBody LoginRequestDto loginRequestDto){
+    public ResponseEntity<LoginResponseDto> loginUnion(
+        @RequestBody LoginRequestDto loginRequestDto){
 
         //todo : service.login 구현
         Users loginUsers = usersService.login(loginRequestDto);
@@ -52,14 +54,26 @@ public class  UsersController {
         String accessToken = "Bearer " + usersService.createAccessToken(loginUsers);
         String refreshToken = "Bearer " + usersService.createRefreshToken(loginUsers);
 
-        LoginResponseDto loginResponseDto = LoginResponseDto.builder()
-            .status("USER203").message("통합 로그인 성공").build();
-        ResponseCookie responseCookie = ResponseCookie.from("refreshToken", refreshToken)
-            .httpOnly(true).secure(true).path("/").build();
+        Cookie cookie = new Cookie("refreshToken", refreshToken);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("accessToken", accessToken);
+        headers.add(HttpHeaders.SET_COOKIE, cookie.getName() + "=" + cookie.getValue() + "; Secure; HttpOnly");
 
-        return ResponseEntity.ok()
-            .header(SET_COOKIE, responseCookie.toString())
-            .header("accessToken", accessToken)
-            .body(loginResponseDto);
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .headers(headers)
+            .body(LoginResponseDto
+                .builder()
+                .status(LOGIN_SUCCESS_UNION.getStatus())
+                .message(LOGIN_SUCCESS_UNION.getMessage())
+                .build());
+    }
+
+    @Operation(summary = "로그인", description = "간편회원 로그인", tags = { "User Login" })
+    @PostMapping("/login/easy")
+    public ResponseEntity<LoginResponseDto> loginEasy(
+        @RequestBody LoginRequestDto loginRequestDto) {
+        //todo :
+        return null;
     }
 }
