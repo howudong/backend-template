@@ -1,4 +1,4 @@
-package spharos.msg.domain.productlike.entity;
+package spharos.msg.domain.likes.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -10,7 +10,7 @@ import spharos.msg.domain.users.entity.Users;
 @Entity
 @Getter
 @NoArgsConstructor
-public class ProductLike {
+public class Likes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long likeId;
@@ -26,7 +26,7 @@ public class ProductLike {
     private Product product;
 
     @Builder
-    public ProductLike(Users users, Product product, boolean isLike) {
+    public Likes(Users users, Product product, boolean isLike) {
         this.users = users;
         this.product = product;
         this.isLike = isLike;
