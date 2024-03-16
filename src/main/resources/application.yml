@@ -37,6 +37,6 @@ springdoc:
     disabled: true
 
 JWT:
-  SECRET_KEY: ssglclonecodingtesttesttestssglclonecodingtesttesttest
+  SECRET_KEY: ${SECRET_KEY}
   access-token-expiration: 8640000
   refresh-token-expiration: 8640000
