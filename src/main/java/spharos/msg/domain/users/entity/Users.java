@@ -33,7 +33,6 @@ public class Users extends BaseEntity implements UserDetails {
     @Size(min = 5, max = 20)
     private String loginId;
 
-    @Column(name = "USER_UUID", nullable = false)
     private String uuid;
 
     @NotBlank
@@ -53,7 +52,7 @@ public class Users extends BaseEntity implements UserDetails {
     @Override
     public String toString() {
         return "Users{" +
-            "usersId=" + usersId +
+            "id=" + id +
             ", uuid='" + uuid + '\'' +
             ", password='" + password + '\'' +
             ", userName='" + userName + '\'' +
