@@ -1,7 +1,6 @@
 package spharos.msg.domain.product.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import spharos.msg.domain.product.dto.ProductInfo;
 import spharos.msg.domain.product.dto.ProductResponseDto;

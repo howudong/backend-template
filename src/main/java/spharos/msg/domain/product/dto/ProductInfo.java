@@ -5,8 +5,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.math.BigDecimal;
+
 
 @Getter
 @Setter
@@ -29,6 +29,7 @@ public class ProductInfo {
 
     @Builder
     private ProductInfo(Integer productId, String productName, Integer productPrice, boolean isLike, String image, Short productStar, BigDecimal discountRate) {
+
         this.productId = productId;
         this.productName = productName;
         this.productPrice = productPrice;

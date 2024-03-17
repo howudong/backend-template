@@ -16,4 +16,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     //랜덤 상품 반환
     @Query(value = "SELECT * FROM product ORDER BY RAND() LIMIT 12", nativeQuery = true)
     List<Product> findRandomProducts();
+
 }
