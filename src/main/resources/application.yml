@@ -1,9 +1,14 @@
 spring:
   datasource:
+#<<<<<<< HEAD
     url: jdbc:mysql://127.0.0.1:3306/ssg
     username: root
     password: root
-    driver-class-name: com.mysql.cj.jdbc.Driver
+#=======
+#    url: ${DB_ADDRESS}
+#    username: ${DB_USER}
+#    password: ${DB_PASSWORD}
+#    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
@@ -19,7 +24,7 @@ logging:
     p6spy: info
 
 springdoc:
-  packages-to-scan: com.spharos.msg
+  packages-to-scan: spharos.msg
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
   swagger-ui:

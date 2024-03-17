@@ -1,59 +1,56 @@
 package spharos.msg.domain.cart.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import spharos.msg.domain.cart.dto.CartRequestDto;
 import spharos.msg.domain.cart.service.CartService;
-import spharos.msg.global.dto.BasicResponseDto;
+import spharos.msg.global.api.ApiResponse;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/cart")
+@RequestMapping("/api/v1/cart")
 public class CartController {
     private final CartService cartService;
 
-    @PostMapping
-    public BasicResponseDto<?> addCart(
-            @RequestBody CartRequestDto cartRequestDto
+    @PostMapping("/option/{productOptionId}")
+    public ApiResponse<?> addCart(
+            @PathVariable Long productOptionId
     ) {
-        cartService.addCart(cartRequestDto);
-        return null;
+
+        return cartService.addCart(productOptionId);
     }
+
     //장바구니 전체 조회
     @GetMapping
-    public BasicResponseDto<?> getCart(
-            @AuthenticationPrincipal UserDetails userDetails
-            ) {
-        cartService.getCart(userDetails);
+    public ApiResponse<?> getCart(
+    ) {
+
         return null;
     }
 
     @PatchMapping("/{cartId}")
-    public BasicResponseDto<?> updateCart(
+    public ApiResponse<?> updateCart(
             @RequestBody CartRequestDto cartRequestDto,
-            @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable Long cartId
-    ){
-        cartService.updateCart(cartRequestDto,userDetails,cartId);
+    ) {
         return null;
     }
+
     @DeleteMapping("/{cartId}")
-    public BasicResponseDto<?> deleteCart(
-            @AuthenticationPrincipal UserDetails userDetails,
+    public ApiResponse<?> deleteCart(
             @PathVariable Long cartId
-    ){
-        cartService.deleteCart(userDetails,cartId);
+    ) {
+        cartService.deleteCart(cartId);
         return null;
     }
+
     //장바구니 상품 옵션 조회
     @GetMapping("/option/{productId}")
-    public BasicResponseDto<?> getCartOption(
-            @AuthenticationPrincipal UserDetails userDetails,
+    public ApiResponse<?> getCartOption(
             @PathVariable Long productId
-    ){
-        cartService.getCartOption(userDetails,productId);
+    ) {
+        cartService.getCartOption(productId);
+
         return null;
     }
 }
