@@ -17,21 +17,18 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final ProductRepository productRepository;
-
-    //카테고리 상품 반환
-//    public List<Product> getFashionProducts(String categoryName) {
-//        return productRepository.findProductsByCategoryName(categoryName);
-//    }
-
-    // 랜덤 상품 반환
+    //Home화면 상품 조회
     public ProductResponseDto getHomeProducts() {
-        //패션 상품 조회
-        List<Product> fashionProducts = productRepository.findProductsByCategoryName("패션");
+        //뷰티 상품 조회
+        List<Product> beautyProducts = productRepository.findProductsByCategoryName("뷰티");
         //랜덤 상품 조회
         List<Product> randomProducts = productRepository.findRandomProducts();
+        //신선식품 상품 조회
+        List<Product> foodProducts = productRepository.findProductsByCategoryName("신선식품");
 
         //Entity를 ProductInfo Dto로 변환
-        List<ProductInfo> fashionProductList = fashionProducts.stream()
+        List<ProductInfo> fashionProductList = beautyProducts.stream()
+                .limit(6)
                 .map(product -> ProductInfo.builder()
                         .productId(product.getId().intValue())
                         .productName(product.getProductName())
@@ -49,9 +46,20 @@ public class ProductService {
                         .build())
                 .collect(Collectors.toList());
 
+        List<ProductInfo> foodProductList = foodProducts.stream()
+                .limit(12)
+                .map(product -> ProductInfo.builder()
+                        .productId(product.getId().intValue())
+                        .productName(product.getProductName())
+                        .productPrice(product.getProductPrice())
+                        .discountRate(product.getDiscountRate())
+                        .build())
+                .collect(Collectors.toList());
+
         return ProductResponseDto.builder()
                 .cosmeticList(fashionProductList)
                 .randomList(randomProductList)
+                .foodList(foodProductList)
                 .build();
     }
 }
