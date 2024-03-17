@@ -34,7 +34,7 @@ public class LikesService {
                 .isLike(true)
                 .build();
         likesRepository.save(like);
-        return new ApiResponse<>("200", "좋아요 등록 성공", null);
+        return new ApiResponse<>(true, "200", "좋아요 등록 성공", null);
     }
 
     @Transactional
@@ -44,13 +44,14 @@ public class LikesService {
 
         Likes likes = likesRepository.findByUsersAndProduct(users, product).orElseThrow();
         likesRepository.delete(likes);
-        return new ApiResponse<>("200", "좋아요 해제 성공", null);
+        return new ApiResponse<>(true, "200", "좋아요 해제 성공", null);
     }
 
     @Transactional
     public ApiResponse<?> getProductLikeList(Long usersId) {
         Users users = userRepository.findById(usersId).orElseThrow();
         return new ApiResponse<>(
+                true,
                 "200",
                 "좋아요 상품 리스트 조회 성공",
                 likesRepository.findByUsers(users)
