@@ -1,8 +1,10 @@
 package spharos.msg.domain.users.entity;
 
 import jakarta.persistence.*;
+
 import java.util.Collection;
 import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -44,7 +46,7 @@ public class Users extends BaseEntity implements UserDetails {
 
     @Email
     private String email;
-    
+
     @NotBlank
     @Size(min = 2, max = 50)
     private String userName;
@@ -52,13 +54,12 @@ public class Users extends BaseEntity implements UserDetails {
     @Override
     public String toString() {
         return "Users{" +
-            "id=" + id +
-            ", uuid='" + uuid + '\'' +
-            ", password='" + password + '\'' +
-            ", userName='" + userName + '\'' +
-            '}';
+                "id=" + id +
+                ", loginId='" + loginId + '\'' +
+                ", uuid='" + uuid + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
-    
 
     public void hashPassword(String password) {
         this.password = new BCryptPasswordEncoder().encode(password);

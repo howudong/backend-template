@@ -7,11 +7,11 @@ import lombok.Setter;
 @Setter
 public class SignUpRequestDto {
 
-    public String login_id;
+    public String loginId;
     public String username;
     public String password;
     public String address;
-    public String phone_number;
+    public String phoneNumber;
     public String email;
     public Boolean is_easy;
 }

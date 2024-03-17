@@ -3,7 +3,7 @@ package spharos.msg.global.api.exception;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import spharos.msg.global.api.code.BaseErrorCode;
-import spharos.msg.global.dto.ErrorReasonDto;
+import spharos.msg.global.api.dto.ErrorReasonDto;
 
 @Getter
 @RequiredArgsConstructor
