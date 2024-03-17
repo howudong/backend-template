@@ -9,12 +9,12 @@ import java.util.List;
 @Setter
 public class ProductResponseDto {
 
-    private List<ProductInfo> cosmeticList;
-    private List<ProductInfo> randomList;
-    private List<ProductInfo> foodList;
+    private List<ProductInfoDto> cosmeticList;
+    private List<ProductInfoDto> randomList;
+    private List<ProductInfoDto> foodList;
 
     @Builder
-    private ProductResponseDto(List<ProductInfo> cosmeticList,List<ProductInfo> randomList,List<ProductInfo> foodList) {
+    private ProductResponseDto(List<ProductInfoDto> cosmeticList, List<ProductInfoDto> randomList, List<ProductInfoDto> foodList) {
         this.cosmeticList = cosmeticList;
         this.randomList = randomList;
         this.foodList = foodList;

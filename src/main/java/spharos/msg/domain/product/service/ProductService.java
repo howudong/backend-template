@@ -2,12 +2,11 @@ package spharos.msg.domain.product.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import spharos.msg.domain.product.dto.ProductInfo;
+import spharos.msg.domain.product.dto.ProductInfoDto;
 import spharos.msg.domain.product.dto.ProductResponseDto;
 import spharos.msg.domain.product.entity.Product;
 import spharos.msg.domain.product.repository.ProductRepository;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,39 +25,34 @@ public class ProductService {
         List<Product> foodProducts = productRepository.findProductsByCategoryName("신선식품");
 
         //Entity를 ProductInfo Dto로 변환
-        List<ProductInfo> fashionProductList = beautyProducts.stream()
+        List<ProductInfoDto> beautys = beautyProducts.stream()
                 .limit(6)
-                .map(product -> ProductInfo.builder()
-                        .productId(product.getId().intValue())
-                        .productName(product.getProductName())
-                        .productPrice(product.getProductPrice())
-                        .discountRate(product.getDiscountRate())
-                        .build())
+                .map(this::mapToProductInfoDto)
                 .collect(Collectors.toList());
 
-        List<ProductInfo> randomProductList = randomProducts.stream()
-                .map(product -> ProductInfo.builder()
-                        .productId(product.getId().intValue())
-                        .productName(product.getProductName())
-                        .productPrice(product.getProductPrice())
-                        .discountRate(product.getDiscountRate())
-                        .build())
+        List<ProductInfoDto> randoms = randomProducts.stream()
+                .map(this::mapToProductInfoDto)
                 .collect(Collectors.toList());
 
-        List<ProductInfo> foodProductList = foodProducts.stream()
+        List<ProductInfoDto> foods = foodProducts.stream()
                 .limit(12)
-                .map(product -> ProductInfo.builder()
-                        .productId(product.getId().intValue())
-                        .productName(product.getProductName())
-                        .productPrice(product.getProductPrice())
-                        .discountRate(product.getDiscountRate())
-                        .build())
+                .map(this::mapToProductInfoDto)
                 .collect(Collectors.toList());
 
         return ProductResponseDto.builder()
-                .cosmeticList(fashionProductList)
-                .randomList(randomProductList)
-                .foodList(foodProductList)
+                .cosmeticList(beautys)
+                .randomList(randoms)
+                .foodList(foods)
+                .build();
+    }
+
+    //상품 엔티티를 상품정보Dto로 매핑하는 메서드
+    private ProductInfoDto mapToProductInfoDto(Product product) {
+        return ProductInfoDto.builder()
+                .productId(product.getId().intValue())
+                .productName(product.getProductName())
+                .productPrice(product.getProductPrice())
+                .discountRate(product.getDiscountRate())
                 .build();
     }
 }

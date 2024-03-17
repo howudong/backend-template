@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import spharos.msg.domain.product.dto.ProductResponseDto;
 import spharos.msg.domain.product.service.ProductService;
 import spharos.msg.global.api.ApiResponse;
+import spharos.msg.global.api.code.status.ErrorStatus;
 
 @RequiredArgsConstructor
 @RestController
@@ -24,8 +25,8 @@ public class ProductController {
     public ApiResponse<ProductResponseDto> getHomeProducts(@RequestParam("param") String state, @RequestParam("index")int index) {
         if ("HOME".equals(state) && index == 0) {
             return ApiResponse.onSuccess(productService.getHomeProducts());
-        } else {
-            return ApiResponse.onFailure("400","홈 상품 조회 불러오기 실패",null);
         }
+            return ApiResponse.onFailure(ErrorStatus.PRODUCT_ERROR.getStatus(), ErrorStatus.PRODUCT_ERROR.getMessage(), null);
+
     }
 }
