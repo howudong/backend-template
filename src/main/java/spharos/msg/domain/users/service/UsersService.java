@@ -35,9 +35,9 @@ public class UsersService {
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
 
-    final String BEARER = "Bearer";
-    final String ACCESS_TOKEN = "accessToken";
-    final String REFRESH_TOKEN = "refreshToken";
+    private final String BEARER = "Bearer";
+    private final String ACCESS_TOKEN = "accessToken";
+    private final String REFRESH_TOKEN = "refreshToken";
 
     @Value("${JWT.access-token-expiration}")
     private long access_token_expiration;
@@ -75,7 +75,7 @@ public class UsersService {
         return users;
     }
 
-    @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = true)
     public void createUsers(SignUpRequestDto signUpRequestDto) {
 
         UUID uuid = UUID.randomUUID();
