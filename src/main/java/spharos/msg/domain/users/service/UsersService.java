@@ -15,7 +15,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import spharos.msg.domain.users.dto.LoginRequestDto;
 import spharos.msg.domain.users.dto.SignUpRequestDto;
@@ -44,15 +43,14 @@ public class UsersService {
     @Value("${JWT.refresh-token-expiration}")
     private long refresh_token_expiration;
 
-    @Transactional(readOnly = false)
-    public void signUp(SignUpRequestDto signUpRequestDto) {
+    @Transactional(readOnly = true)
+    public void signUpDuplicationCheck(SignUpRequestDto signUpRequestDto){
         if (usersRepository.findByLoginId(signUpRequestDto.getLoginId()).isPresent()) {
             throw new SignUpDuplicationException(SIGN_IN_ID_DUPLICATION);
         }
-        createUsers(signUpRequestDto);
     }
 
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = true)
     public Users login(LoginRequestDto loginRequestDto) {
         log.info("try login id={}", loginRequestDto.getLoginId());
         Users users = usersRepository.findByLoginId(loginRequestDto.getLoginId())
@@ -75,7 +73,7 @@ public class UsersService {
         return users;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public void createUsers(SignUpRequestDto signUpRequestDto) {
 
         UUID uuid = UUID.randomUUID();
@@ -92,7 +90,6 @@ public class UsersService {
         //todo : 카카오 사용자 확인 필요? 간편회원가입용 createUsers 메서드 나눌것인지 확인도 필요.
 
         users.hashPassword(signUpRequestDto.getPassword());
-
         usersRepository.save(users);
     }
 

@@ -23,7 +23,8 @@ public class UsersController {
     @Operation(summary = "통합회원가입", description = "통합회원가입", tags = {"User Signup"})
     @PostMapping("/signup/union")
     public ApiResponse<?> signUpUnion(@RequestBody SignUpRequestDto signUpRequestDto) {
-        usersService.signUp(signUpRequestDto);
+        usersService.signUpDuplicationCheck(signUpRequestDto);
+        usersService.createUsers(signUpRequestDto);
         return ApiResponse.of(SuccessStatus.SIGN_UP_SUCCESS_UNION, null);
     }
 
