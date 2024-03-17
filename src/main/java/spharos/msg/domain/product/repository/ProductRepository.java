@@ -14,7 +14,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT cp.product FROM CategoryProduct cp WHERE cp.category.categoryName = :categoryName")
     List<Product> findProductsByCategoryName(@Param("categoryName") String categoryName);
     //랜덤 상품 반환
-    @Query(value = "SELECT * FROM product ORDER BY RAND() LIMIT 12", nativeQuery = true)
-    List<Product> findRandomProducts();
-
+    @Query(value = "SELECT p FROM Product p ORDER BY RAND()")
+    List<Product> findRandomProducts(@Param("limit") int limit);
+    //패션 상품 반환
+    @Query(value = "SELECT cp.product FROM CategoryProduct cp WHERE cp.category.categoryName = '패션잡화'")
+    List<Product> findFashionProducts(int index, int limit);
 }
