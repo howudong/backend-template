@@ -18,6 +18,7 @@ public enum ErrorStatus implements BaseErrorCode {
     INVALID_REQUEST_PARAM(HttpStatus.BAD_REQUEST, "COMMON406", "유효하지 않은 파라미터 요청입니다"),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "COMMON401", "인증이 필요합니다."),
     FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
+    PRODUCT_ERROR(HttpStatus.BAD_REQUEST, "PRODUCT400","홈 상품 조회 불러오기 실패"),
 
     SIGN_IN_ID_DUPLICATION(HttpStatus.BAD_REQUEST, "USER401", "통합 회원가입 실패"),
     ALREADY_EXIST_LOGIN_ID(HttpStatus.BAD_REQUEST, "USER402", "간편 회원가입 실패"),
