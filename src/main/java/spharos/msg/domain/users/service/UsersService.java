@@ -20,6 +20,8 @@ import spharos.msg.domain.users.dto.LoginRequestDto;
 import spharos.msg.domain.users.dto.SignUpRequestDto;
 import spharos.msg.domain.users.entity.Users;
 import spharos.msg.domain.users.repository.UsersRepository;
+import spharos.msg.global.api.code.status.ErrorStatus;
+import spharos.msg.global.api.exception.JwtTokenValidationException;
 import spharos.msg.global.api.exception.LoginIdNotFoundException;
 import spharos.msg.global.api.exception.LoginPwValidationException;
 import spharos.msg.global.api.exception.SignUpDuplicationException;
@@ -52,7 +54,6 @@ public class UsersService {
 
     @Transactional(readOnly = true)
     public Users login(LoginRequestDto loginRequestDto) {
-        log.info("try login id={}", loginRequestDto.getLoginId());
         Users users = usersRepository.findByLoginId(loginRequestDto.getLoginId())
                 .orElseThrow(() -> new LoginIdNotFoundException(LOGIN_ID_NOT_FOUND));
 
@@ -113,5 +114,29 @@ public class UsersService {
         cookie.setPath("/");
         cookie.setMaxAge((int) refresh_token_expiration);
         response.addCookie(cookie);
+    }
+
+    public Users CheckRefreshTokenValidation(String refreshToken, String UUID){
+
+        //Token 값 자체 유효성 검사
+        if (refreshToken == null || !refreshToken.startsWith(BEARER + " ")) {
+            throw new JwtTokenValidationException(ErrorStatus.REISSUE_TOKEN_FAIL);
+        }
+
+        //Token 값 내부 uuid 추출 후, 유효성 검사
+        String jwt = refreshToken.substring(7);
+        String findUuid;
+        try{
+            findUuid = jwtTokenProvider.validateAndGetUserUuid(jwt);
+        }catch(Exception e){
+            throw new JwtTokenValidationException(ErrorStatus.REISSUE_TOKEN_FAIL);
+        }
+        if(!findUuid.equals(UUID)){
+            throw new JwtTokenValidationException(ErrorStatus.REISSUE_TOKEN_FAIL);
+        }
+
+        //Uuid 토대로 users 추출
+        Users users = usersRepository.findByUuid(findUuid).orElseThrow(()->new JwtTokenValidationException(ErrorStatus.REISSUE_TOKEN_FAIL));
+        return users;
     }
 }

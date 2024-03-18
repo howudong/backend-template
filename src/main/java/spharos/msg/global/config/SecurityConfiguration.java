@@ -46,6 +46,7 @@ public class SecurityConfiguration {
                     .permitAll()
                     //.requestMatchers("/api/v1").permitAll() //테스트용 주석 제거시, 모든 api 호출 가능.
                     .requestMatchers("/api/v1/users/**").permitAll()
+                    .requestMatchers("/api/v1/reissue/**").permitAll()
                     .requestMatchers("/example/**").permitAll()
                     .anyRequest()
                     .authenticated()

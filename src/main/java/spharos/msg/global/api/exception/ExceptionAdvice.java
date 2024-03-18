@@ -91,11 +91,11 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
     }
 
     /**
-     * Client->Server Token 담아서 호출 시, Token 만료 될 시,
+     * Token 재발급 절차 진행 중, Exception 발생 시
      */
     @ExceptionHandler
-    public ResponseEntity<Object> TokenIsExpired(JwtTokenIsExpired e, WebRequest request) {
-        ErrorStatus errorStatus = ErrorStatus.TOKEN_EXPIRED;
+    public ResponseEntity<Object> ReissueTokenFail(JwtTokenValidationException e, WebRequest request) {
+        ErrorStatus errorStatus = ErrorStatus.REISSUE_TOKEN_FAIL;
         ApiResponse<Object> responseBody = createResponseBody(errorStatus, null);
         return super.handleExceptionInternal(
             e, responseBody, HttpHeaders.EMPTY, errorStatus.getHttpStatus(), request);

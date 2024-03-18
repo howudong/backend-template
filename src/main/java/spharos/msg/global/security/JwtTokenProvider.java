@@ -41,7 +41,6 @@ public class JwtTokenProvider {
         long expiration,
         String type
     ) {
-        log.info("generateToken {} ", userDetails);
 
         return Jwts.builder()
             .setClaims(extractClaims)
@@ -54,12 +53,7 @@ public class JwtTokenProvider {
     }
 
     public String validateAndGetUserUuid(String token) {
-        try {
-            return extractClaim(token, Claims::getSubject);
-        } catch (NullPointerException e) {
-            log.info("토큰에 담긴 유저 정보가 없습니다");
-            return null;
-        }
+        return extractClaim(token, Claims::getSubject);
     }
 
     public String getUsersUUID(String token) {
@@ -75,7 +69,7 @@ public class JwtTokenProvider {
         return (uuid.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
-    private boolean isTokenExpired(String token) {
+    public boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new java.util.Date());
     }
 
