@@ -21,11 +21,11 @@ public class CartController {
     }
 
     //장바구니 전체 조회
-    @GetMapping
+    @GetMapping("/{usersId}")
     public ApiResponse<?> getCart(
+            @PathVariable Long usersId
     ) {
-
-        return null;
+        return cartService.getCart(usersId);
     }
 
     @PatchMapping("/{cartId}")

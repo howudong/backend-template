@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 //import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import spharos.msg.domain.cart.dto.CartRequestDto;
+import spharos.msg.domain.cart.dto.CartResponseDto;
 import spharos.msg.domain.cart.entity.CartProduct;
 import spharos.msg.domain.cart.repository.CartRepository;
 import spharos.msg.domain.product.entity.ProductOption;
@@ -12,8 +13,10 @@ import spharos.msg.domain.product.repository.ProductRepository;
 import spharos.msg.domain.users.entity.Users;
 import spharos.msg.domain.users.repository.UserRepository;
 import spharos.msg.global.api.ApiResponse;
-import spharos.msg.global.api.code.BaseErrorCode;
 import spharos.msg.global.api.code.status.SuccessStatus;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -44,7 +47,14 @@ public class CartService {
         return ApiResponse.of(SuccessStatus.CART_PRODUCT_ADD_SUCCESS, null);
     }
 
-    public void getCart() {
+    public ApiResponse<?> getCart(Long usersId) {
+        Users users = userRepository.findById(usersId).orElseThrow();
+
+        return ApiResponse.of(SuccessStatus.CART_PRODUCT_GET_ACCESS,
+                cartRepository.findByUsers(users)
+                .stream()
+                .map(CartResponseDto::new)
+                .collect(Collectors.toList()));
     }
 
     public void updateCart(CartRequestDto cartRequestDto, Long cartId) {

@@ -16,7 +16,9 @@ public enum SuccessStatus implements BaseCode {
     LOGIN_SUCCESS_UNION(HttpStatus.ACCEPTED, "USER203", "통합 로그인 성공"),
     LOGIN_SUCCESS_EASY(HttpStatus.ACCEPTED, "USER203", "간편 로그인 성공"),
 
-    CART_PRODUCT_ADD_SUCCESS(HttpStatus.CREATED,"CART301","장바구니 담기 성공");
+
+    CART_PRODUCT_ADD_SUCCESS(HttpStatus.CREATED,"CART301","장바구니 담기 성공"),
+    CART_PRODUCT_GET_ACCESS(HttpStatus.OK,"CART302","장바구니 조회 성공");
 
     private final HttpStatus httpStatus;
     private final String status;
