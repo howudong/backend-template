@@ -20,7 +20,7 @@ public class ProductService {
         //뷰티 상품 조회
         List<Product> beautyProducts = productRepository.findProductsByCategoryName("뷰티");
         //랜덤 상품 조회
-        List<Product> randomProducts = productRepository.findRandomProducts();
+        List<Product> randomProducts = productRepository.findRandomProducts(12);
         //신선식품 상품 조회
         List<Product> foodProducts = productRepository.findProductsByCategoryName("신선식품");
 
