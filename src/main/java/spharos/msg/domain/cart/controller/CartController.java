@@ -14,10 +14,10 @@ public class CartController {
 
     @PostMapping("/option/{productOptionId}")
     public ApiResponse<?> addCart(
-            @PathVariable Long productOptionId
+            @PathVariable Long productOptionId,
+            @RequestBody CartRequestDto cartRequestDto
     ) {
-
-        return cartService.addCart(productOptionId);
+        return cartService.addCart(productOptionId,cartRequestDto);
     }
 
     //장바구니 전체 조회

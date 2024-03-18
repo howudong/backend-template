@@ -26,6 +26,8 @@ public enum ErrorStatus implements BaseErrorCode {
     LOGIN_ID_PW_VALIDATION(HttpStatus.BAD_REQUEST, "USER404", "통합 로그인 실패"),
     TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, "USER404", "토큰이 만료되었습니다."),
 
+    NOT_EXIST_PRODUCT_OPTION(HttpStatus.NOT_FOUND,"PRODUCT600","존재하지 않는 상품옵션 입니다."),
+
     EXAMPLE_EXCEPTION(HttpStatus.BAD_REQUEST, "EXAMPLE400", "샘플 에러 메시지입니다");
 
     private final HttpStatus httpStatus;
