@@ -1,13 +1,12 @@
 package spharos.msg.domain.cart.dto;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import spharos.msg.domain.cart.entity.CartProduct;
 
 @Getter
 @NoArgsConstructor
-public class CartResponseDto {
+public class CartProductResponseDto {
     private Long productID;
     private String productName;
     private Integer productPrice;
@@ -17,7 +16,7 @@ public class CartResponseDto {
     //private Integer productStar;
     private Integer productQuantity;
 
-    public CartResponseDto(CartProduct cartProduct) {
+    public CartProductResponseDto(CartProduct cartProduct) {
         this.productID = cartProduct.getProductOption().getProduct().getId();
         this.productName = cartProduct.getProductOption().getProduct().getProductName();
         this.productPrice = cartProduct.getProductOption().getProduct().getProductPrice();

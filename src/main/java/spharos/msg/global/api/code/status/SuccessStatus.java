@@ -18,7 +18,9 @@ public enum SuccessStatus implements BaseCode {
 
 
     CART_PRODUCT_ADD_SUCCESS(HttpStatus.CREATED,"CART301","장바구니 담기 성공"),
-    CART_PRODUCT_GET_ACCESS(HttpStatus.OK,"CART302","장바구니 조회 성공");
+    CART_PRODUCT_GET_SUCCESS(HttpStatus.OK,"CART302","장바구니 조회 성공"),
+    CART_PRODUCT_UPDATE_SUCCESS(HttpStatus.OK,"CART303","장바구니 수정 성공"),
+    CART_PRODUCT_DELETE_SUCCESS(HttpStatus.OK,"CART304","장바구니 삭제 성공");
 
     private final HttpStatus httpStatus;
     private final String status;
