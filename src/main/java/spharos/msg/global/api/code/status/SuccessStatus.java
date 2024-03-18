@@ -9,9 +9,12 @@ import spharos.msg.global.api.dto.ReasonDto;
 @Getter
 @RequiredArgsConstructor
 public enum SuccessStatus implements BaseCode {
-    LOGIN_SUCCESS(HttpStatus.ACCEPTED, "USER202", "로그인 성공"),
-
-    SIGN_UP_SUCCESS(HttpStatus.CREATED, "USER201", "회원가입 성공");
+    SIGN_UP_SUCCESS_UNION(HttpStatus.CREATED, "USER201", "통합 회원가입 성공"),
+    SIGN_UP_SUCCESS_EASY(HttpStatus.CREATED, "USER202", "간편 회원가입 성공"),
+    LOGIN_SUCCESS(HttpStatus.ACCEPTED, "USER203", "통합 로그인 성공"),
+    LOGIN_SUCCESS_UNION(HttpStatus.ACCEPTED, "USER203", "통합 로그인 성공"),
+    LOGIN_SUCCESS_EASY(HttpStatus.ACCEPTED, "USER203", "간편 로그인 성공"),
+    ORDER_SUCCESS(HttpStatus.CREATED, "ORDER201", "상품 주문 성공");
 
     private final HttpStatus httpStatus;
     private final String status;
