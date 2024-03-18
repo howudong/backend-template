@@ -55,8 +55,6 @@ public class CartProductController {
     public ApiResponse<?> getCartOption(
             @PathVariable Long productId
     ) {
-        cartProductService.getCartOption(productId);
-
-        return null;
+        return cartProductService.getCartOption(productId);
     }
 }

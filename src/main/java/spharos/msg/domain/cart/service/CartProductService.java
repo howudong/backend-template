@@ -4,10 +4,12 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 //import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import spharos.msg.domain.cart.dto.CartProductOptionResponseDto;
 import spharos.msg.domain.cart.dto.CartProductRequestDto;
 import spharos.msg.domain.cart.dto.CartProductResponseDto;
 import spharos.msg.domain.cart.entity.CartProduct;
 import spharos.msg.domain.cart.repository.CartProductRepository;
+import spharos.msg.domain.product.entity.Product;
 import spharos.msg.domain.product.entity.ProductOption;
 import spharos.msg.domain.product.repository.ProductOptionRepository;
 import spharos.msg.domain.product.repository.ProductRepository;
@@ -16,6 +18,7 @@ import spharos.msg.domain.users.repository.UserRepository;
 import spharos.msg.global.api.ApiResponse;
 import spharos.msg.global.api.code.status.SuccessStatus;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -79,7 +82,13 @@ public class CartProductService {
     }
 
     @Transactional
-    public void getCartOption(Long productId) {
-    }
+    public ApiResponse<?> getCartOption(Long productId) {
+        Product product = productRepository.findById(productId).orElseThrow();
 
+        return ApiResponse.of(SuccessStatus.CART_PRODUCT_OPTION_SUCCESS,
+                productOptionRepository.findByProduct(product)
+                        .stream()
+                        .map(CartProductOptionResponseDto::new)
+                        .collect(Collectors.toList()));
+    }
 }

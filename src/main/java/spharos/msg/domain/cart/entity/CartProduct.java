@@ -19,7 +19,7 @@ public class CartProduct extends BaseEntity {
     @Column(name = "cart_product_id")
     private Long id;
 
-    @Column(columnDefinition = "integer default 0")
+    @Column(columnDefinition = "integer default 1")
     @NotNull
     private Integer cartProductQuantity;
 
