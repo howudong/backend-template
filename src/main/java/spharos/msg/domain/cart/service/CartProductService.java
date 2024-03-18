@@ -1,9 +1,9 @@
 package spharos.msg.domain.cart.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 //import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import spharos.msg.domain.cart.dto.CartProductOptionResponseDto;
 import spharos.msg.domain.cart.dto.CartProductRequestDto;
 import spharos.msg.domain.cart.dto.CartProductResponseDto;
@@ -51,7 +51,7 @@ public class CartProductService {
         return ApiResponse.of(SuccessStatus.CART_PRODUCT_ADD_SUCCESS, null);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public ApiResponse<?> getCart(Long usersId) {
         Users users = userRepository.findById(usersId).orElseThrow();
 
@@ -81,7 +81,7 @@ public class CartProductService {
         return ApiResponse.of(SuccessStatus.CART_PRODUCT_DELETE_SUCCESS, null);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public ApiResponse<?> getCartOption(Long productId) {
         Product product = productRepository.findById(productId).orElseThrow();
 
