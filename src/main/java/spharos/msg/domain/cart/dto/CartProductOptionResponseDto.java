@@ -18,18 +18,12 @@ public class CartProductOptionResponseDto {
         this.productStock = productOption.getStock();
         if (productOption.getOptionColor() != null) {
             this.optionColor = productOption.getOptionColor().getProductColor();
-        } else {
-            this.optionColor = null;
         }
         if (productOption.getOptionColor() != null) {
             this.optionSize = productOption.getOptionSize().getProductSize();
-        } else {
-            this.optionSize = null;
         }
         if (productOption.getOptionColor() != null) {
             this.optionEtc = productOption.getOptionEtc().getProductEtc();
-        } else {
-            this.optionEtc = null;
         }
     }
 }
