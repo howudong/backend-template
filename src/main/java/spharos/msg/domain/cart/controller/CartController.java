@@ -21,6 +21,7 @@ public class CartController {
     }
 
     //장바구니 전체 조회
+    //todo 유저정보 로그인 통해서 가져오기
     @GetMapping("/{usersId}")
     public ApiResponse<?> getCart(
             @PathVariable Long usersId
