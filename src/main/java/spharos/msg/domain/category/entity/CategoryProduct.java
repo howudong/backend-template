@@ -10,6 +10,7 @@ import spharos.msg.global.entity.BaseEntity;
 @Entity
 @Getter
 public class CategoryProduct extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_product_id")

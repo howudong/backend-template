@@ -17,16 +17,20 @@ import spharos.msg.global.api.code.status.ErrorStatus;
 @RequestMapping("/api/v1/")
 @Tag(name = "Product", description = "상품 관련 API")
 public class ProductController {
+
     private final ProductService productService;
 
     @Operation(summary = "홈화면 상품 조회",
-    description = "홈화면 3가지 섹션(뷰티/랜덤/음식)의 상품을 조회합니다")
+        description = "홈화면 3가지 섹션(뷰티/랜덤/음식)의 상품,패션카테고리 상품을 조회합니다")
     @GetMapping("/product-list")
-    public ApiResponse<ProductResponseDto> getHomeProducts(@RequestParam("param") String state, @RequestParam("index")int index) {
+    public ApiResponse<?> getHome1Products(@RequestParam("param") String state,
+        @RequestParam("index") int index) {
         if ("HOME".equals(state) && index == 0) {
-            return ApiResponse.onSuccess(productService.getHomeProducts());
+            return ApiResponse.onSuccess(productService.getHome1Products());
+        } else if ("HOME2".equals(state)) {
+            return ApiResponse.onSuccess(productService.getHome2Products(index));
         }
-            return ApiResponse.onFailure(ErrorStatus.PRODUCT_ERROR.getStatus(), ErrorStatus.PRODUCT_ERROR.getMessage(), null);
-
+        return ApiResponse.onFailure(ErrorStatus.PRODUCT_ERROR.getStatus(),
+            ErrorStatus.PRODUCT_ERROR.getMessage(), null);
     }
 }
