@@ -12,8 +12,9 @@ public class CartResponseDto {
     private String productName;
     private Integer productPrice;
     private boolean cartIsChecked;
-    //    private String image;
-//    private Integer productStar;
+    //todo 이미지, 별점 정보 가져오기
+    //private String image;
+    //private Integer productStar;
     private Integer productQuantity;
 
     public CartResponseDto(CartProduct cartProduct) {
