@@ -49,7 +49,7 @@ public class ProductService {
     //상품 엔티티를 상품정보Dto로 매핑하는 메서드
     private ProductInfoDto mapToProductInfoDto(Product product) {
         return ProductInfoDto.builder()
-                .productId(product.getId().intValue())
+                .productId(product.getId())
                 .productName(product.getProductName())
                 .productPrice(product.getProductPrice())
                 .discountRate(product.getDiscountRate())

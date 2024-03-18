@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @Setter
 public class ProductInfoDto {
     @Schema(description = "상품 id")
-    private Integer productId;
+    private Long productId;
     @Schema(description = "상품 이름")
     private String productName;
     @Schema(description = "상품 가격")
@@ -28,7 +28,7 @@ public class ProductInfoDto {
     private BigDecimal discountRate;
 
     @Builder
-    private ProductInfoDto(Integer productId, String productName, Integer productPrice, boolean isLike, String image, Short productStar, BigDecimal discountRate) {
+    private ProductInfoDto(Long productId, String productName, Integer productPrice, boolean isLike, String image, Short productStar, BigDecimal discountRate) {
 
         this.productId = productId;
         this.productName = productName;
