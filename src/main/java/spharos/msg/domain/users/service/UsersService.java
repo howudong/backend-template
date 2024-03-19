@@ -16,7 +16,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import spharos.msg.domain.users.dto.KakaoSignUpRequestDto;
 import spharos.msg.domain.users.dto.LoginRequestDto;
+import spharos.msg.domain.users.dto.NewAddressRequestDto;
 import spharos.msg.domain.users.dto.SignUpRequestDto;
 import spharos.msg.domain.users.entity.Users;
 import spharos.msg.domain.users.repository.UsersRepository;
@@ -25,6 +27,7 @@ import spharos.msg.global.api.exception.JwtTokenValidationException;
 import spharos.msg.global.api.exception.LoginIdNotFoundException;
 import spharos.msg.global.api.exception.LoginPwValidationException;
 import spharos.msg.global.api.exception.SignUpDuplicationException;
+import spharos.msg.global.redis.RedisService;
 import spharos.msg.global.security.JwtTokenProvider;
 
 @Slf4j
@@ -35,10 +38,14 @@ public class UsersService {
     private final UsersRepository usersRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
+    private final RedisService redisService;
+    private final KakaoUsersService kakaoUsersService;
+    private final AddressService addressService;
 
     private final String BEARER = "Bearer";
     private final String ACCESS_TOKEN = "accessToken";
     private final String REFRESH_TOKEN = "refreshToken";
+    private final String BASIC_ADDRESS_NAME = "배송지";
 
     @Value("${JWT.access-token-expiration}")
     private long access_token_expiration;
@@ -87,15 +94,31 @@ public class UsersService {
                 .uuid(uuid.toString())
                 .build();
 
-        //todo : address 배송지 Entity에 추가 필요.
-        //todo : 카카오 사용자 확인 필요? 간편회원가입용 createUsers 메서드 나눌것인지 확인도 필요.
+        NewAddressRequestDto newAddressRequestDto = NewAddressRequestDto
+            .builder()
+            .addressName(BASIC_ADDRESS_NAME)
+            .recipient(signUpRequestDto.getUsername())
+            .mobileNumber(signUpRequestDto.getPhoneNumber())
+            .addressPhoneNumber(signUpRequestDto.getPhoneNumber())
+            .address(signUpRequestDto.getAddress())
+            .users(users)
+            .build();
+        addressService.createNewAddress(newAddressRequestDto);
 
         users.hashPassword(signUpRequestDto.getPassword());
-        usersRepository.save(users);
+        Users savedUser = usersRepository.save(users);
+
+        if (signUpRequestDto.isEasy){
+            kakaoUsersService.createKakaoUsers(
+                KakaoSignUpRequestDto.builder().userId(savedUser.getId()).build());
+        }
     }
 
+    //토큰 생성 후, redis에 저장
     public String createRefreshToken(Users users) {
-        return BEARER + "%20" + jwtTokenProvider.generateToken(users, refresh_token_expiration, "Refresh");
+        String token = jwtTokenProvider.generateToken(users, refresh_token_expiration, "Refresh");
+        redisService.saveRefreshToken(users.getUuid(), token, refresh_token_expiration);
+        return BEARER + "%20" + token;
     }
 
     public String createAccessToken(Users users) {
@@ -103,11 +126,17 @@ public class UsersService {
     }
 
     public void createTokenAndCreateHeaders(HttpServletResponse response, Users users) {
+
+        //refreshToken 확인 후, 있을 시, Delete 처리
+        if(!redisService.getRefreshToken(users.getUuid()).isEmpty()){
+            log.info("RefreshToken is not Empty={}", redisService.getRefreshToken(users.getUuid()));
+            redisService.deleteRefreshToken(users.getUuid());
+        }
+
         String accessToken = createAccessToken(users);
         String refreshToken = createRefreshToken(users);
 
         response.addHeader(ACCESS_TOKEN, accessToken);
-
         Cookie cookie = new Cookie(REFRESH_TOKEN, refreshToken);
         cookie.setSecure(true);
         cookie.setHttpOnly(true);
@@ -138,8 +167,9 @@ public class UsersService {
         }
 
         //todo: 내가 가지고 있는 refresh token과 일치 하는지 확인
-        //TokenRepository.find~~!@~!@(refreshToken);
-        //
+        String findRefreshToken = redisService.getRefreshToken(UUID);
+        log.info("Redis Finded Refresh Token={}", findRefreshToken);
+        if(findRefreshToken.isEmpty()) throw new JwtTokenValidationException(ErrorStatus.REISSUE_TOKEN_FAIL);
 
         //Uuid 토대로 users 추출
         Users users = usersRepository.findByUuid(findUuid).orElseThrow(()->new JwtTokenValidationException(ErrorStatus.REISSUE_TOKEN_FAIL));
