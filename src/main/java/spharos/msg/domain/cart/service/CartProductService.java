@@ -27,6 +27,7 @@ public class CartProductService {
     private final ProductOptionRepository productOptionRepository;
     private final UsersRepository usersRepository;
 
+    //todo 회원/비회원 구분 및 예외처리
     @Transactional
     public ApiResponse<?> addCart(Long productOptionId, CartProductRequestDto cartProductRequestDto, String userUuid) {
         //todo 상품 옵션 없는 경우 바로 add
