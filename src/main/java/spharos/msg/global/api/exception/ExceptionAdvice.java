@@ -26,6 +26,7 @@ import java.util.Optional;
 @RestControllerAdvice
 @Slf4j
 public class ExceptionAdvice extends ResponseEntityExceptionHandler {
+
     /*
     사용자 커스텀 예외 처리 샘플
      */
@@ -33,16 +34,16 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> exampleException(ExampleException exception, WebRequest request) {
         ErrorReasonDto errorReasonHttpStatus = exception.getErrorReasonHttpStatus();
         ApiResponse<Object> responseBody = createResponseBody(
-                errorReasonHttpStatus.getStatus(),
-                errorReasonHttpStatus.getMessage(),
-                null);
+            errorReasonHttpStatus.getStatus(),
+            errorReasonHttpStatus.getMessage(),
+            null);
 
         return super.handleExceptionInternal(
-                exception,
-                responseBody,
-                HttpHeaders.EMPTY,
-                errorReasonHttpStatus.getHttpStatus(),
-                request);
+            exception,
+            responseBody,
+            HttpHeaders.EMPTY,
+            errorReasonHttpStatus.getHttpStatus(),
+            request);
     }
 
     @ExceptionHandler
@@ -50,7 +51,54 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
         ErrorStatus errorStatus = ErrorStatus.INTERNAL_SERVER_ERROR;
         ApiResponse<Object> responseBody = createResponseBody(errorStatus, null);
         return super.handleExceptionInternal(
-                e, responseBody, HttpHeaders.EMPTY, errorStatus.getHttpStatus(), request);
+            e, responseBody, HttpHeaders.EMPTY, errorStatus.getHttpStatus(), request);
+    }
+
+    /**
+     * 회원 가입 시, Login Id 중복 시,
+     */
+    @ExceptionHandler
+    public ResponseEntity<Object> duplicationIdException(SignUpDuplicationException e,
+        WebRequest request) {
+        ErrorStatus errorStatus = ErrorStatus.SIGN_IN_ID_DUPLICATION;
+        ApiResponse<Object> responseBody = createResponseBody(errorStatus, null);
+        return super.handleExceptionInternal(
+            e, responseBody, HttpHeaders.EMPTY, errorStatus.getHttpStatus(), request);
+    }
+
+    /**
+     * 로그인 시, 잘못된 아이디로 로그인 시도 시,
+     */
+    @ExceptionHandler
+    public ResponseEntity<Object> LoginIdNotFoundException(LoginIdNotFoundException e,
+        WebRequest request) {
+        ErrorStatus errorStatus = ErrorStatus.LOGIN_ID_NOT_FOUND;
+        ApiResponse<Object> responseBody = createResponseBody(errorStatus, null);
+        return super.handleExceptionInternal(
+            e, responseBody, HttpHeaders.EMPTY, errorStatus.getHttpStatus(), request);
+    }
+
+    /**
+     * 로그인 시, Id<->Pw 매칭 안될 시,
+     */
+    @ExceptionHandler
+    public ResponseEntity<Object> LoginPwValidationEx(LoginPwValidationException e,
+        WebRequest request) {
+        ErrorStatus errorStatus = ErrorStatus.LOGIN_ID_NOT_FOUND;
+        ApiResponse<Object> responseBody = createResponseBody(errorStatus, null);
+        return super.handleExceptionInternal(
+            e, responseBody, HttpHeaders.EMPTY, errorStatus.getHttpStatus(), request);
+    }
+
+    /**
+     * Client->Server Token 담아서 호출 시, Token 만료 될 시,
+     */
+    @ExceptionHandler
+    public ResponseEntity<Object> TokenIsExpired(JwtTokenIsExpired e, WebRequest request) {
+        ErrorStatus errorStatus = ErrorStatus.TOKEN_EXPIRED;
+        ApiResponse<Object> responseBody = createResponseBody(errorStatus, null);
+        return super.handleExceptionInternal(
+            e, responseBody, HttpHeaders.EMPTY, errorStatus.getHttpStatus(), request);
     }
 
     /*
@@ -59,16 +107,16 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<Object> validation(ConstraintViolationException e, WebRequest request) {
         String errorMessage = e.getConstraintViolations()
-                .stream()
-                .map(ConstraintViolation::getMessage)
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("ConstrainViolation 추출 오류 발생"));
-
+            .stream()
+            .map(ConstraintViolation::getMessage)
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("ConstrainViolation 추출 오류 발생"));
 
         ErrorStatus errorStatus = ErrorStatus.valueOf(errorMessage);
         ApiResponse<Object> responseBody = createResponseBody(errorStatus, null);
 
-        return super.handleExceptionInternal(e, responseBody, HttpHeaders.EMPTY, errorStatus.getHttpStatus(), request);
+        return super.handleExceptionInternal(e, responseBody, HttpHeaders.EMPTY,
+            errorStatus.getHttpStatus(), request);
     }
 
     /*
@@ -76,22 +124,26 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
      */
     @Override
     protected ResponseEntity<Object> handleMissingPathVariable(MissingPathVariableException e,
-                                                               HttpHeaders headers,
-                                                               HttpStatusCode status,
-                                                               WebRequest request) {
+        HttpHeaders headers,
+        HttpStatusCode status,
+        WebRequest request) {
         String requestURI = request.getContextPath();
         ErrorStatus errorStatus = ErrorStatus.INVALID_PATH_VARIABLE;
         ApiResponse<String> responseBody = createResponseBody(errorStatus, requestURI);
-        return super.handleExceptionInternal(e, responseBody, HttpHeaders.EMPTY, errorStatus.getHttpStatus(), request);
+        return super.handleExceptionInternal(e, responseBody, HttpHeaders.EMPTY,
+            errorStatus.getHttpStatus(), request);
     }
 
     /*
     잘못된 QueryString을 사용한 경우 호출되는 예외 처리
      */
     @Override
-    protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+    protected ResponseEntity<Object> handleMissingServletRequestParameter(
+        MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatusCode status,
+        WebRequest request) {
         ErrorStatus errorStatus = ErrorStatus.INVALID_REQUEST_PARAM;
-        ApiResponse<Map<String, String[]>> responseBody = createResponseBody(errorStatus, request.getParameterMap());
+        ApiResponse<Map<String, String[]>> responseBody = createResponseBody(errorStatus,
+            request.getParameterMap());
         return super.handleExceptionInternal(ex, responseBody, headers, status, request);
     }
 
@@ -99,7 +151,8 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
     잘못된 url 경로로 API 요청을 한 경우 호출되는 예외 처리
      */
     @Override
-    protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+    protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex,
+        HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         ErrorStatus errorStatus = ErrorStatus.BAD_GATEWAY;
         ApiResponse<Object> responseBody = createResponseBody(errorStatus, null);
         return super.handleExceptionInternal(ex, responseBody, headers, status, request);
@@ -107,27 +160,28 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException e,
-                                                                  HttpHeaders headers,
-                                                                  HttpStatusCode status,
-                                                                  WebRequest request) {
+        HttpHeaders headers,
+        HttpStatusCode status,
+        WebRequest request) {
         Map<String, String> errorArgs = new LinkedHashMap<>();
         ErrorStatus errorStatus = ErrorStatus.INVALID_PARAMETER_ERROR;
 
         e.getBindingResult()
-                .getFieldErrors()
-                .forEach(fieldError -> {
-                    String fieldName = fieldError.getField();
-                    String errorMessage = Optional.ofNullable(
-                                    fieldError.getDefaultMessage())
-                            .orElse("");
+            .getFieldErrors()
+            .forEach(fieldError -> {
+                String fieldName = fieldError.getField();
+                String errorMessage = Optional.ofNullable(
+                        fieldError.getDefaultMessage())
+                    .orElse("");
 
-                    errorArgs.merge(fieldName, errorMessage,
-                            (existingErrorMessage, newErrorMessage) -> existingErrorMessage + ", " + newErrorMessage);
-                });
+                errorArgs.merge(fieldName, errorMessage,
+                    (existingErrorMessage, newErrorMessage) -> existingErrorMessage + ", "
+                        + newErrorMessage);
+            });
 
         ApiResponse<Map<String, String>> responseBody = createResponseBody(errorStatus, errorArgs);
         return super.handleExceptionInternal(
-                e, responseBody, HttpHeaders.EMPTY, errorStatus.getHttpStatus(), request);
+            e, responseBody, HttpHeaders.EMPTY, errorStatus.getHttpStatus(), request);
     }
     /*
     사용자 커스텀 예외 추가
@@ -136,15 +190,15 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
     private <T> ApiResponse<T> createResponseBody(ErrorStatus errorStatus, T data) {
         return ApiResponse.onFailure(
-                errorStatus.getStatus(),
-                errorStatus.getMessage(),
-                data);
+            errorStatus.getStatus(),
+            errorStatus.getMessage(),
+            data);
     }
 
     private <T> ApiResponse<T> createResponseBody(String errorStatus, String errorMessage, T data) {
         return ApiResponse.onFailure(
-                errorStatus,
-                errorMessage,
-                data);
+            errorStatus,
+            errorMessage,
+            data);
     }
 }

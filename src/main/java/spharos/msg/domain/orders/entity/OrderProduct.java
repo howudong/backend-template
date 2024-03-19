@@ -1,4 +1,4 @@
-package spharos.msg.domain.category.entity;
+package spharos.msg.domain.orders.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,25 +8,30 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import spharos.msg.domain.product.entity.Product;
 import spharos.msg.global.entity.BaseEntity;
 
 @Entity
 @Getter
-public class CategoryProduct extends BaseEntity {
+public class OrderProduct extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "category_product_id")
+    @Column(name = "order_product_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private Category category;
+    @Column
+    private Long productId;
+
+    @NotNull()
+    @Min(0)
+    @Column(columnDefinition = "integer default 0")
+    private Integer ordersDeliveryFee;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @JoinColumn(name = "order_id")
+    private Orders orders;
 
 }

@@ -18,7 +18,7 @@ public class ExampleController {
             throw new ExampleException(ErrorStatus.EXAMPLE_EXCEPTION);
         }
         ExampleResponse.TestDto dto = ExampleConverter.toExampleTestDto();
-        return ApiResponse.of(SuccessStatus.SIGN_UP_SUCCESS, dto);
+        return ApiResponse.of(SuccessStatus.SIGN_UP_SUCCESS_UNION, dto);
     }
 
     @GetMapping("/login")

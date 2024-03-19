@@ -20,6 +20,14 @@ public enum ErrorStatus implements BaseErrorCode {
     FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
     PRODUCT_ERROR(HttpStatus.BAD_REQUEST, "PRODUCT400","홈 상품 조회 불러오기 실패"),
 
+    SIGN_IN_ID_DUPLICATION(HttpStatus.BAD_REQUEST, "USER401", "통합 회원가입 실패"),
+    ALREADY_EXIST_LOGIN_ID(HttpStatus.BAD_REQUEST, "USER402", "간편 회원가입 실패"),
+    LOGIN_ID_NOT_FOUND(HttpStatus.BAD_REQUEST, "USER403", "통합 로그인 실패"),
+    LOGIN_ID_PW_VALIDATION(HttpStatus.BAD_REQUEST, "USER404", "통합 로그인 실패"),
+    TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, "USER404", "토큰이 만료되었습니다."),
+
+    NOT_EXIST_PRODUCT_OPTION(HttpStatus.NOT_FOUND,"PRODUCT600","존재하지 않는 상품옵션 입니다."),
+
     EXAMPLE_EXCEPTION(HttpStatus.BAD_REQUEST, "EXAMPLE400", "샘플 에러 메시지입니다");
 
     private final HttpStatus httpStatus;
