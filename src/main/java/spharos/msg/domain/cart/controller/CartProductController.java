@@ -26,11 +26,9 @@ public class CartProductController {
     }
 
     //장바구니 전체 조회
-    //todo 유저정보 로그인 통해서 가져오기
     @GetMapping
     public ApiResponse<?> getCart(
             @AuthenticationPrincipal UserDetails userDetails
-
     ) {
         return cartProductService.getCart(userDetails.getUsername());
     }
@@ -52,7 +50,6 @@ public class CartProductController {
         return cartProductService.deleteCart(cartId, userDetails.getUsername());
     }
 
-    //장바구니 상품 옵션 조회
     @GetMapping("/option/{productId}")
     public ApiResponse<?> getCartOption(
             @PathVariable Long productId,

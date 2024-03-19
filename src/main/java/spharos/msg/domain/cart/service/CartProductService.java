@@ -49,7 +49,7 @@ public class CartProductService {
         return ApiResponse.of(SuccessStatus.CART_PRODUCT_ADD_SUCCESS, null);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public ApiResponse<?> getCart(String userUuid) {
         Users users = usersRepository.findByUuid(userUuid).orElseThrow();
 
