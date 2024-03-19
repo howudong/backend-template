@@ -1,7 +1,6 @@
 package spharos.msg.domain.cart.service;
 
 import lombok.RequiredArgsConstructor;
-//import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import spharos.msg.domain.cart.dto.CartProductOptionResponseDto;
@@ -14,11 +13,10 @@ import spharos.msg.domain.product.entity.ProductOption;
 import spharos.msg.domain.product.repository.ProductOptionRepository;
 import spharos.msg.domain.product.repository.ProductRepository;
 import spharos.msg.domain.users.entity.Users;
-import spharos.msg.domain.users.repository.UserRepository;
+import spharos.msg.domain.users.repository.UsersRepository;
 import spharos.msg.global.api.ApiResponse;
 import spharos.msg.global.api.code.status.SuccessStatus;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,15 +25,15 @@ public class CartProductService {
     private final CartProductRepository cartProductRepository;
     private final ProductRepository productRepository;
     private final ProductOptionRepository productOptionRepository;
-    private final UserRepository userRepository;
+    private final UsersRepository usersRepository;
 
     @Transactional
-    public ApiResponse<?> addCart(Long productOptionId, CartProductRequestDto cartProductRequestDto) {
+    public ApiResponse<?> addCart(Long productOptionId, CartProductRequestDto cartProductRequestDto, String userUuid) {
         //todo 상품 옵션 없는 경우 바로 add
         ProductOption productOption = productOptionRepository.findById(productOptionId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 상품옵션입니다.")
         );
-        Users users = userRepository.findById(1L).orElseThrow(
+        Users users = usersRepository.findByUuid(userUuid).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 사용자입니다.")
         );
 
@@ -52,8 +50,8 @@ public class CartProductService {
     }
 
     @Transactional(readOnly = true)
-    public ApiResponse<?> getCart(Long usersId) {
-        Users users = userRepository.findById(usersId).orElseThrow();
+    public ApiResponse<?> getCart(String userUuid) {
+        Users users = usersRepository.findByUuid(userUuid).orElseThrow();
 
         return ApiResponse.of(SuccessStatus.CART_PRODUCT_GET_SUCCESS,
                 cartProductRepository.findByUsers(users)
@@ -63,9 +61,11 @@ public class CartProductService {
     }
 
     @Transactional
-    public ApiResponse<?> updateCart(CartProductRequestDto cartProductRequestDto, Long cartId) {
+    public ApiResponse<?> updateCart(CartProductRequestDto cartProductRequestDto, Long cartId, String userUuid) {
         CartProduct cartProduct = cartProductRepository.findById(cartId).orElseThrow();
         ProductOption productOption = productOptionRepository.findById(cartProductRequestDto.getProductOptionId()).orElseThrow();
+        Users users = usersRepository.findByUuid(userUuid).orElseThrow();
+
         cartProduct.updateCartProduct(cartProductRequestDto, productOption);
 
         return ApiResponse.of(SuccessStatus.CART_PRODUCT_UPDATE_SUCCESS,
@@ -73,16 +73,16 @@ public class CartProductService {
     }
 
     @Transactional
-    public ApiResponse<?> deleteCart(Long cartId, Long usersId) {
+    public ApiResponse<?> deleteCart(Long cartId, String userUuid) {
         CartProduct cartProduct = cartProductRepository.findById(cartId).orElseThrow();
-        Users users = userRepository.findById(usersId).orElseThrow();
+        Users users = usersRepository.findByUuid(userUuid).orElseThrow();
         cartProductRepository.delete(cartProduct);
 
         return ApiResponse.of(SuccessStatus.CART_PRODUCT_DELETE_SUCCESS, null);
     }
 
     @Transactional(readOnly = true)
-    public ApiResponse<?> getCartOption(Long productId) {
+    public ApiResponse<?> getCartOption(Long productId, String userUuid) {
         Product product = productRepository.findById(productId).orElseThrow();
 
         return ApiResponse.of(SuccessStatus.CART_PRODUCT_OPTION_SUCCESS,
