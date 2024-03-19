@@ -1,6 +1,8 @@
 package spharos.msg.domain.product.repository;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -23,5 +25,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     //패션 상품 반환
     @Query("SELECT cp.product FROM CategoryProduct cp WHERE cp.category.id IN (SELECT c.id FROM Category c WHERE c.categoryName = '패션잡화' OR c.parent.categoryName = '패션잡화')")
-    List<Product> findFashionProducts(int index, int limit);
+    Page<Product> findFashionProducts(Pageable pageable);
 }
