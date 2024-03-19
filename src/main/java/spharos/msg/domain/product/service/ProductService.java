@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import spharos.msg.domain.product.dto.ProductInfoDto;
 import spharos.msg.domain.product.dto.ProductResponseDto;
@@ -53,7 +52,7 @@ public class ProductService {
 
     public ProductResponseDto.Home2 getHome2Products(int index) {
         //pageble 객체 생성
-        Pageable pageable = PageRequest.of(index,16);
+        Pageable pageable = PageRequest.of(index, 16);
         //index 기반 패션 상품들 조회
         Page<Product> fashionProductsPage = productRepository.findFashionProducts(pageable);
         List<Product> fashionProducts = fashionProductsPage.getContent();

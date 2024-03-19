@@ -3,7 +3,11 @@ package spharos.msg.domain.product.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull.List;
+import java.util.ArrayList;
+import java.util.Optional;
 import lombok.Getter;
+import spharos.msg.domain.likes.entity.Likes;
 import spharos.msg.global.entity.BaseEntity;
 import spharos.msg.global.entity.Vendor;
 
@@ -46,4 +50,7 @@ public class Product extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "vendor_id")
     private Vendor vendor;
+
+    @OneToMany(mappedBy = "product")
+    private ArrayList<Likes> likesList;
 }
