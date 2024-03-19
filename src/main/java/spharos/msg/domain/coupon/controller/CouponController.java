@@ -11,13 +11,13 @@ import spharos.msg.global.api.ApiResponse;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
-@Tag(name = "Coupon",description = "쿠폰 API")
+@Tag(name = "Coupon", description = "쿠폰 API")
 public class CouponController {
     private final CouponService couponService;
 
     @GetMapping("/coupon")
-private ApiResponse<?> getCoupon(
-    ){
+    private ApiResponse<?> getCoupon(
+    ) {
         return couponService.getCoupon();
     }
 
@@ -25,14 +25,14 @@ private ApiResponse<?> getCoupon(
     private ApiResponse<?> downloadCoupon(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable Long couponId
-            ){
-        return couponService.downloadCoupon(userDetails.getUsername(),couponId);
+    ) {
+        return couponService.downloadCoupon(userDetails.getUsername(), couponId);
     }
 
     @GetMapping("/coupon-user")
     private ApiResponse<?> getUsersCoupon(
             @AuthenticationPrincipal UserDetails userDetails
-    ){
+    ) {
         return couponService.getUsersCoupon(userDetails.getUsername());
     }
 }
