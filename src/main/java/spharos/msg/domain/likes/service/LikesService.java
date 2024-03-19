@@ -10,6 +10,7 @@ import spharos.msg.domain.product.entity.Product;
 import spharos.msg.domain.product.repository.ProductRepository;
 import spharos.msg.domain.users.entity.Users;
 import spharos.msg.domain.users.repository.UserRepository;
+import spharos.msg.domain.users.repository.UsersRepository;
 import spharos.msg.global.api.ApiResponse;
 
 import java.util.stream.Collectors;
@@ -19,14 +20,14 @@ import java.util.stream.Collectors;
 public class LikesService {
     private final ProductRepository productRepository;
     private final LikesRepository likesRepository;
-    private final UserRepository userRepository;
+    private final UsersRepository usersRepository;
 
     //상품에 좋아요 등록
     @Transactional
-    public ApiResponse<?> likeProduct(Long productId, Long userId) {
+    public ApiResponse<?> likeProduct(Long productId, String userUuid) {
         //todo 로그인 안되어 있으면 로그인 페이지로 이동
         Product product = productRepository.findById(productId).orElseThrow();
-        Users users = userRepository.findById(userId).orElseThrow();
+        Users users = usersRepository.findByUuid(userUuid).orElseThrow();
 
         Likes like = Likes.builder()
                 .product(product)
@@ -38,9 +39,9 @@ public class LikesService {
     }
 
     @Transactional
-    public ApiResponse<?> deleteLikeProduct(Long productId, Long userId) {
+    public ApiResponse<?> deleteLikeProduct(Long productId, String userUuid) {
         Product product = productRepository.findById(productId).orElseThrow();
-        Users users = userRepository.findById(userId).orElseThrow();
+        Users users = usersRepository.findByUuid(userUuid).orElseThrow();
 
         Likes likes = likesRepository.findByUsersAndProduct(users, product).orElseThrow();
         likesRepository.delete(likes);
@@ -48,8 +49,8 @@ public class LikesService {
     }
 
     @Transactional
-    public ApiResponse<?> getProductLikeList(Long usersId) {
-        Users users = userRepository.findById(usersId).orElseThrow();
+    public ApiResponse<?> getProductLikeList(String userUuid) {
+        Users users = usersRepository.findByUuid(userUuid).orElseThrow();
         return new ApiResponse<>(
                 true,
                 "200",

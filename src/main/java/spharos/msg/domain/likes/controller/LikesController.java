@@ -1,6 +1,8 @@
 package spharos.msg.domain.likes.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import spharos.msg.domain.likes.service.LikesService;
 import spharos.msg.global.api.ApiResponse;
@@ -10,22 +12,22 @@ import spharos.msg.global.api.ApiResponse;
 @RequestMapping("/api/v1/like")
 public class LikesController {
     private final LikesService likesService;
-    @PostMapping("/{productId}/{userId}")
+    @PostMapping("/{productId}")
     private ApiResponse<?> likeProduct(
             @PathVariable Long productId,
-            @PathVariable Long userId){
-        return likesService.likeProduct(productId,userId);
+            @AuthenticationPrincipal UserDetails userDetails){
+        return likesService.likeProduct(productId,userDetails.getUsername());
     }
-    @DeleteMapping("/{productId}/{userId}")
+    @DeleteMapping("/{productId}")
     private ApiResponse<?> deleteLikeProduct(
             @PathVariable Long productId,
-            @PathVariable Long userId){
-        return likesService.deleteLikeProduct(productId,userId);
+            @AuthenticationPrincipal UserDetails userDetails){
+        return likesService.deleteLikeProduct(productId, userDetails.getUsername());
     }
-    @GetMapping("/{userId}")
+    @GetMapping
     private ApiResponse<?> getProductLikeList(
-            @PathVariable Long userId
+            @AuthenticationPrincipal UserDetails userDetails
             ){
-        return likesService.getProductLikeList(userId);
+        return likesService.getProductLikeList(userDetails.getUsername());
     }
 }
