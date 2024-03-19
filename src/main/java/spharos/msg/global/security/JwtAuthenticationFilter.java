@@ -46,7 +46,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         jwt = authHeader.substring(7);
 
-        //todo : 토큰 유효 확인
         try {
             jwtTokenProvider.isTokenExpired(jwt);
             userUuid = jwtTokenProvider.validateAndGetUserUuid(jwt);
@@ -58,8 +57,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode jsonResponse = mapper.createObjectNode();
-            jsonResponse.put("status", ErrorStatus.REISSUE_TOKEN_FAIL.getStatus());
-            jsonResponse.put("message", ErrorStatus.REISSUE_TOKEN_FAIL.getMessage());
+            jsonResponse.put("status", ErrorStatus.TOKEN_EXPIRED.getStatus());
+            jsonResponse.put("message", ErrorStatus.TOKEN_EXPIRED.getMessage());
+            jsonResponse.put("isSuccess", "false");
 
             PrintWriter out = response.getWriter();
             out.print(jsonResponse.toString());

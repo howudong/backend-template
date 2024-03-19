@@ -129,11 +129,17 @@ public class UsersService {
         try{
             findUuid = jwtTokenProvider.validateAndGetUserUuid(jwt);
         }catch(Exception e){
+            log.info("Token 내, UUID 추출 실패");
             throw new JwtTokenValidationException(ErrorStatus.REISSUE_TOKEN_FAIL);
         }
         if(!findUuid.equals(UUID)){
+            log.info("추출한 UUID와 BODY로 받은 UUID 값이 다릅니다.");
             throw new JwtTokenValidationException(ErrorStatus.REISSUE_TOKEN_FAIL);
         }
+
+        //todo: 내가 가지고 있는 refresh token과 일치 하는지 확인
+        //TokenRepository.find~~!@~!@(refreshToken);
+        //
 
         //Uuid 토대로 users 추출
         Users users = usersRepository.findByUuid(findUuid).orElseThrow(()->new JwtTokenValidationException(ErrorStatus.REISSUE_TOKEN_FAIL));
