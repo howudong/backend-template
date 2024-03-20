@@ -20,7 +20,7 @@ public class CartProductResponseDto {
     public CartProductResponseDto(CartProduct cartProduct) {
         this.productId = cartProduct.getProductOption().getProduct().getId();
         this.productName = cartProduct.getProductOption().getProduct().getProductName();
-        this.productPrice = cartProduct.getProductOption().getProduct().getProductPrice()* cartProduct.getCartProductQuantity();
+        this.productPrice = cartProduct.getProductOption().getProduct().getProductPrice();
         this.cartIsChecked = cartProduct.getCartIsChecked();
         this.productOptionId = cartProduct.getProductOption().getProductOptionId();
 //        this.image = cartProduct.getProductOption().getProduct().get
