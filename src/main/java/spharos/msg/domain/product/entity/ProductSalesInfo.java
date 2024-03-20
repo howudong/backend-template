@@ -19,7 +19,7 @@ public class ProductSalesInfo extends BaseEntity {
     @NotNull
     @DecimalMin("0.0")
     @DecimalMax("5.0")
-    private BigDecimal discountRatio;
+    private BigDecimal productStars;
 
     @NotNull
     @Column(columnDefinition = "bigint default 0")
@@ -30,7 +30,7 @@ public class ProductSalesInfo extends BaseEntity {
 
     //TODO : 연관관계 주인은 PRODUCT인가, 여기인가 상의해보기
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "orders_id")
+    @JoinColumn(name = "product_id")
     private Product product;
 
 }

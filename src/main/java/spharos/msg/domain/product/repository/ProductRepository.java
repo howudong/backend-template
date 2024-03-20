@@ -1,5 +1,6 @@
 package spharos.msg.domain.product.repository;
 
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
@@ -17,4 +18,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "SELECT p FROM Product p ORDER BY RAND()")
     List<Product> findRandomProducts(@Param("limit") int limit);
 
+    Optional<Product> findById(Long id);
 }

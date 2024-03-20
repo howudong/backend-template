@@ -1,20 +1,27 @@
 package spharos.msg.domain.product.service;
 
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import spharos.msg.domain.product.dto.ProductDetailInfoDto;
 import spharos.msg.domain.product.dto.ProductInfoDto;
 import spharos.msg.domain.product.dto.ProductResponseDto;
 import spharos.msg.domain.product.entity.Product;
+import spharos.msg.domain.product.entity.ProductSalesInfo;
 import spharos.msg.domain.product.repository.ProductRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import spharos.msg.domain.product.repository.ProductSalesInfoRepository;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final ProductSalesInfoRepository productSalesInfoRepository;
     //Home화면 상품 조회
     public ProductResponseDto getHomeProducts() {
         //뷰티 상품 조회
@@ -44,6 +51,32 @@ public class ProductService {
                 .randomList(randoms)
                 .foodList(foods)
                 .build();
+    }
+
+    public ProductDetailInfoDto getProductDetail(Long productId) {
+        log.info("ProductDetail Service 호출");
+        //id값으로 상품 조회
+        Optional<Product> productOptional = productRepository.findById(productId);
+        Optional<ProductSalesInfo> productSalesInfoOptional = productSalesInfoRepository.findById(productId);
+        //해당 객체가 존재하는지 확인 후, Dto 매핑
+        if (productOptional.isPresent() && productSalesInfoOptional.isPresent()) {
+            Product product = productOptional.get();
+            ProductSalesInfo productSalesInfo = productSalesInfoOptional.get();
+
+            ProductDetailInfoDto test = ProductDetailInfoDto.builder()
+                .productId(product.getId())
+                .productName(product.getProductName())
+                .productPrice(product.getProductPrice())
+                .productBrand(product.getProductBrand())
+                .defaultImageIndex(product.getDefaultImageIndex())
+                .discountRate(product.getDiscountRate())
+                .productStars(productSalesInfo.getProductStars())
+                .productReviewCount(productSalesInfo.getReviewCount())
+                .build();
+            log.info("dto확인"+test);
+            return test;
+        }
+        return null;
     }
 
     //상품 엔티티를 상품정보Dto로 매핑하는 메서드
