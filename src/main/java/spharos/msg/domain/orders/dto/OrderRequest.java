@@ -12,6 +12,6 @@ public class OrderRequest {
 
         private Long productId;
         private Long productOptionId;
-        private int cartProductQuantity;
+        private Integer quantity;
     }
 }
