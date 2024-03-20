@@ -53,6 +53,12 @@ public class Users extends BaseEntity implements UserDetails {
     @Size(min = 2, max = 50)
     private String userName;
 
+    @Column(columnDefinition = "bigint default 0")
+    private Long baseAddressId;
+
+    @OneToMany(mappedBy = "users")
+    private List<Address> addresses;
+
     public static Users usersConverter(SignUpRequestDto signUpRequestDto){
         signUpRequestDto.setPassword(hashPassword(signUpRequestDto.getPassword()));
         return Users
@@ -63,6 +69,7 @@ public class Users extends BaseEntity implements UserDetails {
             .email(signUpRequestDto.getEmail())
             .phoneNumber(signUpRequestDto.getPhoneNumber())
             .uuid(UUID.randomUUID().toString())
+            .baseAddressId(0L)
             .build();
     }
 
