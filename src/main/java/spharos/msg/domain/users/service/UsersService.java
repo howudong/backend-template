@@ -22,10 +22,8 @@ import spharos.msg.domain.users.dto.SignUpRequestDto;
 import spharos.msg.domain.users.entity.Users;
 import spharos.msg.domain.users.repository.UsersRepository;
 import spharos.msg.global.api.code.status.ErrorStatus;
-import spharos.msg.global.api.exception.JwtTokenValidationException;
-import spharos.msg.global.api.exception.LoginIdNotFoundException;
-import spharos.msg.global.api.exception.LoginPwValidationException;
-import spharos.msg.global.api.exception.SignUpDuplicationException;
+import spharos.msg.global.api.exception.JwtTokenCommonException;
+import spharos.msg.global.api.exception.UserCommonException;
 import spharos.msg.global.redis.RedisService;
 import spharos.msg.global.security.JwtTokenProvider;
 
@@ -54,19 +52,19 @@ public class UsersService {
     @Transactional(readOnly = true)
     public void signUpDuplicationCheck(SignUpRequestDto signUpRequestDto) {
         if (usersRepository.findByLoginId(signUpRequestDto.getLoginId()).isPresent()) {
-            throw new SignUpDuplicationException(SIGN_IN_ID_DUPLICATION);
+            throw new UserCommonException(SIGN_IN_ID_DUPLICATION);
         }
     }
 
     @Transactional(readOnly = true)
     public Users login(LoginRequestDto loginRequestDto) {
         Users users = usersRepository.findByLoginId(loginRequestDto.getLoginId())
-            .orElseThrow(() -> new LoginIdNotFoundException(LOGIN_ID_NOT_FOUND));
+            .orElseThrow(() -> new UserCommonException(LOGIN_ID_NOT_FOUND));
 
         //비밀번호 검증
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if (!encoder.matches(loginRequestDto.getPassword(), users.getPassword())) {
-            throw new LoginPwValidationException(LOGIN_ID_PW_VALIDATION);
+            throw new UserCommonException(LOGIN_ID_PW_VALIDATION);
         }
 
         //적합한 인증 provider 찾기
@@ -136,7 +134,7 @@ public class UsersService {
 
         //Token 값 자체 유효성 검사
         if (givenRefreshToken == null || !givenRefreshToken.startsWith(BEARER + " ")) {
-            throw new JwtTokenValidationException(ErrorStatus.REISSUE_TOKEN_FAIL);
+            throw new JwtTokenCommonException(ErrorStatus.REISSUE_TOKEN_FAIL);
         }
 
         String jwt = givenRefreshToken.substring(7);
@@ -144,13 +142,13 @@ public class UsersService {
         try {
             String findRefreshToken = redisService.getRefreshToken(uuid);
             if (!findRefreshToken.matches(jwt)) {
-                throw new JwtTokenValidationException(ErrorStatus.REISSUE_TOKEN_FAIL);
+                throw new JwtTokenCommonException(ErrorStatus.REISSUE_TOKEN_FAIL);
             }
 
             return usersRepository.findByUuid(uuid)
-                .orElseThrow(() -> new JwtTokenValidationException(ErrorStatus.REISSUE_TOKEN_FAIL));
+                .orElseThrow(() -> new JwtTokenCommonException(ErrorStatus.REISSUE_TOKEN_FAIL));
         } catch (Exception e) {
-            throw new JwtTokenValidationException(ErrorStatus.REISSUE_TOKEN_FAIL);
+            throw new JwtTokenCommonException(ErrorStatus.REISSUE_TOKEN_FAIL);
         }
     }
 }
