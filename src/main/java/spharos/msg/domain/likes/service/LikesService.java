@@ -9,7 +9,6 @@ import spharos.msg.domain.likes.repository.LikesRepository;
 import spharos.msg.domain.product.entity.Product;
 import spharos.msg.domain.product.repository.ProductRepository;
 import spharos.msg.domain.users.entity.Users;
-import spharos.msg.domain.users.repository.UserRepository;
 import spharos.msg.domain.users.repository.UsersRepository;
 import spharos.msg.global.api.ApiResponse;
 
