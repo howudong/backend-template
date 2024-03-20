@@ -14,6 +14,7 @@ import spharos.msg.domain.users.service.UsersService;
 @NoArgsConstructor
 @Builder
 public class NewAddressRequestDto {
+
     private String addressName;
     private String recipient;
     private String mobileNumber;
@@ -22,10 +23,10 @@ public class NewAddressRequestDto {
     private Users users;
 
     public static NewAddressRequestDto newAddressRequestConverter(
-        SignUpRequestDto signUpRequestDto, Users savedUser){
+        SignUpRequestDto signUpRequestDto, Users savedUser) {
         return NewAddressRequestDto
             .builder()
-            .addressName(UsersService.BasicAddressName)
+            .addressName(UsersService.BASIC_ADDRESS_NAME)
             .recipient(signUpRequestDto.getUsername())
             .mobileNumber(signUpRequestDto.getPhoneNumber())
             .addressPhoneNumber(signUpRequestDto.getPhoneNumber())

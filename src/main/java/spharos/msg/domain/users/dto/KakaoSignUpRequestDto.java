@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import spharos.msg.domain.users.entity.Users;
 
 @Getter
 @Setter
@@ -16,10 +15,10 @@ public class KakaoSignUpRequestDto {
 
     private String userUuid;
 
-    public static KakaoSignUpRequestDto kakaoSignUpRequestConverter(String Uuid){
+    public static KakaoSignUpRequestDto kakaoSignUpRequestConverter(String uuid) {
         return KakaoSignUpRequestDto
             .builder()
-            .userUuid(Uuid)
+            .userUuid(uuid)
             .build();
     }
 }
