@@ -6,9 +6,6 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import spharos.msg.domain.users.entity.UserCoupon;
 import spharos.msg.global.entity.BaseEntity;
 
@@ -19,7 +16,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
 public class Coupon extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
