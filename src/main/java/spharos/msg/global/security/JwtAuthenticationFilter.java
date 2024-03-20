@@ -2,7 +2,6 @@ package spharos.msg.global.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -49,7 +48,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             jwtTokenProvider.isTokenExpired(jwt);
             userUuid = jwtTokenProvider.validateAndGetUserUuid(jwt);
-        } catch (ExpiredJwtException e) {
+        } catch (Exception e) {
             log.error("Jwt Token is Expired = {}", e.toString());
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setContentType("application/json");

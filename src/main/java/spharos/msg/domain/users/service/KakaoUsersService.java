@@ -12,10 +12,11 @@ import spharos.msg.domain.users.repository.KakaoUsersRepository;
 @RequiredArgsConstructor
 @Slf4j
 public class KakaoUsersService {
+
     private final KakaoUsersRepository kakaoUsersRepository;
 
     @Transactional
-    public void createKakaoUsers(KakaoSignUpRequestDto kakaoSignUpRequestDto){
+    public void createKakaoUsers(KakaoSignUpRequestDto kakaoSignUpRequestDto) {
         log.info("Kakao Signup complete={}", kakaoSignUpRequestDto.getUserUuid());
         kakaoUsersRepository.save(KakaoUsers.kakaoUsersConverter(kakaoSignUpRequestDto));
     }

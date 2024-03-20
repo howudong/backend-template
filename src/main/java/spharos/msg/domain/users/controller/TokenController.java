@@ -2,6 +2,8 @@ package spharos.msg.domain.users.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,12 +27,13 @@ public class TokenController {
 
     @Operation(summary = "Security", description = "Token 재발급", tags = {"Token"})
     @PostMapping
-    public ApiResponse reissueToken(
+    public ApiResponse<?> reissueToken(
         @RequestBody ReissueRequestDto reissueRequestDto,
         @RequestHeader(name = "Authorization") String refreshToken,
         HttpServletResponse response
     ) {
-        Users findUsers = usersService.CheckRefreshTokenValidation(refreshToken,
+        Users findUsers = usersService.checkRefreshTokenValidation(
+            URLDecoder.decode(refreshToken, StandardCharsets.UTF_8),
             reissueRequestDto.getUuid());
 
         usersService.createTokenAndCreateHeaders(response, findUsers);

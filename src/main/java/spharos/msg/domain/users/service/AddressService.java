@@ -16,7 +16,7 @@ public class AddressService {
     private final AddressRepository addressRepository;
 
     @Transactional
-    public void createNewAddress(NewAddressRequestDto newAddressRequestDto){
+    public void createNewAddress(NewAddressRequestDto newAddressRequestDto) {
         log.info("New Address registration complete={}", newAddressRequestDto.getUsers().getId());
         addressRepository.save(Address.addressConverter(newAddressRequestDto));
     }

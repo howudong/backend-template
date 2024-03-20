@@ -1,5 +1,6 @@
 package spharos.msg.global.redis;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -23,6 +24,12 @@ public class RedisService {
     public String getRefreshToken(String uuid) {
         String key = REDIS_KEY_PREFIX + uuid;
         return redisTemplate.opsForValue().get(key);
+    }
+
+    public Boolean isRefreshTokenExist(String uuid) {
+        String key = REDIS_KEY_PREFIX + uuid;
+        Optional<String> value = Optional.ofNullable(redisTemplate.opsForValue().get(key));
+        return value.isPresent() && !value.get().isEmpty();
     }
 
     // Redis에서 토큰 삭제

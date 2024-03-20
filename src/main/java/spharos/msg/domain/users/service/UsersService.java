@@ -4,7 +4,6 @@ import static spharos.msg.global.api.code.status.ErrorStatus.LOGIN_ID_NOT_FOUND;
 import static spharos.msg.global.api.code.status.ErrorStatus.LOGIN_ID_PW_VALIDATION;
 import static spharos.msg.global.api.code.status.ErrorStatus.SIGN_IN_ID_DUPLICATION;
 
-import java.util.UUID;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -43,17 +42,17 @@ public class UsersService {
     private final AddressService addressService;
 
     public static final String BEARER = "Bearer";
-    public static final String AcessToken = "accessToken";
-    public static final String RefreshToken = "refreshToken";
-    public static final String BasicAddressName = "기본 배송지";
+    public static final String ACCESS_TOKEN = "accessToken";
+    public static final String REFRESH_TOKEN = "refreshToken";
+    public static final String BASIC_ADDRESS_NAME = "기본 배송지";
 
     @Value("${JWT.access-token-expiration}")
-    private long AccessTokenExpiration;
+    private long accessTokenExpiration;
     @Value("${JWT.refresh-token-expiration}")
-    private long RefreshTokenExpiration;
+    private long refreshTokenExpiration;
 
     @Transactional(readOnly = true)
-    public void signUpDuplicationCheck(SignUpRequestDto signUpRequestDto){
+    public void signUpDuplicationCheck(SignUpRequestDto signUpRequestDto) {
         if (usersRepository.findByLoginId(signUpRequestDto.getLoginId()).isPresent()) {
             throw new SignUpDuplicationException(SIGN_IN_ID_DUPLICATION);
         }
@@ -62,7 +61,7 @@ public class UsersService {
     @Transactional(readOnly = true)
     public Users login(LoginRequestDto loginRequestDto) {
         Users users = usersRepository.findByLoginId(loginRequestDto.getLoginId())
-                .orElseThrow(() -> new LoginIdNotFoundException(LOGIN_ID_NOT_FOUND));
+            .orElseThrow(() -> new LoginIdNotFoundException(LOGIN_ID_NOT_FOUND));
 
         //비밀번호 검증
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -72,10 +71,10 @@ public class UsersService {
 
         //적합한 인증 provider 찾기
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        users.getUsername(),
-                        loginRequestDto.getPassword()
-                )
+            new UsernamePasswordAuthenticationToken(
+                users.getUsername(),
+                loginRequestDto.getPassword()
+            )
         );
 
         return users;
@@ -98,62 +97,60 @@ public class UsersService {
 
     //토큰 생성 후, redis에 저장
     public String createRefreshToken(Users users) {
-        String token = jwtTokenProvider.generateToken(users, RefreshTokenExpiration, "Refresh");
-        redisService.saveRefreshToken(users.getUuid(), token, RefreshTokenExpiration);
+        String token = jwtTokenProvider.generateToken(users, refreshTokenExpiration, "Refresh");
+        redisService.saveRefreshToken(users.getUuid(), token, refreshTokenExpiration);
         return BEARER + "%20" + token;
     }
 
     public String createAccessToken(Users users) {
-        return BEARER + " " + jwtTokenProvider.generateToken(users, AccessTokenExpiration, "Access");
+        return BEARER + " " + jwtTokenProvider.generateToken(users, accessTokenExpiration,
+            "Access");
     }
 
     public void createTokenAndCreateHeaders(HttpServletResponse response, Users users) {
 
         //refreshToken 확인 후, 있을 시, Delete 처리
-        if(!redisService.getRefreshToken(users.getUuid()).isEmpty()){
-            log.info("RefreshToken is not Empty={}", redisService.getRefreshToken(users.getUuid()));
+        if (Boolean.TRUE.equals(redisService.isRefreshTokenExist(users.getUuid()))) {
+            log.info("Delete Token is Complete={}", redisService.getRefreshToken(users.getUuid()));
             redisService.deleteRefreshToken(users.getUuid());
         }
 
         String accessToken = createAccessToken(users);
         String refreshToken = createRefreshToken(users);
 
-        response.addHeader(AcessToken, accessToken);
-        Cookie cookie = new Cookie(RefreshToken, refreshToken);
+        doResponseCookieAndHeader(response, refreshToken, accessToken);
+    }
+
+    private void doResponseCookieAndHeader(
+        HttpServletResponse response, String refreshToken, String accessToken) {
+        response.addHeader(ACCESS_TOKEN, accessToken);
+        Cookie cookie = new Cookie(REFRESH_TOKEN, refreshToken);
         cookie.setSecure(true);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
-        cookie.setMaxAge((int)RefreshTokenExpiration);
+        cookie.setMaxAge((int) refreshTokenExpiration);
         response.addCookie(cookie);
     }
 
-    public Users CheckRefreshTokenValidation(String refreshToken, String UUID){
+    public Users checkRefreshTokenValidation(String givenRefreshToken, String uuid) {
 
         //Token 값 자체 유효성 검사
-        if (refreshToken == null || !refreshToken.startsWith(BEARER + " ")) {
+        if (givenRefreshToken == null || !givenRefreshToken.startsWith(BEARER + " ")) {
             throw new JwtTokenValidationException(ErrorStatus.REISSUE_TOKEN_FAIL);
         }
 
-        //Token 값 내부 uuid 추출 후, 유효성 검사
-        String jwt = refreshToken.substring(7);
-        String findUuid;
-        try{
-            findUuid = jwtTokenProvider.validateAndGetUserUuid(jwt);
-        }catch(Exception e){
-            log.info("Token 내, UUID 추출 실패");
+        String jwt = givenRefreshToken.substring(7);
+
+        try {
+            String findRefreshToken = redisService.getRefreshToken(uuid);
+            if (!findRefreshToken.matches(jwt)) {
+                throw new JwtTokenValidationException(ErrorStatus.REISSUE_TOKEN_FAIL);
+            }
+
+            return usersRepository.findByUuid(uuid)
+                .orElseThrow(() -> new JwtTokenValidationException(ErrorStatus.REISSUE_TOKEN_FAIL));
+        } catch (Exception e) {
             throw new JwtTokenValidationException(ErrorStatus.REISSUE_TOKEN_FAIL);
         }
-        if(!findUuid.equals(UUID)){
-            log.info("추출한 UUID와 BODY로 받은 UUID 값이 다릅니다.");
-            throw new JwtTokenValidationException(ErrorStatus.REISSUE_TOKEN_FAIL);
-        }
-
-        //todo: 내가 가지고 있는 refresh token과 일치 하는지 확인
-        String findRefreshToken = redisService.getRefreshToken(UUID);
-        log.info("Redis Finded Refresh Token={}", findRefreshToken);
-        if(findRefreshToken.isEmpty()) throw new JwtTokenValidationException(ErrorStatus.REISSUE_TOKEN_FAIL);
-
-        //Uuid 토대로 users 추출
-        return usersRepository.findByUuid(findUuid).orElseThrow(()->new JwtTokenValidationException(ErrorStatus.REISSUE_TOKEN_FAIL));
     }
 }

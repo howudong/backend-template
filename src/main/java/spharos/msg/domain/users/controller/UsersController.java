@@ -37,7 +37,7 @@ public class UsersController {
 
     @Operation(summary = "로그인", description = "통합회원 로그인", tags = {"User Login"})
     @PostMapping("login/union")
-    public ApiResponse loginUnion(
+    public ApiResponse<?> loginUnion(
         @RequestBody LoginRequestDto loginRequestDto,
         HttpServletResponse response
     ) {
@@ -48,7 +48,7 @@ public class UsersController {
 
     @Operation(summary = "로그인", description = "간편회원 로그인", tags = {"User Login"})
     @PostMapping("/login/easy")
-    public ApiResponse loginEasy(
+    public ApiResponse<?> loginEasy(
         @RequestBody LoginRequestDto loginRequestDto) {
         //todo : 간편 로그인 구현
         return null;
