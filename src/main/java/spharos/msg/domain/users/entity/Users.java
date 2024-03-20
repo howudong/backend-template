@@ -51,6 +51,7 @@ public class Users extends BaseEntity implements UserDetails {
     @Size(min = 2, max = 50)
     private String userName;
 
+    @Column(columnDefinition = "bigint default 0")
     private Long baseAddressId;
 
     @OneToMany(mappedBy = "users")
