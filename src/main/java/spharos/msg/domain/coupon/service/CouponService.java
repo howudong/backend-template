@@ -11,6 +11,7 @@ import spharos.msg.domain.users.entity.Users;
 import spharos.msg.domain.users.repository.UsersCouponRepository;
 import spharos.msg.domain.users.repository.UsersRepository;
 import spharos.msg.global.api.ApiResponse;
+import spharos.msg.global.api.code.status.ErrorStatus;
 import spharos.msg.global.api.code.status.SuccessStatus;
 
 import java.time.LocalDateTime;
@@ -37,6 +38,17 @@ public class CouponService {
     public ApiResponse<?> downloadCoupon(String userUuid, Long couponId) {
         Coupon coupon = couponRepository.findById(couponId).orElseThrow();
         Users users = usersRepository.findByUuid(userUuid).orElseThrow();
+
+        for(UserCoupon userCoupon:usersCouponRepository.findByUsers(users)){
+            if(userCoupon.getCoupon().getId().equals(couponId)){
+                if(userCoupon.getIsCouponUsed()){
+                    return ApiResponse.onFailure(ErrorStatus.ALREADY_USED_COUPON,null);
+                }else{
+                    return ApiResponse.onFailure(ErrorStatus.ALREADY_HAD_COUPON,null);
+                }
+            }
+        }
+
         UserCoupon userCoupon = UserCoupon.builder()
                 .isCouponUsed(false)
                 .users(users)
