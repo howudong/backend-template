@@ -22,7 +22,6 @@ public class UserCoupon extends BaseEntity {
     @NotNull
     private Boolean isCouponUsed;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private Users users;

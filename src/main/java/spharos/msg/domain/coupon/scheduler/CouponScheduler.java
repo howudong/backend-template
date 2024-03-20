@@ -9,7 +9,7 @@ import spharos.msg.domain.coupon.service.CouponService;
 @RequiredArgsConstructor
 public class CouponScheduler {
     private final CouponService couponService;
-    @Scheduled()
+    @Scheduled(cron = "0 0 0 * * *")    //매일 00시
     public void deleteExpiredCoupon(){
         couponService.deleteExpiredCoupon();
     }

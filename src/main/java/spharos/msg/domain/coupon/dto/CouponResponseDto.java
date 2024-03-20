@@ -14,7 +14,7 @@ public class CouponResponseDto {
     private Long couponId;
     private BigDecimal couponDiscountRate;
     private String couponName;
-    private Integer couponExpiration;
+    private LocalDateTime couponExpiration;
 
     public CouponResponseDto(Coupon coupon){
         this.couponId = coupon.getId();

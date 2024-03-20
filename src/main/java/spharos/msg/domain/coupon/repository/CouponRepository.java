@@ -7,5 +7,5 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface CouponRepository extends JpaRepository<Coupon,Long> {
-    List<Coupon> findByCreatedAtBefore(LocalDateTime expireDate);
+    List<Coupon> findByCouponExpirationBefore(LocalDateTime expireDate);
 }
