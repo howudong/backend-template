@@ -60,8 +60,8 @@ public class CouponService {
 
     @Transactional
     public void deleteExpiredCoupon() {
-        LocalDateTime currentDate = LocalDateTime.now(); //오늘 3월 20일 00시에 실행->currentDate==3월20일 00시
-        List<Coupon> couponToDelete = couponRepository.findByCouponExpirationBefore(currentDate);//3월 20일 23시59짜리 삭제
+        LocalDateTime currentDate = LocalDateTime.now();
+        List<Coupon> couponToDelete = couponRepository.findByCouponExpirationBefore(currentDate);
         couponRepository.deleteAll(couponToDelete);
     }
 }
