@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.util.Collection;
 import java.util.List;
 
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,6 +18,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import spharos.msg.domain.users.dto.SignUpRequestDto;
 import spharos.msg.global.entity.BaseEntity;
 
 @Entity
@@ -51,18 +53,31 @@ public class Users extends BaseEntity implements UserDetails {
     @Size(min = 2, max = 50)
     private String userName;
 
+    public static Users usersConverter(SignUpRequestDto signUpRequestDto){
+        signUpRequestDto.setPassword(hashPassword(signUpRequestDto.getPassword()));
+        return Users
+            .builder()
+            .loginId(signUpRequestDto.getLoginId())
+            .password(signUpRequestDto.getPassword())
+            .userName(signUpRequestDto.getUsername())
+            .email(signUpRequestDto.getEmail())
+            .phoneNumber(signUpRequestDto.getPhoneNumber())
+            .uuid(UUID.randomUUID().toString())
+            .build();
+    }
+
     @Override
     public String toString() {
         return "Users{" +
-                "id=" + id +
-                ", loginId='" + loginId + '\'' +
-                ", uuid='" + uuid + '\'' +
-                ", password='" + password + '\'' +
-                '}';
+            "id=" + id +
+            ", loginId='" + loginId + '\'' +
+            ", uuid='" + uuid + '\'' +
+            ", password='" + password + '\'' +
+            '}';
     }
 
-    public void hashPassword(String password) {
-        this.password = new BCryptPasswordEncoder().encode(password);
+    public static String hashPassword(String password) {
+        return new BCryptPasswordEncoder().encode(password);
     }
 
     @Override

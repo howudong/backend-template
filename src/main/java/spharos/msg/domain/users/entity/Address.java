@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import spharos.msg.domain.users.dto.NewAddressRequestDto;
 
 @Entity
 @Getter
@@ -14,6 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class Address {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "address_id")
@@ -39,4 +41,15 @@ public class Address {
     @JoinColumn(name = "user_id")
     private Users users;
 
+    public static Address addressConverter(NewAddressRequestDto newAddressRequestDto){
+        return Address
+            .builder()
+            .addressName(newAddressRequestDto.getAddressName())
+            .recipient(newAddressRequestDto.getRecipient())
+            .mobileNumber(newAddressRequestDto.getMobileNumber())
+            .addressPhoneNumber(newAddressRequestDto.getAddressPhoneNumber())
+            .address(newAddressRequestDto.getAddress())
+            .users(newAddressRequestDto.getUsers())
+            .build();
+    }
 }

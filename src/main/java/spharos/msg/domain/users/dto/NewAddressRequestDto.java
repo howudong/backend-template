@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import spharos.msg.domain.users.entity.Users;
+import spharos.msg.domain.users.service.UsersService;
 
 @Getter
 @Setter
@@ -19,4 +20,17 @@ public class NewAddressRequestDto {
     private String addressPhoneNumber;
     private String address;
     private Users users;
+
+    public static NewAddressRequestDto newAddressRequestConverter(
+        SignUpRequestDto signUpRequestDto, Users savedUser){
+        return NewAddressRequestDto
+            .builder()
+            .addressName(UsersService.BasicAddressName)
+            .recipient(signUpRequestDto.getUsername())
+            .mobileNumber(signUpRequestDto.getPhoneNumber())
+            .addressPhoneNumber(signUpRequestDto.getPhoneNumber())
+            .address(signUpRequestDto.getAddress())
+            .users(savedUser)
+            .build();
+    }
 }

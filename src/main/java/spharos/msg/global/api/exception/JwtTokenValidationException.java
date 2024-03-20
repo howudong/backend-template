@@ -8,6 +8,7 @@ import spharos.msg.global.api.dto.ErrorReasonDto;
 @Getter
 @RequiredArgsConstructor
 public class JwtTokenValidationException extends RuntimeException {
+    //todo : Exception common 처리. handler 에서 getErrorReason 활용하여 message 만 바꾸는 형식으로 처리.
 
     private final BaseErrorCode errorCode;
 

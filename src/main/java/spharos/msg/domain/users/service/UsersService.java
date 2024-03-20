@@ -42,15 +42,15 @@ public class UsersService {
     private final KakaoUsersService kakaoUsersService;
     private final AddressService addressService;
 
-    private final String BEARER = "Bearer";
-    private final String ACCESS_TOKEN = "accessToken";
-    private final String REFRESH_TOKEN = "refreshToken";
-    private final String BASIC_ADDRESS_NAME = "배송지";
+    public static final String BEARER = "Bearer";
+    public static final String AcessToken = "accessToken";
+    public static final String RefreshToken = "refreshToken";
+    public static final String BasicAddressName = "기본 배송지";
 
     @Value("${JWT.access-token-expiration}")
-    private long access_token_expiration;
+    private long AccessTokenExpiration;
     @Value("${JWT.refresh-token-expiration}")
-    private long refresh_token_expiration;
+    private long RefreshTokenExpiration;
 
     @Transactional(readOnly = true)
     public void signUpDuplicationCheck(SignUpRequestDto signUpRequestDto){
@@ -83,46 +83,28 @@ public class UsersService {
 
     @Transactional
     public void createUsers(SignUpRequestDto signUpRequestDto) {
-
-        UUID uuid = UUID.randomUUID();
-        Users users = Users.builder()
-                .loginId(signUpRequestDto.getLoginId())
-                .password(signUpRequestDto.getPassword())
-                .userName(signUpRequestDto.getUsername())
-                .email(signUpRequestDto.getEmail())
-                .phoneNumber(signUpRequestDto.getPhoneNumber())
-                .uuid(uuid.toString())
-                .build();
-
-        NewAddressRequestDto newAddressRequestDto = NewAddressRequestDto
-            .builder()
-            .addressName(BASIC_ADDRESS_NAME)
-            .recipient(signUpRequestDto.getUsername())
-            .mobileNumber(signUpRequestDto.getPhoneNumber())
-            .addressPhoneNumber(signUpRequestDto.getPhoneNumber())
-            .address(signUpRequestDto.getAddress())
-            .users(users)
-            .build();
-        addressService.createNewAddress(newAddressRequestDto);
-
-        users.hashPassword(signUpRequestDto.getPassword());
+        Users users = Users.usersConverter(signUpRequestDto);
         Users savedUser = usersRepository.save(users);
+        log.info("savedUsers = {}", savedUser);
 
-        if (signUpRequestDto.isEasy){
+        addressService.createNewAddress(
+            NewAddressRequestDto.newAddressRequestConverter(signUpRequestDto, savedUser));
+
+        if (Boolean.TRUE.equals(signUpRequestDto.getIsEasy())) {
             kakaoUsersService.createKakaoUsers(
-                KakaoSignUpRequestDto.builder().userId(savedUser.getId()).build());
+                KakaoSignUpRequestDto.kakaoSignUpRequestConverter(savedUser.getUuid()));
         }
     }
 
     //토큰 생성 후, redis에 저장
     public String createRefreshToken(Users users) {
-        String token = jwtTokenProvider.generateToken(users, refresh_token_expiration, "Refresh");
-        redisService.saveRefreshToken(users.getUuid(), token, refresh_token_expiration);
+        String token = jwtTokenProvider.generateToken(users, RefreshTokenExpiration, "Refresh");
+        redisService.saveRefreshToken(users.getUuid(), token, RefreshTokenExpiration);
         return BEARER + "%20" + token;
     }
 
     public String createAccessToken(Users users) {
-        return BEARER + " " + jwtTokenProvider.generateToken(users, access_token_expiration, "Access");
+        return BEARER + " " + jwtTokenProvider.generateToken(users, AccessTokenExpiration, "Access");
     }
 
     public void createTokenAndCreateHeaders(HttpServletResponse response, Users users) {
@@ -136,12 +118,12 @@ public class UsersService {
         String accessToken = createAccessToken(users);
         String refreshToken = createRefreshToken(users);
 
-        response.addHeader(ACCESS_TOKEN, accessToken);
-        Cookie cookie = new Cookie(REFRESH_TOKEN, refreshToken);
+        response.addHeader(AcessToken, accessToken);
+        Cookie cookie = new Cookie(RefreshToken, refreshToken);
         cookie.setSecure(true);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
-        cookie.setMaxAge((int) refresh_token_expiration);
+        cookie.setMaxAge((int)RefreshTokenExpiration);
         response.addCookie(cookie);
     }
 
@@ -172,7 +154,6 @@ public class UsersService {
         if(findRefreshToken.isEmpty()) throw new JwtTokenValidationException(ErrorStatus.REISSUE_TOKEN_FAIL);
 
         //Uuid 토대로 users 추출
-        Users users = usersRepository.findByUuid(findUuid).orElseThrow(()->new JwtTokenValidationException(ErrorStatus.REISSUE_TOKEN_FAIL));
-        return users;
+        return usersRepository.findByUuid(findUuid).orElseThrow(()->new JwtTokenValidationException(ErrorStatus.REISSUE_TOKEN_FAIL));
     }
 }

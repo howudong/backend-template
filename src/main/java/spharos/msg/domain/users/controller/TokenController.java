@@ -29,9 +29,9 @@ public class TokenController {
         @RequestBody ReissueRequestDto reissueRequestDto,
         @RequestHeader(name = "Authorization") String refreshToken,
         HttpServletResponse response
-    ){
-        //입력받은 Refresh Token의 유효성 검사
-        Users findUsers = usersService.CheckRefreshTokenValidation(refreshToken, reissueRequestDto.getUuid());
+    ) {
+        Users findUsers = usersService.CheckRefreshTokenValidation(refreshToken,
+            reissueRequestDto.getUuid());
 
         usersService.createTokenAndCreateHeaders(response, findUsers);
 
