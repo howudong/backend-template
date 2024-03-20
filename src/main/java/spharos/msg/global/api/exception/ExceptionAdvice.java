@@ -58,7 +58,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
      * Users Common Exception
      */
     @ExceptionHandler
-    public ResponseEntity<Object> userCommonException(UserCommonException exception,
+    public ResponseEntity<Object> userCommonException(UserException exception,
         WebRequest request) {
         ErrorReasonDto errorReasonDto = exception.getErrorReasonHttpStatus();
         ApiResponse<Object> responseBody = createResponseBody(
@@ -77,7 +77,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
      * JwtToken Common Exception
      */
     @ExceptionHandler
-    public ResponseEntity<Object> jwtTokenCommonException(JwtTokenCommonException exception,
+    public ResponseEntity<Object> jwtTokenCommonException(JwtTokenException exception,
         WebRequest request) {
         ErrorReasonDto errorReasonDto = exception.getErrorReasonHttpStatus();
         ApiResponse<Object> responseBody = createResponseBody(
