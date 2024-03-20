@@ -1,6 +1,7 @@
 package spharos.msg.domain.product.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,16 +16,18 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProductService {
 
     private final ProductRepository productRepository;
 
     //Home화면 상품 조회
     public ProductResponseDto.Home1 getHome1Products() {
+        log.info("getHome1Products 메서드 실행");
         //뷰티 상품들 조회
         List<Product> beautyProducts = productRepository.findProductsByCategoryName("뷰티");
         //랜덤 상품 조회
-        List<Product> randomProducts = productRepository.findRandomProducts(12);
+        List<Product> randomProducts = productRepository.findRandomProducts();
         //신선식품 상품 조회
         List<Product> foodProducts = productRepository.findProductsByCategoryName("신선식품");
 
@@ -35,6 +38,7 @@ public class ProductService {
             .collect(Collectors.toList());
 
         List<ProductInfoDto> randoms = randomProducts.stream()
+            .limit(12)
             .map(this::mapToProductInfoDto)
             .collect(Collectors.toList());
 

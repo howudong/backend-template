@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 @Entity
 @Getter
 public class Product extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id")
@@ -51,6 +52,4 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "vendor_id")
     private Vendor vendor;
 
-    @OneToMany(mappedBy = "product")
-    private ArrayList<Likes> likesList;
 }

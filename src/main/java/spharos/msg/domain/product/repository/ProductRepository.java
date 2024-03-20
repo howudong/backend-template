@@ -1,6 +1,7 @@
 package spharos.msg.domain.product.repository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,7 +22,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     //랜덤 상품 반환
     @Query("SELECT p FROM Product p ORDER BY RAND()")
-    List<Product> findRandomProducts(@Param("limit") int limit);
+    List<Product> findRandomProducts();
 
     //패션 상품 반환
     @Query("SELECT cp.product FROM CategoryProduct cp WHERE cp.category.id IN (SELECT c.id FROM Category c WHERE c.categoryName = '패션잡화' OR c.parent.categoryName = '패션잡화')")
