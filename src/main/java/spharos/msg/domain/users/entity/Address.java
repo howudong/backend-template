@@ -3,11 +3,19 @@ package spharos.msg.domain.users.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import spharos.msg.domain.users.dto.NewAddressRequestDto;
 
 @Entity
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Address {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "address_id")
@@ -29,8 +37,19 @@ public class Address {
     @NotBlank
     private String address;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private Users users;
 
+    public static Address NewAddressDtoToEntity(NewAddressRequestDto newAddressRequestDto) {
+        return Address
+            .builder()
+            .addressName(newAddressRequestDto.getAddressName())
+            .recipient(newAddressRequestDto.getRecipient())
+            .mobileNumber(newAddressRequestDto.getMobileNumber())
+            .addressPhoneNumber(newAddressRequestDto.getAddressPhoneNumber())
+            .address(newAddressRequestDto.getAddress())
+            .users(newAddressRequestDto.getUsers())
+            .build();
+    }
 }

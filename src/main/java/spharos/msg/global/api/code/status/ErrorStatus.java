@@ -10,7 +10,8 @@ import spharos.msg.global.api.dto.ErrorReasonDto;
 @RequiredArgsConstructor
 public enum ErrorStatus implements BaseErrorCode {
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMMON500", "서버 에러 입니다"),
-    INVALID_PARAMETER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMMON501", "서버 에러, 유효하지 않은 매개변수입니다."),
+    INVALID_PARAMETER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMMON501",
+        "서버 에러, 유효하지 않은 매개변수입니다."),
 
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "COMMON400", "잘못된 요청입니다."),
     BAD_GATEWAY(HttpStatus.BAD_GATEWAY, "COMMON404", "잘못된 api 주소입니다."),
@@ -25,6 +26,7 @@ public enum ErrorStatus implements BaseErrorCode {
     LOGIN_ID_NOT_FOUND(HttpStatus.BAD_REQUEST, "USER403", "통합 로그인 실패"),
     LOGIN_ID_PW_VALIDATION(HttpStatus.BAD_REQUEST, "USER404", "통합 로그인 실패"),
     TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, "USER404", "토큰이 만료되었습니다."),
+    REISSUE_TOKEN_FAIL(HttpStatus.BAD_REQUEST, "USER405", "토큰 재발급 실패"),
 
     NOT_EXIST_PRODUCT_OPTION(HttpStatus.NOT_FOUND,"PRODUCT600","존재하지 않는 상품옵션 입니다."),
     NOT_EXIST_PRODUCT(HttpStatus.NOT_FOUND,"PRODUCT601","존재하지 않는 상품입니다."),
@@ -42,17 +44,17 @@ public enum ErrorStatus implements BaseErrorCode {
     @Override
     public ErrorReasonDto getReason() {
         return ErrorReasonDto.builder()
-                .message(message)
-                .status(status)
-                .build();
+            .message(message)
+            .status(status)
+            .build();
     }
 
     @Override
     public ErrorReasonDto getReasonHttpStatus() {
         return ErrorReasonDto.builder()
-                .message(message)
-                .status(status)
-                .httpStatus(httpStatus)
-                .build();
+            .message(message)
+            .status(status)
+            .httpStatus(httpStatus)
+            .build();
     }
 }

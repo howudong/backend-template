@@ -55,50 +55,41 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
     }
 
     /**
-     * 회원 가입 시, Login Id 중복 시,
+     * Users Common Exception
      */
     @ExceptionHandler
-    public ResponseEntity<Object> duplicationIdException(SignUpDuplicationException e,
+    public ResponseEntity<Object> usersException(UsersException exception,
         WebRequest request) {
-        ErrorStatus errorStatus = ErrorStatus.SIGN_IN_ID_DUPLICATION;
-        ApiResponse<Object> responseBody = createResponseBody(errorStatus, null);
+        ErrorReasonDto errorReasonDto = exception.getErrorReasonHttpStatus();
+        ApiResponse<Object> responseBody = createResponseBody(
+            errorReasonDto.getStatus(),
+            errorReasonDto.getMessage(),
+            null);
         return super.handleExceptionInternal(
-            e, responseBody, HttpHeaders.EMPTY, errorStatus.getHttpStatus(), request);
+            exception,
+            responseBody,
+            HttpHeaders.EMPTY,
+            errorReasonDto.getHttpStatus(),
+            request);
     }
 
     /**
-     * 로그인 시, 잘못된 아이디로 로그인 시도 시,
+     * JwtToken Common Exception
      */
     @ExceptionHandler
-    public ResponseEntity<Object> LoginIdNotFoundException(LoginIdNotFoundException e,
+    public ResponseEntity<Object> jwtTokenException(JwtTokenException exception,
         WebRequest request) {
-        ErrorStatus errorStatus = ErrorStatus.LOGIN_ID_NOT_FOUND;
-        ApiResponse<Object> responseBody = createResponseBody(errorStatus, null);
+        ErrorReasonDto errorReasonDto = exception.getErrorReasonHttpStatus();
+        ApiResponse<Object> responseBody = createResponseBody(
+            errorReasonDto.getStatus(),
+            errorReasonDto.getMessage(),
+            null);
         return super.handleExceptionInternal(
-            e, responseBody, HttpHeaders.EMPTY, errorStatus.getHttpStatus(), request);
-    }
-
-    /**
-     * 로그인 시, Id<->Pw 매칭 안될 시,
-     */
-    @ExceptionHandler
-    public ResponseEntity<Object> LoginPwValidationEx(LoginPwValidationException e,
-        WebRequest request) {
-        ErrorStatus errorStatus = ErrorStatus.LOGIN_ID_NOT_FOUND;
-        ApiResponse<Object> responseBody = createResponseBody(errorStatus, null);
-        return super.handleExceptionInternal(
-            e, responseBody, HttpHeaders.EMPTY, errorStatus.getHttpStatus(), request);
-    }
-
-    /**
-     * Client->Server Token 담아서 호출 시, Token 만료 될 시,
-     */
-    @ExceptionHandler
-    public ResponseEntity<Object> TokenIsExpired(JwtTokenIsExpired e, WebRequest request) {
-        ErrorStatus errorStatus = ErrorStatus.TOKEN_EXPIRED;
-        ApiResponse<Object> responseBody = createResponseBody(errorStatus, null);
-        return super.handleExceptionInternal(
-            e, responseBody, HttpHeaders.EMPTY, errorStatus.getHttpStatus(), request);
+            exception,
+            responseBody,
+            HttpHeaders.EMPTY,
+            errorReasonDto.getHttpStatus(),
+            request);
     }
 
     /*
