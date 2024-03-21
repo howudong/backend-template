@@ -21,15 +21,16 @@ public class OrderResponse {
         private String address;
         private Long orderId;
         private String phoneNumber;
-        List<ProductPrice> productPrices;
+        private Long totalPrice;
+        List<PriceInfo> priceInfos;
     }
 
     @Getter
     @AllArgsConstructor
-    public static class ProductPrice {
+    public static class PriceInfo {
 
-        private Long deliveryFee;
-        private Long productPrice;
+        private int deliveryFee;
+        private int productPrice;
         private Long salePrice;
     }
 }

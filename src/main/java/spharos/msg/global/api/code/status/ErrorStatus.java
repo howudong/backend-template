@@ -30,6 +30,7 @@ public enum ErrorStatus implements BaseErrorCode {
     INVALID_ORDER(HttpStatus.BAD_REQUEST, "ORDER400", "잘못된 주문 요청입니다"),
     ORDER_PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "ORDER401", "주문 상품을 찾을 수 없습니다"),
     ORDER_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "ORDER404", "주문 정보를 찾을 수 없습니다."),
+    ORDER_ADDRESS_NOT_FOUND(HttpStatus.NOT_FOUND, "ORDER405", "주소 정보를 찾을 수 없습니다"),
     NOT_EXIST_PRODUCT_OPTION(HttpStatus.NOT_FOUND, "PRODUCT600", "존재하지 않는 상품옵션 입니다."),
     NOT_EXIST_PRODUCT(HttpStatus.NOT_FOUND, "PRODUCT601", "존재하지 않는 상품입니다."),
 

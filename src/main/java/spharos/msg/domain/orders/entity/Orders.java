@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 import spharos.msg.global.entity.BaseEntity;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -20,6 +21,7 @@ import spharos.msg.global.entity.BaseEntity;
 @Entity
 @Getter
 @Builder
+@DynamicInsert
 public class Orders extends BaseEntity {
 
     @Id
@@ -27,8 +29,7 @@ public class Orders extends BaseEntity {
     @Column(name = "order_id")
     private Long id;
 
-    @NotNull
-    @Column(columnDefinition = "bigint default 0")
+    @Column(columnDefinition = "bigint default 0", nullable = false)
     private Long totalAmount;
 
     @NotNull
