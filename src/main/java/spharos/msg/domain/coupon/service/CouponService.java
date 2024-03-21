@@ -43,9 +43,8 @@ public class CouponService {
             if(userCoupon.getCoupon().getId().equals(couponId)){
                 if(userCoupon.getIsCouponUsed()){
                     return ApiResponse.onFailure(ErrorStatus.ALREADY_USED_COUPON,null);
-                }else{
-                    return ApiResponse.onFailure(ErrorStatus.ALREADY_HAD_COUPON,null);
                 }
+                return ApiResponse.onFailure(ErrorStatus.ALREADY_HAD_COUPON,null);
             }
         }
 
