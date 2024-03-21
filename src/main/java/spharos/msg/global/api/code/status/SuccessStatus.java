@@ -25,8 +25,13 @@ public enum SuccessStatus implements BaseCode {
 
     LIKES_SUCCESS(HttpStatus.CREATED,"LIKES401","좋아요 등록 성공"),
     LIKES_DELETE_SUCCESS(HttpStatus.CREATED,"LIKES402","좋아요 해제 성공"),
-    LIKES_LIST_GET_SUCCESS(HttpStatus.CREATED,"LIKES403","좋아요 목록 조회 성공")
-    ;
+    LIKES_LIST_GET_SUCCESS(HttpStatus.CREATED,"LIKES403","좋아요 목록 조회 성공"),
+
+    COUPON_LIST_GET_SUCCESS(HttpStatus.OK,"COUPON501","다운 가능 쿠폰 목록 조회 성공"),
+    COUPON_DOWNLOAD_SUCCESS(HttpStatus.OK,"COUPON502","쿠폰 다운로드 성공"),
+    COUPON_GET_USERS_SUCCESS(HttpStatus.OK,"COUPON503","보유 쿠폰 목록 조회 성공"),
+
+            ;
 
     private final HttpStatus httpStatus;
     private final String status;
