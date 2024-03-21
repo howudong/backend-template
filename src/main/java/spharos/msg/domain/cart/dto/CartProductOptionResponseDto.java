@@ -12,7 +12,6 @@ public class CartProductOptionResponseDto {
     private String optionColor;
     private String optionSize;
     private String optionEtc;
-
     public CartProductOptionResponseDto(ProductOption productOption){
         this.productOptionId = productOption.getProductOptionId();
         this.productStock = productOption.getStock();

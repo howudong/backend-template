@@ -7,8 +7,7 @@ import spharos.msg.global.api.dto.ErrorReasonDto;
 
 @Getter
 @RequiredArgsConstructor
-public class SignUpDuplicationException extends RuntimeException {
-
+public class JwtTokenException extends RuntimeException{
     private final BaseErrorCode errorCode;
 
     public ErrorReasonDto getErrorReason() {
@@ -19,3 +18,4 @@ public class SignUpDuplicationException extends RuntimeException {
         return errorCode.getReasonHttpStatus();
     }
 }
+

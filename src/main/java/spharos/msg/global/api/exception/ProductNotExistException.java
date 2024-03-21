@@ -7,7 +7,7 @@ import spharos.msg.global.api.dto.ErrorReasonDto;
 
 @Getter
 @RequiredArgsConstructor
-public class LoginIdNotFoundException extends RuntimeException {
+public class ProductNotExistException extends RuntimeException {
 
     private final BaseErrorCode errorCode;
 

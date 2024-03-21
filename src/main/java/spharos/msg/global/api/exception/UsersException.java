@@ -5,11 +5,9 @@ import lombok.RequiredArgsConstructor;
 import spharos.msg.global.api.code.BaseErrorCode;
 import spharos.msg.global.api.dto.ErrorReasonDto;
 
-
 @Getter
 @RequiredArgsConstructor
-public class JwtTokenIsExpired extends RuntimeException {
-
+public class UsersException extends RuntimeException{
     private final BaseErrorCode errorCode;
 
     public ErrorReasonDto getErrorReason() {
@@ -20,3 +18,4 @@ public class JwtTokenIsExpired extends RuntimeException {
         return errorCode.getReasonHttpStatus();
     }
 }
+

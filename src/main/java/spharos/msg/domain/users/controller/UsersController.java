@@ -37,9 +37,9 @@ public class UsersController {
 
     @Operation(summary = "로그인", description = "통합회원 로그인", tags = {"User Login"})
     @PostMapping("login/union")
-    public ApiResponse loginUnion(
-            @RequestBody LoginRequestDto loginRequestDto,
-            HttpServletResponse response
+    public ApiResponse<?> loginUnion(
+        @RequestBody LoginRequestDto loginRequestDto,
+        HttpServletResponse response
     ) {
         Users loginUsers = usersService.login(loginRequestDto);
         usersService.createTokenAndCreateHeaders(response, loginUsers);
@@ -48,8 +48,8 @@ public class UsersController {
 
     @Operation(summary = "로그인", description = "간편회원 로그인", tags = {"User Login"})
     @PostMapping("/login/easy")
-    public ApiResponse loginEasy(
-            @RequestBody LoginRequestDto loginRequestDto) {
+    public ApiResponse<?> loginEasy(
+        @RequestBody LoginRequestDto loginRequestDto) {
         //todo : 간편 로그인 구현
         return null;
     }
