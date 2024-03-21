@@ -8,8 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import spharos.msg.domain.cart.dto.CartProductRequestDto;
 import spharos.msg.domain.cart.service.CartProductService;
-import spharos.msg.domain.users.entity.Users;
-import spharos.msg.domain.users.repository.UserRepository;
 import spharos.msg.global.api.ApiResponse;
 
 @RestController

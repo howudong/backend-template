@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import spharos.msg.global.api.code.BaseCode;
+import spharos.msg.global.api.code.BaseErrorCode;
 
 @JsonPropertyOrder({"isSuccess", "status", "data", "message"})
 @Getter
@@ -35,4 +36,12 @@ public class ApiResponse<T> {
     public static <T> ApiResponse<T> onFailure(String status, String message, T data) {
         return new ApiResponse<>(false, status, message, data);
     }
+    public static <T> ApiResponse<T> onFailure(BaseErrorCode errorCode, T data) {
+        return new ApiResponse<>(
+                false,
+                errorCode.getReasonHttpStatus().getStatus(),
+                errorCode.getReasonHttpStatus().getMessage(),
+                data);
+    }
+
 }
