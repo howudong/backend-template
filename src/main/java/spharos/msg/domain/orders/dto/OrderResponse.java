@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OrderResponse {
@@ -29,6 +30,7 @@ public class OrderResponse {
     @AllArgsConstructor
     @Builder
     @Getter
+    @ToString
     public static class OrderUserDto {
 
         private String loginId;
