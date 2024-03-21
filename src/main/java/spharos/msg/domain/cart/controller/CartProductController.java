@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import spharos.msg.domain.cart.dto.CartProductQuantityDto;
 import spharos.msg.domain.cart.dto.CartProductRequestDto;
 import spharos.msg.domain.cart.service.CartProductService;
 import spharos.msg.global.api.ApiResponse;
@@ -22,10 +23,10 @@ public class CartProductController {
     @PostMapping("/option/{productOptionId}")
     public ApiResponse<?> addCart(
             @PathVariable Long productOptionId,
-            @RequestBody CartProductRequestDto cartProductRequestDto,
+            @RequestBody CartProductQuantityDto cartProductQuantity,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
-        return cartProductService.addCart(productOptionId, cartProductRequestDto, userDetails.getUsername());
+        return cartProductService.addCartProduct(productOptionId, cartProductQuantity, userDetails.getUsername());
     }
 
     @Operation(summary = "장바구니 조회",
