@@ -95,7 +95,7 @@ public class OrderService {
             getDiscountPrice(product));
     }
 
-    private long getDiscountPrice(Product product) {
+    private Long getDiscountPrice(Product product) {
         return (product.getProductPrice() *
             (100 - product.getDiscountRate().longValue())) / 100;
     }
