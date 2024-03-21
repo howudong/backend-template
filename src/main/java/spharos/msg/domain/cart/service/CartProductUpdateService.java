@@ -3,7 +3,6 @@ package spharos.msg.domain.cart.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import spharos.msg.domain.cart.dto.CartProductCheckDto;
 import spharos.msg.domain.cart.dto.CartProductResponseDto;
 import spharos.msg.domain.cart.entity.CartProduct;
 import spharos.msg.domain.cart.repository.CartProductRepository;
@@ -54,17 +53,25 @@ public class CartProductUpdateService {
     }
 
     @Transactional
-    public ApiResponse<?> checkCartProduct(CartProductCheckDto cartProductCheckDto, Long cartId, String userUuid) {
+    public ApiResponse<?> checkCartProduct(Long cartId, String userUuid) {
         CartProduct cartProduct = getCartProduct(cartId);
-
-        return null;
+        if (userCheck(cartProduct, userUuid)) {
+            cartProduct.checkCartProduct();
+            return ApiResponse.of(SuccessStatus.CART_PRODUCT_UPDATE_SUCCESS,
+                    new CartProductResponseDto(cartProduct));
+        }
+        return ApiResponse.onFailure(ErrorStatus.NOT_CART_OWNER, null);
     }
 
     @Transactional
-    public ApiResponse<?> notCheckCartProduct(CartProductCheckDto cartProductCheckDto, Long cartId, String userUuid) {
+    public ApiResponse<?> notCheckCartProduct(Long cartId, String userUuid) {
         CartProduct cartProduct = getCartProduct(cartId);
-
-        return null;
+        if (userCheck(cartProduct, userUuid)) {
+            cartProduct.notCheckCartProduct();
+            return ApiResponse.of(SuccessStatus.CART_PRODUCT_UPDATE_SUCCESS,
+                    new CartProductResponseDto(cartProduct));
+        }
+        return ApiResponse.onFailure(ErrorStatus.NOT_CART_OWNER, null);
     }
 
     private boolean userCheck(CartProduct cartProduct, String userUuid) {

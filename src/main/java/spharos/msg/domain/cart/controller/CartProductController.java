@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import spharos.msg.domain.cart.dto.CartProductCheckDto;
 import spharos.msg.domain.cart.dto.CartProductQuantityDto;
 import spharos.msg.domain.cart.service.CartProductService;
 import spharos.msg.domain.cart.service.CartProductUpdateService;
@@ -72,21 +71,19 @@ private final CartProductUpdateService cartProductUpdateService;
             description = "장바구니에 담긴 상품을 체크합니다.")
     @PatchMapping("/{cartId}")
     public ApiResponse<?> checkCartProduct(
-            @RequestBody CartProductCheckDto cartProductCheckDto,
             @PathVariable Long cartId,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
-        return cartProductUpdateService.checkCartProduct(cartProductCheckDto,cartId, userDetails.getUsername());
+        return cartProductUpdateService.checkCartProduct(cartId, userDetails.getUsername());
     }
     @Operation(summary = "장바구니 체크 수정",
             description = "장바구니에 담긴 상품을 체크해제합니다.")
     @PatchMapping("/{cartId}")
     public ApiResponse<?> notCheckCartProduct(
-            @RequestBody CartProductCheckDto cartProductCheckDto,
             @PathVariable Long cartId,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
-        return cartProductUpdateService.notCheckCartProduct(cartProductCheckDto, cartId, userDetails.getUsername());
+        return cartProductUpdateService.notCheckCartProduct(cartId, userDetails.getUsername());
     }
 
 
