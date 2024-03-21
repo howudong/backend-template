@@ -22,7 +22,7 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     //Home화면 상품 조회
-    public ProductResponseDto.Home1 getHome1Products() {
+    public ProductResponseDto.HomeCosmeRandomFood getHomeCosmeRandomFood() {
         log.info("getHome1Products 메서드 실행");
         //뷰티 상품들 조회
         List<Product> beautyProducts = productRepository.findProductsByCategoryName("뷰티");
@@ -47,14 +47,14 @@ public class ProductService {
             .map(this::mapToProductInfoDto)
             .collect(Collectors.toList());
 
-        return ProductResponseDto.Home1.builder()
+        return ProductResponseDto.HomeCosmeRandomFood.builder()
             .cosmeticList(beautys)
             .randomList(randoms)
             .foodList(foods)
             .build();
     }
 
-    public ProductResponseDto.Home2 getHome2Products(int index) {
+    public ProductResponseDto.HomeFashion getHomeFashion(int index) {
         //pageble 객체 생성
         Pageable pageable = PageRequest.of(index, 16);
         //index 기반 패션 상품들 조회
@@ -66,7 +66,7 @@ public class ProductService {
             .map(this::mapToProductInfoDto)
             .collect(Collectors.toList());
 
-        return ProductResponseDto.Home2.builder()
+        return ProductResponseDto.HomeFashion.builder()
             .fashionList(fashions)
             .build();
     }

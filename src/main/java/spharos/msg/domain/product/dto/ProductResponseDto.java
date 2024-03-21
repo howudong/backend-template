@@ -1,15 +1,17 @@
 package spharos.msg.domain.product.dto;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import java.util.List;
+import lombok.Setter;
 
 @Data
+@Setter(AccessLevel.NONE)
 public class ProductResponseDto {
 
     @Builder
-    @Data
-    public static class Home1 {
+    public static class HomeCosmeRandomFood {
 
         private List<ProductInfoDto> cosmeticList;
         private List<ProductInfoDto> randomList;
@@ -17,8 +19,7 @@ public class ProductResponseDto {
     }
 
     @Builder
-    @Data
-    public static class Home2 {
+    public static class HomeFashion {
 
         private List<ProductInfoDto> fashionList;
     }
