@@ -22,7 +22,7 @@ public class NewAddressRequestDto {
     private String address;
     private Users users;
 
-    public static NewAddressRequestDto newAddressRequestConverter(
+    public static NewAddressRequestDto signUpDtoToDto(
         SignUpRequestDto signUpRequestDto, Users savedUser) {
         return NewAddressRequestDto
             .builder()

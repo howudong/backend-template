@@ -41,7 +41,7 @@ public class Address {
     @JoinColumn(name = "user_id")
     private Users users;
 
-    public static Address addressConverter(NewAddressRequestDto newAddressRequestDto) {
+    public static Address NewAddressDtoToEntity(NewAddressRequestDto newAddressRequestDto) {
         return Address
             .builder()
             .addressName(newAddressRequestDto.getAddressName())

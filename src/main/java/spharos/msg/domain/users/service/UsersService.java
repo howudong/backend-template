@@ -23,7 +23,7 @@ import spharos.msg.domain.users.entity.Users;
 import spharos.msg.domain.users.repository.UsersRepository;
 import spharos.msg.global.api.code.status.ErrorStatus;
 import spharos.msg.global.api.exception.JwtTokenException;
-import spharos.msg.global.api.exception.UserException;
+import spharos.msg.global.api.exception.UsersException;
 import spharos.msg.global.redis.RedisService;
 import spharos.msg.global.security.JwtTokenProvider;
 
@@ -52,19 +52,19 @@ public class UsersService {
     @Transactional(readOnly = true)
     public void signUpDuplicationCheck(SignUpRequestDto signUpRequestDto) {
         if (usersRepository.findByLoginId(signUpRequestDto.getLoginId()).isPresent()) {
-            throw new UserException(SIGN_IN_ID_DUPLICATION);
+            throw new UsersException(SIGN_IN_ID_DUPLICATION);
         }
     }
 
     @Transactional(readOnly = true)
     public Users login(LoginRequestDto loginRequestDto) {
         Users users = usersRepository.findByLoginId(loginRequestDto.getLoginId())
-            .orElseThrow(() -> new UserException(LOGIN_ID_NOT_FOUND));
+            .orElseThrow(() -> new UsersException(LOGIN_ID_NOT_FOUND));
 
         //비밀번호 검증
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if (!encoder.matches(loginRequestDto.getPassword(), users.getPassword())) {
-            throw new UserException(LOGIN_ID_PW_VALIDATION);
+            throw new UsersException(LOGIN_ID_PW_VALIDATION);
         }
 
         //적합한 인증 provider 찾기
@@ -80,16 +80,16 @@ public class UsersService {
 
     @Transactional
     public void createUsers(SignUpRequestDto signUpRequestDto) {
-        Users users = Users.usersConverter(signUpRequestDto);
+        Users users = Users.signUpDtoToEntity(signUpRequestDto);
         Users savedUser = usersRepository.save(users);
         log.info("savedUsers = {}", savedUser);
 
         addressService.createNewAddress(
-            NewAddressRequestDto.newAddressRequestConverter(signUpRequestDto, savedUser));
+            NewAddressRequestDto.signUpDtoToDto(signUpRequestDto, savedUser));
 
         if (Boolean.TRUE.equals(signUpRequestDto.getIsEasy())) {
             kakaoUsersService.createKakaoUsers(
-                KakaoSignUpRequestDto.kakaoSignUpRequestConverter(savedUser.getUuid()));
+                KakaoSignUpRequestDto.uuidToDto(savedUser.getUuid()));
         }
     }
 

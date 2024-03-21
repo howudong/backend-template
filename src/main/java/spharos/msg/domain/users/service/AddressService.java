@@ -18,6 +18,6 @@ public class AddressService {
     @Transactional
     public void createNewAddress(NewAddressRequestDto newAddressRequestDto) {
         log.info("New Address registration complete={}", newAddressRequestDto.getUsers().getId());
-        addressRepository.save(Address.addressConverter(newAddressRequestDto));
+        addressRepository.save(Address.NewAddressDtoToEntity(newAddressRequestDto));
     }
 }

@@ -59,7 +59,7 @@ public class Users extends BaseEntity implements UserDetails {
     @OneToMany(mappedBy = "users")
     private List<Address> addresses;
 
-    public static Users usersConverter(SignUpRequestDto signUpRequestDto) {
+    public static Users signUpDtoToEntity(SignUpRequestDto signUpRequestDto) {
         signUpRequestDto.setPassword(hashPassword(signUpRequestDto.getPassword()));
         return Users
             .builder()

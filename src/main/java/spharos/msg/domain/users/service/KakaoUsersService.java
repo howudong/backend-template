@@ -18,6 +18,6 @@ public class KakaoUsersService {
     @Transactional
     public void createKakaoUsers(KakaoSignUpRequestDto kakaoSignUpRequestDto) {
         log.info("Kakao Signup complete={}", kakaoSignUpRequestDto.getUserUuid());
-        kakaoUsersRepository.save(KakaoUsers.kakaoUsersConverter(kakaoSignUpRequestDto));
+        kakaoUsersRepository.save(KakaoUsers.kakaoSignUpDtoToEntity(kakaoSignUpRequestDto));
     }
 }

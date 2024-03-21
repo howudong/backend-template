@@ -15,7 +15,7 @@ public class KakaoSignUpRequestDto {
 
     private String userUuid;
 
-    public static KakaoSignUpRequestDto kakaoSignUpRequestConverter(String uuid) {
+    public static KakaoSignUpRequestDto uuidToDto(String uuid) {
         return KakaoSignUpRequestDto
             .builder()
             .userUuid(uuid)
