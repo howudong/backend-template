@@ -17,6 +17,7 @@ import spharos.msg.domain.users.repository.UsersRepository;
 import spharos.msg.global.api.ApiResponse;
 import spharos.msg.global.api.code.status.SuccessStatus;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,12 +32,17 @@ public class CartProductService {
     @Transactional
     public ApiResponse<?> addCart(Long productOptionId, CartProductRequestDto cartProductRequestDto, String userUuid) {
         //todo 상품 옵션 없는 경우 바로 add
-        ProductOption productOption = productOptionRepository.findById(productOptionId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 상품옵션입니다.")
-        );
-        Users users = usersRepository.findByUuid(userUuid).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 사용자입니다.")
-        );
+        ProductOption productOption = productOptionRepository.findById(productOptionId).orElseThrow();
+        Users users = usersRepository.findByUuid(userUuid).orElseThrow();
+
+        List<CartProduct> cartProducts = cartProductRepository.findByUsers(users);
+
+        for(CartProduct cartProduct:cartProducts){
+            if(cartProduct.getProductOption().getProductOptionId().equals(productOptionId)){
+                cartProduct.addCartProductQuantity(cartProductRequestDto.getProductQuantity());
+                return ApiResponse.of(SuccessStatus.CART_PRODUCT_ADD_SUCCESS, null);
+            }
+        }
 
         CartProduct cartProduct = CartProduct.builder()
                 .cartProductQuantity(cartProductRequestDto.getProductQuantity())

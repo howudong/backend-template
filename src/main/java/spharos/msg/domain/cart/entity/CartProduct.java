@@ -48,4 +48,8 @@ public class CartProduct extends BaseEntity {
         this.cartIsChecked = cartProductRequestDto.isCartIsChecked();
         this.productOption = productOption;
     }
+
+    public void addCartProductQuantity(int productQuantity){
+        this.cartProductQuantity+=productQuantity;
+    }
 }
