@@ -16,6 +16,7 @@ import spharos.msg.domain.product.repository.ProductRepository;
 import spharos.msg.domain.users.entity.Users;
 import spharos.msg.domain.users.repository.UsersRepository;
 import spharos.msg.global.api.ApiResponse;
+import spharos.msg.global.api.code.status.ErrorStatus;
 import spharos.msg.global.api.code.status.SuccessStatus;
 
 import java.util.List;
@@ -55,18 +56,6 @@ public class CartProductService {
     }
 
     @Transactional
-    public ApiResponse<?> updateCartProductOption(Long productOptionId, Long cartId, String userUuid) {
-        CartProduct cartProduct = cartProductRepository.findById(cartId).orElseThrow();
-        ProductOption productOption = productOptionRepository.findById(productOptionId).orElseThrow();
-        Users users = usersRepository.findByUuid(userUuid).orElseThrow();
-
-        cartProduct.updateCartProductOption(productOption);
-
-        return ApiResponse.of(SuccessStatus.CART_PRODUCT_UPDATE_SUCCESS,
-                new CartProductResponseDto(cartProduct));
-    }
-
-    @Transactional
     public ApiResponse<?> deleteCart(Long cartId, String userUuid) {
         CartProduct cartProduct = cartProductRepository.findById(cartId).orElseThrow();
         Users users = usersRepository.findByUuid(userUuid).orElseThrow();
@@ -86,6 +75,41 @@ public class CartProductService {
                         .collect(Collectors.toList()));
     }
 
+    @Transactional
+    public ApiResponse<?> updateCartProductOption(Long productOptionId, Long cartId, String userUuid) {
+        CartProduct cartProduct = cartProductRepository.findById(cartId).orElseThrow();
+        ProductOption productOption = productOptionRepository.findById(productOptionId).orElseThrow();
+        if(userCheck(cartProduct,userUuid)) {
+            cartProduct.updateCartProductOption(productOption);
+            return ApiResponse.of(SuccessStatus.CART_PRODUCT_UPDATE_SUCCESS,
+                    new CartProductResponseDto(cartProduct));
+        }
+        return ApiResponse.onFailure(ErrorStatus.NOT_CART_OWNER,null);
+    }
+
+    @Transactional
+    public ApiResponse<?> addCartProductQuantity(Long cartId, String userUuid) {
+        CartProduct cartProduct = cartProductRepository.findById(cartId).orElseThrow();
+        if(userCheck(cartProduct,userUuid)){
+            cartProduct.addOneCartProductQuantity();
+            return ApiResponse.of(SuccessStatus.CART_PRODUCT_UPDATE_SUCCESS,
+                    new CartProductResponseDto(cartProduct));
+        }
+        return ApiResponse.onFailure(ErrorStatus.NOT_CART_OWNER,null);
+    }
+
+    public ApiResponse<?> minusCartProductQuantity(Long cartId, String userUuid) {
+        return null;
+    }
+
+    public ApiResponse<?> checkCartProduct(CartProductCheckDto cartProductCheckDto, Long cartId, String userUuid) {
+        return null;
+    }
+
+    public ApiResponse<?> notCheckCartProduct(CartProductCheckDto cartProductCheckDto, Long cartId, String userUuid) {
+    return null;
+    }
+
     private ApiResponse<?> addCart(Users users, Long productOptionId, ProductOption productOption, Integer productQuantity) {
         List<CartProduct> cartProducts = cartProductRepository.findByUsers(users);
         for (CartProduct cartProduct : cartProducts) {
@@ -103,20 +127,7 @@ public class CartProductService {
         cartProductRepository.save(cartProduct);
         return ApiResponse.of(SuccessStatus.CART_PRODUCT_ADD_SUCCESS, null);
     }
-
-    public ApiResponse<?> addCartProductQuantity(Long cartId, String username) {
-        return null;
-    }
-
-    public ApiResponse<?> minusCartProductQuantity(Long cartId, String username) {
-        return null;
-    }
-
-    public ApiResponse<?> checkCartProduct(CartProductCheckDto cartProductCheckDto, Long cartId, String username) {
-        return null;
-    }
-
-    public ApiResponse<?> notCheckCartProduct(CartProductCheckDto cartProductCheckDto, Long cartId, String username) {
-    return null;
+    private boolean userCheck(CartProduct cartProduct, String userUuid){
+        return cartProduct.getUsers().getUuid().equals(userUuid);
     }
 }

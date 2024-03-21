@@ -43,12 +43,16 @@ public class CartProduct extends BaseEntity {
     }
 
 
-
-    public void addCartProductQuantity(int productQuantity){
-        this.cartProductQuantity+=productQuantity;
+    public void addCartProductQuantity(int productQuantity) {
+        this.cartProductQuantity += productQuantity;
     }
-
     public void updateCartProductOption(ProductOption productOption) {
         this.productOption = productOption;
+    }
+    public void addOneCartProductQuantity(){
+        this.cartProductQuantity++;
+    }
+    public void minusOneCartProductQuantity(){
+        this.cartProductQuantity--;
     }
 }
