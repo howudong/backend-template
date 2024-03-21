@@ -31,28 +31,42 @@ public class CartProductService {
     //todo 회원/비회원 구분 및 예외처리
     @Transactional
     public ApiResponse<?> addCart(Long productOptionId, CartProductRequestDto cartProductRequestDto, String userUuid) {
-        //todo 상품 옵션 없는 경우 바로 add
         ProductOption productOption = productOptionRepository.findById(productOptionId).orElseThrow();
         Users users = usersRepository.findByUuid(userUuid).orElseThrow();
 
+        //옵션 없는 상품
+        if(productOption.getOptionColor()==null&&productOption.getOptionSize()==null&&productOption.getOptionEtc()==null){
+            List<CartProduct> cartProducts = cartProductRepository.findByUsers(users);
+            for(CartProduct cartProduct:cartProducts){
+                if(cartProduct.getProductOption().getProductOptionId().equals(productOptionId)){
+                    cartProduct.addCartProductQuantity(1);
+                    return ApiResponse.of(SuccessStatus.CART_PRODUCT_ADD_SUCCESS, null);
+                }
+            }
+            CartProduct cartProduct = CartProduct.builder()
+                    .cartProductQuantity(cartProductRequestDto.getProductQuantity())
+                    .cartIsChecked(false)
+                    .users(users)
+                    .productOption(productOption)
+                    .build();
+            cartProductRepository.save(cartProduct);
+            return ApiResponse.of(SuccessStatus.CART_PRODUCT_ADD_SUCCESS, null);
+        }
+        //옵션 있는 상품
         List<CartProduct> cartProducts = cartProductRepository.findByUsers(users);
-
         for(CartProduct cartProduct:cartProducts){
             if(cartProduct.getProductOption().getProductOptionId().equals(productOptionId)){
                 cartProduct.addCartProductQuantity(cartProductRequestDto.getProductQuantity());
                 return ApiResponse.of(SuccessStatus.CART_PRODUCT_ADD_SUCCESS, null);
             }
         }
-
         CartProduct cartProduct = CartProduct.builder()
                 .cartProductQuantity(cartProductRequestDto.getProductQuantity())
                 .cartIsChecked(false)
                 .users(users)
                 .productOption(productOption)
                 .build();
-
         cartProductRepository.save(cartProduct);
-
         return ApiResponse.of(SuccessStatus.CART_PRODUCT_ADD_SUCCESS, null);
     }
 
