@@ -16,6 +16,7 @@ public class CartProductResponseDto {
     //private String image;
     //private Integer productStar;
     private Integer productQuantity;
+    private Integer productStock;
 
     public CartProductResponseDto(CartProduct cartProduct) {
         this.productId = cartProduct.getProductOption().getProduct().getId();
@@ -26,5 +27,6 @@ public class CartProductResponseDto {
 //        this.image = cartProduct.getProductOption().getProduct().get
 //        this.productStar =
         this.productQuantity = cartProduct.getCartProductQuantity();
+        this.productStock = cartProduct.getProductOption().getStock();
     }
 }

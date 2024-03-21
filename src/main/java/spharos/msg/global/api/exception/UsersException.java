@@ -7,8 +7,7 @@ import spharos.msg.global.api.dto.ErrorReasonDto;
 
 @Getter
 @RequiredArgsConstructor
-public class LoginPwValidationException extends RuntimeException {
-
+public class UsersException extends RuntimeException{
     private final BaseErrorCode errorCode;
 
     public ErrorReasonDto getErrorReason() {
@@ -19,3 +18,4 @@ public class LoginPwValidationException extends RuntimeException {
         return errorCode.getReasonHttpStatus();
     }
 }
+

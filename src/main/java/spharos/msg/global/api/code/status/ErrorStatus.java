@@ -26,6 +26,7 @@ public enum ErrorStatus implements BaseErrorCode {
     LOGIN_ID_NOT_FOUND(HttpStatus.BAD_REQUEST, "USER403", "통합 로그인 실패"),
     LOGIN_ID_PW_VALIDATION(HttpStatus.BAD_REQUEST, "USER404", "통합 로그인 실패"),
     TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, "USER404", "토큰이 만료되었습니다."),
+    REISSUE_TOKEN_FAIL(HttpStatus.BAD_REQUEST, "USER405", "토큰 재발급 실패"),
 
     INVALID_ORDER(HttpStatus.BAD_REQUEST, "ORDER400", "잘못된 주문 요청입니다"),
     ORDER_PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "ORDER401", "주문 상품을 찾을 수 없습니다"),

@@ -13,6 +13,7 @@ import spharos.msg.global.entity.BaseEntity;
 @Getter
 @NoArgsConstructor
 public class UserCoupon extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_coupon_id")

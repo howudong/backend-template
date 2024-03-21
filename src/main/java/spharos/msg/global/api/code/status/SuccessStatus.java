@@ -26,7 +26,8 @@ public enum SuccessStatus implements BaseCode {
 
     COUPON_LIST_GET_SUCCESS(HttpStatus.OK, "COUPON501", "다운 가능 쿠폰 목록 조회 성공"),
     COUPON_DOWNLOAD_SUCCESS(HttpStatus.OK, "COUPON502", "쿠폰 다운로드 성공"),
-    COUPON_GET_USERS_SUCCESS(HttpStatus.OK, "COUPON503", "보유 쿠폰 목록 조회 성공");
+    COUPON_GET_USERS_SUCCESS(HttpStatus.OK, "COUPON503", "보유 쿠폰 목록 조회 성공"),
+    TOKEN_REISSUE_COMPLETE(HttpStatus.ACCEPTED, "USER204", "토큰 재발급 성공");
 
     private final HttpStatus httpStatus;
     private final String status;
@@ -50,3 +51,4 @@ public enum SuccessStatus implements BaseCode {
 
     }
 }
+

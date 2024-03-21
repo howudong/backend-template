@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.util.Collection;
 import java.util.List;
 
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,6 +18,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import spharos.msg.domain.users.dto.SignUpRequestDto;
 import spharos.msg.global.entity.BaseEntity;
 
 @Entity
@@ -54,21 +56,35 @@ public class Users extends BaseEntity implements UserDetails {
     @Column(columnDefinition = "bigint default 0")
     private Long baseAddressId;
 
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Address> addresses;
+
+    public static Users signUpDtoToEntity(SignUpRequestDto signUpRequestDto) {
+        signUpRequestDto.setPassword(passwordToHash(signUpRequestDto.getPassword()));
+        return Users
+            .builder()
+            .loginId(signUpRequestDto.getLoginId())
+            .password(signUpRequestDto.getPassword())
+            .userName(signUpRequestDto.getUsername())
+            .email(signUpRequestDto.getEmail())
+            .phoneNumber(signUpRequestDto.getPhoneNumber())
+            .uuid(UUID.randomUUID().toString())
+            .baseAddressId(0L)
+            .build();
+    }
 
     @Override
     public String toString() {
         return "Users{" +
-                "id=" + id +
-                ", loginId='" + loginId + '\'' +
-                ", uuid='" + uuid + '\'' +
-                ", password='" + password + '\'' +
-                '}';
+            "id=" + id +
+            ", loginId='" + loginId + '\'' +
+            ", uuid='" + uuid + '\'' +
+            ", password='" + password + '\'' +
+            '}';
     }
 
-    public void hashPassword(String password) {
-        this.password = new BCryptPasswordEncoder().encode(password);
+    public static String passwordToHash(String password) {
+        return new BCryptPasswordEncoder().encode(password);
     }
 
     @Override
