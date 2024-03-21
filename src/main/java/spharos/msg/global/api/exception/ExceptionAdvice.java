@@ -2,6 +2,9 @@ package spharos.msg.global.api.exception;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
@@ -18,10 +21,6 @@ import spharos.msg.global.api.ApiResponse;
 import spharos.msg.global.api.code.status.ErrorStatus;
 import spharos.msg.global.api.dto.ErrorReasonDto;
 import spharos.msg.global.api.example.ExampleException;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
 
 @RestControllerAdvice
 @Slf4j
@@ -55,6 +54,22 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
     }
 
     /**
+     * 주문 예외 발생
+     */
+    @ExceptionHandler
+    public ResponseEntity<Object> orderException(OrderException e, WebRequest request) {
+        ErrorReasonDto errorStatus = e.getReasonHttpStatus();
+        ApiResponse<Object> responseBody = createResponseBody(
+            errorStatus.getStatus(),
+            errorStatus.getMessage(),
+            null);
+
+        return super.handleExceptionInternal(
+            e, responseBody, HttpHeaders.EMPTY, errorStatus.getHttpStatus(), request);
+    }
+
+    /**
+     * 회원 가입 시, Login Id 중복 시,
      * Users Common Exception
      */
     @ExceptionHandler
