@@ -17,7 +17,8 @@ import spharos.msg.global.api.ApiResponse;
 @Tag(name = "CartProduct", description = "장바구니 API")
 public class CartProductController {
     private final CartProductService cartProductService;
-private final CartProductUpdateService cartProductUpdateService;
+    private final CartProductUpdateService cartProductUpdateService;
+
     @Operation(summary = "장바구니 담기",
             description = "옵션에 해당되는 상품을 장바구니에 추가합니다.")
     @PostMapping("/option/{productOptionId}")
@@ -40,26 +41,28 @@ private final CartProductUpdateService cartProductUpdateService;
 
     @Operation(summary = "장바구니 옵션 수정",
             description = "장바구니에 담긴 상품의 옵션을 수정합니다.")
-    @PatchMapping("/{cartId}/{productOptionId}")
+    @PatchMapping("/option/{cartId}")
     public ApiResponse<?> updateCartProductOption(
-    @PathVariable Long productOptionId,
-    @PathVariable Long cartId,
+            @PathVariable Long cartId,
+            @RequestParam("productOptionId") Long productOptionId,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
         return cartProductUpdateService.updateCartProductOption(productOptionId, cartId, userDetails.getUsername());
     }
+
     @Operation(summary = "장바구니 수량 추가",
             description = "장바구니에 담긴 상품의 수량을 늘립니다.")
-    @PatchMapping("/{cartId}")
+    @PatchMapping("/add/{cartId}")
     public ApiResponse<?> addCartProductQuantity(
             @PathVariable Long cartId,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
         return cartProductUpdateService.addCartProductQuantity(cartId, userDetails.getUsername());
     }
+
     @Operation(summary = "장바구니 수량 감소",
             description = "장바구니에 담긴 상품의 수량을 줄입니다.")
-    @PatchMapping("/{cartId}")
+    @PatchMapping("/minus/{cartId}")
     public ApiResponse<?> minusCartProductQuantity(
             @PathVariable Long cartId,
             @AuthenticationPrincipal UserDetails userDetails
@@ -69,16 +72,17 @@ private final CartProductUpdateService cartProductUpdateService;
 
     @Operation(summary = "장바구니 체크 수정",
             description = "장바구니에 담긴 상품을 체크합니다.")
-    @PatchMapping("/{cartId}")
+    @PatchMapping("/check/{cartId}")
     public ApiResponse<?> checkCartProduct(
             @PathVariable Long cartId,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
         return cartProductUpdateService.checkCartProduct(cartId, userDetails.getUsername());
     }
+
     @Operation(summary = "장바구니 체크 수정",
             description = "장바구니에 담긴 상품을 체크해제합니다.")
-    @PatchMapping("/{cartId}")
+    @PatchMapping("/not-check/{cartId}")
     public ApiResponse<?> notCheckCartProduct(
             @PathVariable Long cartId,
             @AuthenticationPrincipal UserDetails userDetails
