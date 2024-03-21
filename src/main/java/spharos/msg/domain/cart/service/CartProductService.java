@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import spharos.msg.domain.cart.dto.CartProductOptionResponseDto;
+import spharos.msg.domain.cart.dto.CartProductQuantityDto;
 import spharos.msg.domain.cart.dto.CartProductRequestDto;
 import spharos.msg.domain.cart.dto.CartProductResponseDto;
 import spharos.msg.domain.cart.entity.CartProduct;
@@ -30,44 +31,16 @@ public class CartProductService {
 
     //todo 회원/비회원 구분 및 예외처리
     @Transactional
-    public ApiResponse<?> addCart(Long productOptionId, CartProductRequestDto cartProductRequestDto, String userUuid) {
+    public ApiResponse<?> addCartProduct(Long productOptionId, CartProductQuantityDto cartProductQuantity, String userUuid) {
         ProductOption productOption = productOptionRepository.findById(productOptionId).orElseThrow();
         Users users = usersRepository.findByUuid(userUuid).orElseThrow();
 
         //옵션 없는 상품
-        if(productOption.getOptionColor()==null&&productOption.getOptionSize()==null&&productOption.getOptionEtc()==null){
-            List<CartProduct> cartProducts = cartProductRepository.findByUsers(users);
-            for(CartProduct cartProduct:cartProducts){
-                if(cartProduct.getProductOption().getProductOptionId().equals(productOptionId)){
-                    cartProduct.addCartProductQuantity(1);
-                    return ApiResponse.of(SuccessStatus.CART_PRODUCT_ADD_SUCCESS, null);
-                }
-            }
-            CartProduct cartProduct = CartProduct.builder()
-                    .cartProductQuantity(cartProductRequestDto.getProductQuantity())
-                    .cartIsChecked(false)
-                    .users(users)
-                    .productOption(productOption)
-                    .build();
-            cartProductRepository.save(cartProduct);
-            return ApiResponse.of(SuccessStatus.CART_PRODUCT_ADD_SUCCESS, null);
+        if (productOption.getOptionColor() == null && productOption.getOptionSize() == null && productOption.getOptionEtc() == null) {
+            return addCart(users, productOptionId, productOption, 1);
         }
         //옵션 있는 상품
-        List<CartProduct> cartProducts = cartProductRepository.findByUsers(users);
-        for(CartProduct cartProduct:cartProducts){
-            if(cartProduct.getProductOption().getProductOptionId().equals(productOptionId)){
-                cartProduct.addCartProductQuantity(cartProductRequestDto.getProductQuantity());
-                return ApiResponse.of(SuccessStatus.CART_PRODUCT_ADD_SUCCESS, null);
-            }
-        }
-        CartProduct cartProduct = CartProduct.builder()
-                .cartProductQuantity(cartProductRequestDto.getProductQuantity())
-                .cartIsChecked(false)
-                .users(users)
-                .productOption(productOption)
-                .build();
-        cartProductRepository.save(cartProduct);
-        return ApiResponse.of(SuccessStatus.CART_PRODUCT_ADD_SUCCESS, null);
+        return addCart(users, productOptionId, productOption, cartProductQuantity.getProductQuantity());
     }
 
     @Transactional
@@ -112,4 +85,23 @@ public class CartProductService {
                         .map(CartProductOptionResponseDto::new)
                         .collect(Collectors.toList()));
     }
+
+    private ApiResponse<?> addCart(Users users, Long productOptionId, ProductOption productOption, Integer productQuantity) {
+        List<CartProduct> cartProducts = cartProductRepository.findByUsers(users);
+        for (CartProduct cartProduct : cartProducts) {
+            if (cartProduct.getProductOption().getProductOptionId().equals(productOptionId)) {
+                cartProduct.addCartProductQuantity(productQuantity);
+                return ApiResponse.of(SuccessStatus.CART_PRODUCT_ADD_SUCCESS, null);
+            }
+        }
+        CartProduct cartProduct = CartProduct.builder()
+                .cartProductQuantity(productQuantity)
+                .cartIsChecked(false)
+                .users(users)
+                .productOption(productOption)
+                .build();
+        cartProductRepository.save(cartProduct);
+        return ApiResponse.of(SuccessStatus.CART_PRODUCT_ADD_SUCCESS, null);
+    }
+
 }
