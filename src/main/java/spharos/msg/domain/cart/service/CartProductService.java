@@ -3,9 +3,9 @@ package spharos.msg.domain.cart.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import spharos.msg.domain.cart.dto.CartProductCheckDto;
 import spharos.msg.domain.cart.dto.CartProductOptionResponseDto;
 import spharos.msg.domain.cart.dto.CartProductQuantityDto;
-import spharos.msg.domain.cart.dto.CartProductRequestDto;
 import spharos.msg.domain.cart.dto.CartProductResponseDto;
 import spharos.msg.domain.cart.entity.CartProduct;
 import spharos.msg.domain.cart.repository.CartProductRepository;
@@ -55,12 +55,12 @@ public class CartProductService {
     }
 
     @Transactional
-    public ApiResponse<?> updateCart(CartProductRequestDto cartProductRequestDto, Long cartId, String userUuid) {
+    public ApiResponse<?> updateCartProductOption(Long productOptionId, Long cartId, String userUuid) {
         CartProduct cartProduct = cartProductRepository.findById(cartId).orElseThrow();
-        ProductOption productOption = productOptionRepository.findById(cartProductRequestDto.getProductOptionId()).orElseThrow();
+        ProductOption productOption = productOptionRepository.findById(productOptionId).orElseThrow();
         Users users = usersRepository.findByUuid(userUuid).orElseThrow();
 
-        cartProduct.updateCartProduct(cartProductRequestDto, productOption);
+        cartProduct.updateCartProductOption(productOption);
 
         return ApiResponse.of(SuccessStatus.CART_PRODUCT_UPDATE_SUCCESS,
                 new CartProductResponseDto(cartProduct));
@@ -104,4 +104,19 @@ public class CartProductService {
         return ApiResponse.of(SuccessStatus.CART_PRODUCT_ADD_SUCCESS, null);
     }
 
+    public ApiResponse<?> addCartProductQuantity(Long cartId, String username) {
+        return null;
+    }
+
+    public ApiResponse<?> minusCartProductQuantity(Long cartId, String username) {
+        return null;
+    }
+
+    public ApiResponse<?> checkCartProduct(CartProductCheckDto cartProductCheckDto, Long cartId, String username) {
+        return null;
+    }
+
+    public ApiResponse<?> notCheckCartProduct(CartProductCheckDto cartProductCheckDto, Long cartId, String username) {
+    return null;
+    }
 }

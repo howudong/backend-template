@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import spharos.msg.domain.cart.dto.CartProductRequestDto;
 import spharos.msg.domain.product.entity.ProductOption;
 import spharos.msg.domain.users.entity.Users;
 import spharos.msg.global.entity.BaseEntity;
@@ -43,13 +42,13 @@ public class CartProduct extends BaseEntity {
         this.productOption = productOption;
     }
 
-    public void updateCartProduct(CartProductRequestDto cartProductRequestDto, ProductOption productOption) {
-        this.cartProductQuantity = cartProductRequestDto.getProductQuantity();
-        this.cartIsChecked = cartProductRequestDto.isCartIsChecked();
-        this.productOption = productOption;
-    }
+
 
     public void addCartProductQuantity(int productQuantity){
         this.cartProductQuantity+=productQuantity;
+    }
+
+    public void updateCartProductOption(ProductOption productOption) {
+        this.productOption = productOption;
     }
 }
