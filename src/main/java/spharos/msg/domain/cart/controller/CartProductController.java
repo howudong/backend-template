@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import spharos.msg.domain.cart.dto.CartProductCheckDto;
 import spharos.msg.domain.cart.dto.CartProductQuantityDto;
 import spharos.msg.domain.cart.service.CartProductService;
+import spharos.msg.domain.cart.service.CartProductUpdateService;
 import spharos.msg.global.api.ApiResponse;
 
 @RestController
@@ -17,7 +18,7 @@ import spharos.msg.global.api.ApiResponse;
 @Tag(name = "CartProduct", description = "장바구니 API")
 public class CartProductController {
     private final CartProductService cartProductService;
-
+private final CartProductUpdateService cartProductUpdateService;
     @Operation(summary = "장바구니 담기",
             description = "옵션에 해당되는 상품을 장바구니에 추가합니다.")
     @PostMapping("/option/{productOptionId}")
@@ -46,7 +47,7 @@ public class CartProductController {
     @PathVariable Long cartId,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
-        return cartProductService.updateCartProductOption(productOptionId, cartId, userDetails.getUsername());
+        return cartProductUpdateService.updateCartProductOption(productOptionId, cartId, userDetails.getUsername());
     }
     @Operation(summary = "장바구니 수량 추가",
             description = "장바구니에 담긴 상품의 수량을 늘립니다.")
@@ -55,7 +56,7 @@ public class CartProductController {
             @PathVariable Long cartId,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
-        return cartProductService.addCartProductQuantity(cartId, userDetails.getUsername());
+        return cartProductUpdateService.addCartProductQuantity(cartId, userDetails.getUsername());
     }
     @Operation(summary = "장바구니 수량 감소",
             description = "장바구니에 담긴 상품의 수량을 줄입니다.")
@@ -64,7 +65,7 @@ public class CartProductController {
             @PathVariable Long cartId,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
-        return cartProductService.minusCartProductQuantity(cartId, userDetails.getUsername());
+        return cartProductUpdateService.minusCartProductQuantity(cartId, userDetails.getUsername());
     }
 
     @Operation(summary = "장바구니 체크 수정",
@@ -75,7 +76,7 @@ public class CartProductController {
             @PathVariable Long cartId,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
-        return cartProductService.checkCartProduct(cartProductCheckDto,cartId, userDetails.getUsername());
+        return cartProductUpdateService.checkCartProduct(cartProductCheckDto,cartId, userDetails.getUsername());
     }
     @Operation(summary = "장바구니 체크 수정",
             description = "장바구니에 담긴 상품을 체크해제합니다.")
@@ -85,7 +86,7 @@ public class CartProductController {
             @PathVariable Long cartId,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
-        return cartProductService.notCheckCartProduct(cartProductCheckDto, cartId, userDetails.getUsername());
+        return cartProductUpdateService.notCheckCartProduct(cartProductCheckDto, cartId, userDetails.getUsername());
     }
 
 
