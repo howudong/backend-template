@@ -53,4 +53,11 @@ public class UsersController {
         //todo : 간편 로그인 구현
         return null;
     }
+
+    @Operation(summary = "로그아웃", description = "로그인 회원 로그아웃", tags = {"User Logout"})
+    @PatchMapping("/logout")
+    public ApiResponse<?> logout(@RequestBody String uuid){
+        usersService.userLogout(uuid);
+        return ApiResponse.of(SuccessStatus.LOGOUT_SUCCESS, null);
+    }
 }

@@ -19,6 +19,7 @@ import spharos.msg.domain.users.dto.KakaoSignUpRequestDto;
 import spharos.msg.domain.users.dto.LoginRequestDto;
 import spharos.msg.domain.users.dto.NewAddressRequestDto;
 import spharos.msg.domain.users.dto.SignUpRequestDto;
+import spharos.msg.domain.users.entity.Address;
 import spharos.msg.domain.users.entity.Users;
 import spharos.msg.domain.users.repository.UsersRepository;
 import spharos.msg.global.api.code.status.ErrorStatus;
@@ -79,18 +80,23 @@ public class UsersService {
     }
 
     @Transactional
-    public void createUsers(SignUpRequestDto signUpRequestDto) {
+    public Users createUsers(SignUpRequestDto signUpRequestDto) {
         Users users = Users.signUpDtoToEntity(signUpRequestDto);
-        Users savedUser = usersRepository.save(users);
-        log.info("savedUsers = {}", savedUser);
 
-        addressService.createNewAddress(
-            NewAddressRequestDto.signUpDtoToDto(signUpRequestDto, savedUser));
+        Address address = Address.NewAddressDtoToEntity(
+            NewAddressRequestDto.signUpDtoToDto(signUpRequestDto, users));
+
+        users.addAddress(address);
+
+        usersRepository.save(users);
+        addressService.createNewAddress(address);
 
         if (Boolean.TRUE.equals(signUpRequestDto.getIsEasy())) {
             kakaoUsersService.createKakaoUsers(
-                KakaoSignUpRequestDto.uuidToDto(savedUser.getUuid()));
+                KakaoSignUpRequestDto.uuidToDto(users.getUuid()));
         }
+
+        return users;
     }
 
     //토큰 생성 후, redis에 저장
@@ -150,5 +156,16 @@ public class UsersService {
         } catch (Exception e) {
             throw new JwtTokenException(ErrorStatus.REISSUE_TOKEN_FAIL);
         }
+    }
+
+    public void userLogout(String uuid) {
+        if (Boolean.TRUE.equals(redisService.isRefreshTokenExist(uuid))) {
+            redisService.deleteRefreshToken(uuid);
+        }
+    }
+
+    public void deleteUsers(String uuid){
+        Users users = usersRepository.findByUuid(uuid).orElseThrow();
+        usersRepository.deleteById(users.getId());
     }
 }
