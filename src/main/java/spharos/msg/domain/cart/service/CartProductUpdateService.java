@@ -45,8 +45,12 @@ public class CartProductUpdateService {
     @Transactional
     public ApiResponse<?> minusCartProductQuantity(Long cartId, String userUuid) {
         CartProduct cartProduct = getCartProduct(cartId);
-
-        return null;
+        if (userCheck(cartProduct, userUuid)) {
+            cartProduct.minusOneCartProductQuantity();
+            return ApiResponse.of(SuccessStatus.CART_PRODUCT_UPDATE_SUCCESS,
+                    new CartProductResponseDto(cartProduct));
+        }
+        return ApiResponse.onFailure(ErrorStatus.NOT_CART_OWNER, null);
     }
 
     @Transactional
