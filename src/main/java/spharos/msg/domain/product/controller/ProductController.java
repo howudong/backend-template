@@ -3,30 +3,43 @@ package spharos.msg.domain.product.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import spharos.msg.domain.product.dto.ProductResponseDto;
 import spharos.msg.domain.product.service.ProductService;
 import spharos.msg.global.api.ApiResponse;
 import spharos.msg.global.api.code.status.ErrorStatus;
+import spharos.msg.global.security.JwtTokenProvider;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping(value = "/api/v1/")
 @Tag(name = "Product", description = "상품 관련 API")
+@Slf4j
 public class ProductController {
+
     private final ProductService productService;
+    private final String FIRST_STATE = "HOME";
+    private final String SECOND_STATE = "HOME2";
 
     @Operation(summary = "홈화면 상품 조회",
-    description = "홈화면 3가지 섹션(뷰티/랜덤/음식)의 상품을 조회합니다")
+        description = "홈화면 3가지 섹션(뷰티/랜덤/음식)의 상품,패션카테고리 상품을 조회합니다")
     @GetMapping("/product-list")
-    public ApiResponse<ProductResponseDto> getHomeProducts(@RequestParam("param") String state, @RequestParam("index")int index) {
-        if ("HOME".equals(state) && index == 0) {
-            return ApiResponse.onSuccess(productService.getHomeProducts());
+    public ApiResponse<?> getHomeProducts(
+        @RequestParam("param") String state,
+        @RequestParam("index") int index
+    ) {
+        log.info("홈화면 상품 조회 api 호출");
+        if (FIRST_STATE.equals(state) && index == 0) {
+            return ApiResponse.onSuccess(productService.getHomeCosmeRandomFood());
+        } else if (SECOND_STATE.equals(state)) {
+            return ApiResponse.onSuccess(productService.getHomeFashion(index));
         }
-            return ApiResponse.onFailure(ErrorStatus.PRODUCT_ERROR.getStatus(), ErrorStatus.PRODUCT_ERROR.getMessage(), null);
-
+        return ApiResponse.onFailure(ErrorStatus.PRODUCT_ERROR.getStatus(),
+            ErrorStatus.PRODUCT_ERROR.getMessage(), null);
     }
 }
