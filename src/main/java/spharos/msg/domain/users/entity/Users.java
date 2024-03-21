@@ -56,11 +56,11 @@ public class Users extends BaseEntity implements UserDetails {
     @Column(columnDefinition = "bigint default 0")
     private Long baseAddressId;
 
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Address> addresses;
 
     public static Users signUpDtoToEntity(SignUpRequestDto signUpRequestDto) {
-        signUpRequestDto.setPassword(hashPassword(signUpRequestDto.getPassword()));
+        signUpRequestDto.setPassword(passwordToHash(signUpRequestDto.getPassword()));
         return Users
             .builder()
             .loginId(signUpRequestDto.getLoginId())
@@ -83,7 +83,7 @@ public class Users extends BaseEntity implements UserDetails {
             '}';
     }
 
-    public static String hashPassword(String password) {
+    public static String passwordToHash(String password) {
         return new BCryptPasswordEncoder().encode(password);
     }
 
