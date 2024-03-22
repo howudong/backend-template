@@ -117,3 +117,4 @@ modules.xml
 .idea/**/azureSettings.xml
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij
+/.idea/codeStyles/codeStyleConfig.xml

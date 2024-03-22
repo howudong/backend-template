@@ -1,22 +1,26 @@
 package spharos.msg.domain.product.dto;
 
+import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import java.util.List;
+import lombok.Setter;
 
-@Getter
-@Setter
+@Data
+@Setter(AccessLevel.NONE)
 public class ProductResponseDto {
 
-    private List<ProductInfoDto> cosmeticList;
-    private List<ProductInfoDto> randomList;
-    private List<ProductInfoDto> foodList;
+    @Builder
+    public static class HomeCosmeRandomFood {
+
+        private List<ProductInfoDto> cosmeticList;
+        private List<ProductInfoDto> randomList;
+        private List<ProductInfoDto> foodList;
+    }
 
     @Builder
-    private ProductResponseDto(List<ProductInfoDto> cosmeticList, List<ProductInfoDto> randomList, List<ProductInfoDto> foodList) {
-        this.cosmeticList = cosmeticList;
-        this.randomList = randomList;
-        this.foodList = foodList;
+    public static class HomeFashion {
+
+        private List<ProductInfoDto> fashionList;
     }
 }

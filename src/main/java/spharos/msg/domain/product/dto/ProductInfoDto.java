@@ -7,33 +7,30 @@ import lombok.Getter;
 import lombok.Setter;
 import java.math.BigDecimal;
 
-
 @Getter
 @Setter
 public class ProductInfoDto {
+
     @Schema(description = "상품 id")
     private Long productId;
     @Schema(description = "상품 이름")
     private String productName;
-    @Schema(description = "상품 가격")
+    @Schema(description = "상품 정상가")
     private Integer productPrice;
-    @Schema(description = "좋아요 여부")
-    @JsonProperty("isLike")
-    private boolean isLike;
     @Schema(description = "상품 이미지")
     private String image;
     @Schema(description = "상품 별점")
     private Short productStar;
-    @Schema(description = "할인율")
+    @Schema(description = "상품 할인율")
     private BigDecimal discountRate;
 
     @Builder
-    private ProductInfoDto(Long productId, String productName, Integer productPrice, boolean isLike, String image, Short productStar, BigDecimal discountRate) {
+    private ProductInfoDto(Long productId, String productName, Integer productPrice, String image,
+        Short productStar, BigDecimal discountRate) {
 
         this.productId = productId;
         this.productName = productName;
         this.productPrice = productPrice;
-        this.isLike = isLike;
         this.image = image;
         this.productStar = productStar;
         this.discountRate = discountRate;
