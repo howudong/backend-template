@@ -1,6 +1,7 @@
 package spharos.msg.domain.orders.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,7 @@ public class OrderController {
     @PostMapping("/product-order")
     public ApiResponse<?> productOrderAPI(
         @RequestBody List<OrderDto> orderDtos,
+        @Parameter(hidden = true)
         @RequestHeader(AUTHORIZATION) String token) {
 
         String uuid = jwtTokenProvider.validateAndGetUserUuid(token);
@@ -44,7 +46,9 @@ public class OrderController {
 
     @Operation(summary = "주문자 정보 조회", description = "토큰을 통해 주문자의 정보를 조회합니다.")
     @GetMapping("/user")
-    public ApiResponse<?> orderUserAPI(@RequestHeader(AUTHORIZATION) String token) {
+    public ApiResponse<?> orderUserAPI(
+        @Parameter(hidden = true)
+        @RequestHeader(AUTHORIZATION) String token) {
         String uuid = jwtTokenProvider.validateAndGetUserUuid(token);
         OrderUserDto orderUserDto = orderService.findOrderUser(uuid);
         return ApiResponse.of(SuccessStatus.ORDER_USER_SUCCESS, orderUserDto);
