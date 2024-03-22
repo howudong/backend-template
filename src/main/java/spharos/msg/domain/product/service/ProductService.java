@@ -1,5 +1,9 @@
 package spharos.msg.domain.product.service;
 
+import static spharos.msg.global.api.code.status.ErrorStatus.NOT_EXIST_PRODUCT;
+import static spharos.msg.global.api.code.status.SuccessStatus.PRODUCT_DETAIL_READ_SUCCESS;
+
+import jakarta.transaction.Transactional;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,10 +17,10 @@ import spharos.msg.domain.product.dto.ProductResponseDto;
 import spharos.msg.domain.product.entity.Product;
 import spharos.msg.domain.product.entity.ProductSalesInfo;
 import spharos.msg.domain.product.repository.ProductRepository;
-
 import java.util.List;
 import java.util.stream.Collectors;
 import spharos.msg.domain.product.repository.ProductSalesInfoRepository;
+import spharos.msg.global.api.ApiResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -28,13 +32,10 @@ public class ProductService {
 
     //Home화면 상품 조회
     public ProductResponseDto.HomeCosmeRandomFood getHomeCosmeRandomFood() {
-        log.info("getHome1Products 메서드 실행");
-        //뷰티 상품들 조회
+
         List<Product> beautyProducts = productRepository.findProductsByCategoryName("뷰티");
-        //랜덤 상품 조회
-        List<Product> randomProducts = productRepository.findRandomProducts();
-        //신선식품 상품 조회
         List<Product> foodProducts = productRepository.findProductsByCategoryName("신선식품");
+        List<Product> randomProducts = productRepository.findRandomProducts();
 
         //ProductInfo Dto가 담긴 리스트로 변환
         List<ProductInfoDto> beautys = beautyProducts.stream()
@@ -76,8 +77,9 @@ public class ProductService {
             .build();
     }
 
-    public ProductDetailInfoDto getProductDetail(Long productId) {
-        log.info("ProductDetail Service 호출");
+    @Transactional
+    public ApiResponse<?> getProductDetail(Long productId) {
+
         //id값으로 상품 조회
         Optional<Product> productOptional = productRepository.findById(productId);
         Optional<ProductSalesInfo> productSalesInfoOptional = productSalesInfoRepository.findById(productId);
@@ -86,7 +88,7 @@ public class ProductService {
             Product product = productOptional.get();
             ProductSalesInfo productSalesInfo = productSalesInfoOptional.get();
 
-            ProductDetailInfoDto test = ProductDetailInfoDto.builder()
+            return ApiResponse.of(PRODUCT_DETAIL_READ_SUCCESS,ProductDetailInfoDto.builder()
                 .productId(product.getId())
                 .productName(product.getProductName())
                 .productPrice(product.getProductPrice())
@@ -95,11 +97,9 @@ public class ProductService {
                 .discountRate(product.getDiscountRate())
                 .productStars(productSalesInfo.getProductStars())
                 .productReviewCount(productSalesInfo.getReviewCount())
-                .build();
-            log.info("dto확인"+test);
-            return test;
+                .build());
         }
-        return null;
+        return ApiResponse.onFailure(NOT_EXIST_PRODUCT,null);
     }
 
 

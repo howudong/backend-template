@@ -32,7 +32,6 @@ public class ProductController {
         @RequestParam("param") String state,
         @RequestParam("index") int index
     ) {
-        log.info("홈화면 상품 조회 api 호출");
         if (FIRST_STATE.equals(state) && index == 0) {
             return ApiResponse.onSuccess(productService.getHomeCosmeRandomFood());
         } else if (SECOND_STATE.equals(state)) {
@@ -43,9 +42,7 @@ public class ProductController {
     }
 
     @GetMapping("/product/{product_id}")
-    public ApiResponse<ProductDetailInfoDto> getProductDetails(@PathVariable("product_id") Long product_id) {
-        log.info("상품상세조회실행");
-        log.info("id값 확인"+ product_id);
-        return ApiResponse.onSuccess(productService.getProductDetail(product_id));
+    public ApiResponse<?> getProductDetails(@PathVariable("product_id") Long product_id) {
+        return productService.getProductDetail(product_id);
     }
 }
