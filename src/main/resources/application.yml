@@ -45,3 +45,6 @@ JWT:
   SECRET_KEY: ${SECRET_KEY}
   access-token-expiration: 30000
   refresh-token-expiration: 8640000
+
+server:
+  port: 8282
