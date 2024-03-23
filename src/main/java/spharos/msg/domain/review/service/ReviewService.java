@@ -1,5 +1,6 @@
 package spharos.msg.domain.review.service;
 
+import static spharos.msg.global.api.code.status.ErrorStatus.REVIEW_SAVE_FAIL;
 import static spharos.msg.global.api.code.status.SuccessStatus.REVIEW_SAVE_SUCCESS;
 
 import java.util.Optional;
@@ -27,21 +28,24 @@ public class ReviewService {
 
     @Transactional
     public ApiResponse<?> saveReview(Long productId, ReviewRequestDto reviewRequestDto, String userUuid){
-        //상품 객체 가져오기
-        Optional<Product> productOptional = productRepository.findById(productId);
-        Product product = productOptional.get();
-        //유저 가져오기
-        Users users = usersRepository.findByUuid(userUuid).orElseThrow();
-        Long userId = users.getId();
-        //리뷰 객체 생성
-        Review review = Review.builder()
-            .product(product)
-            .reviewStar(reviewRequestDto.getReviewStar())
-            .reviewComment(reviewRequestDto.getReviewContent())
-            .userId(userId)
-            .build();
-        //저장
-        reviewRepository.save(review);
-        return ApiResponse.of(REVIEW_SAVE_SUCCESS,null);
+        try {//상품 객체 가져오기
+            Optional<Product> productOptional = productRepository.findById(productId);
+            Product product = productOptional.get();
+            //유저 가져오기
+            Users users = usersRepository.findByUuid(userUuid).orElseThrow();
+            Long userId = users.getId();
+            //리뷰 객체 생성
+            Review review = Review.builder()
+                .product(product)
+                .reviewStar(reviewRequestDto.getReviewStar())
+                .reviewComment(reviewRequestDto.getReviewContent())
+                .userId(userId)
+                .build();
+            //저장
+            reviewRepository.save(review);
+            return ApiResponse.of(REVIEW_SAVE_SUCCESS, null);
+        } catch (Exception e) {
+            return ApiResponse.onFailure(REVIEW_SAVE_FAIL, null);
+        }
     };
 }
