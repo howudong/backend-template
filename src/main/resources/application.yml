@@ -12,7 +12,7 @@ spring:
         format_sql: true
   data:
     redis:
-      host: redis
+      host: ${REDIS_DB_ADDRESS}
       port: ${REDIS_PORT}
 
 
