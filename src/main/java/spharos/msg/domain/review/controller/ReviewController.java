@@ -1,8 +1,12 @@
 package spharos.msg.domain.review.controller;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -19,6 +23,7 @@ import spharos.msg.global.api.ApiResponse;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/product-review")
+@Slf4j
 @Tag(name="Review",description = "리뷰 관련 API")
 public class ReviewController {
 
@@ -26,11 +31,13 @@ public class ReviewController {
     @Operation(summary = "상품 리뷰 등록",
         description = "리뷰가 가능한 주문상세에 대해 상품 리뷰를 등록합니다")
     @PostMapping("/{productId}")
-    private ApiResponse<?> saveReview(
-        @PathVariable Long productId,
+    public ApiResponse<?> saveReview(
+        @PathVariable("productId") Long productId,
         @RequestBody ReviewRequestDto reviewRequestDto,
+        @Parameter(hidden = true)
         @AuthenticationPrincipal UserDetails userDetails
     ) {
+        log.info("컨트롤러호출");
     return reviewService.saveReview(productId,reviewRequestDto,userDetails.getUsername());
     }
 }
