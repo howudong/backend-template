@@ -11,6 +11,8 @@ jobs:
       redis-changed: ${{ steps.redis-check.outputs.changed }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Copy docker-compose File via ssh key
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -20,7 +22,6 @@ jobs:
           key: ${{ secrets.KEY }}
           source: "docker-compose.yml"
           target: '/home/ubuntu/'
-          override: true
 
       - name: Check for changes in a Spring file
         id: spring-check
