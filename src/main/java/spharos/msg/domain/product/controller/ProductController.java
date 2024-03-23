@@ -41,8 +41,8 @@ public class ProductController {
             ErrorStatus.PRODUCT_ERROR.getMessage(), null);
     }
 
-    @GetMapping("/product/{product_id}")
-    public ApiResponse<?> getProductDetails(@PathVariable("product_id") Long product_id) {
+    @GetMapping("/product/{productId}")
+    public ApiResponse<?> getProductDetails(@PathVariable("productId") Long product_id) {
         return productService.getProductDetail(product_id);
     }
 }

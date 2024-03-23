@@ -82,11 +82,9 @@ public class ProductService {
 
         //id값으로 상품 조회
         Optional<Product> productOptional = productRepository.findById(productId);
-        Optional<ProductSalesInfo> productSalesInfoOptional = productSalesInfoRepository.findById(productId);
         //해당 객체가 존재하는지 확인 후, Dto 매핑
-        if (productOptional.isPresent() && productSalesInfoOptional.isPresent()) {
+        if (productOptional.isPresent()) {
             Product product = productOptional.get();
-            ProductSalesInfo productSalesInfo = productSalesInfoOptional.get();
 
             return ApiResponse.of(PRODUCT_DETAIL_READ_SUCCESS,ProductDetailInfoDto.builder()
                 .productId(product.getId())
@@ -95,8 +93,8 @@ public class ProductService {
                 .productBrand(product.getProductBrand())
                 .defaultImageIndex(product.getDefaultImageIndex())
                 .discountRate(product.getDiscountRate())
-                .productStars(productSalesInfo.getProductStars())
-                .productReviewCount(productSalesInfo.getReviewCount())
+                .productStars(product.getProductSalesInfo().getProductStars())
+                .productReviewCount(product.getProductSalesInfo().getReviewCount())
                 .build());
         }
         return ApiResponse.onFailure(NOT_EXIST_PRODUCT,null);

@@ -52,4 +52,7 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "vendor_id")
     private Vendor vendor;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_sales_info_id")
+    private ProductSalesInfo productSalesInfo;
 }
