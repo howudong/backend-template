@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import spharos.msg.domain.orders.entity.OrderDetail;
+import spharos.msg.domain.product.entity.Product;
 import spharos.msg.domain.users.entity.Users;
 import spharos.msg.global.entity.BaseEntity;
 
@@ -26,11 +27,15 @@ public class Review extends BaseEntity {
     @DecimalMax("5.0")
     private BigDecimal reviewStar;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private Users users;
+//    @ManyToOne
+//    @JoinColumn(name = "user_id")
+//    private Users users;
 
     @ManyToOne
     @JoinColumn(name = "order_detail_id")
     private OrderDetail orderDetail;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 }
