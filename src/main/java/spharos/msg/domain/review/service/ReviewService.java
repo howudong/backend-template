@@ -1,7 +1,9 @@
 package spharos.msg.domain.review.service;
 
+import static spharos.msg.global.api.code.status.ErrorStatus.REVIEW_DELETE_FAIL;
 import static spharos.msg.global.api.code.status.ErrorStatus.REVIEW_SAVE_FAIL;
 import static spharos.msg.global.api.code.status.ErrorStatus.REVIEW_UPDATE_FAIL;
+import static spharos.msg.global.api.code.status.SuccessStatus.REVIEW_DELETE_SUCCESS;
 import static spharos.msg.global.api.code.status.SuccessStatus.REVIEW_SAVE_SUCCESS;
 import static spharos.msg.global.api.code.status.SuccessStatus.REVIEW_UPDATE_SUCCESS;
 
@@ -73,6 +75,18 @@ public class ReviewService {
         } catch (Exception e) {
             log.info("에러 발생 "+e.getMessage());
             return ApiResponse.onFailure(REVIEW_UPDATE_FAIL, null);
+        }
+    }
+
+    @Transactional
+    public ApiResponse<?> deleteReview(Long reviewId) {
+        try {
+            //id와 일치 하는 리뷰 삭제
+            reviewRepository.deleteById(reviewId);
+            return ApiResponse.of(REVIEW_DELETE_SUCCESS,null);
+        }
+        catch (Exception e){
+            return ApiResponse.onFailure(REVIEW_DELETE_FAIL,null);
         }
     }
 }

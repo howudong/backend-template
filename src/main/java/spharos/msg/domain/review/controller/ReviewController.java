@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,5 +44,14 @@ public class ReviewController {
         @RequestBody ReviewRequest.updateDto reviewRequest
     ){
         return reviewService.updateReview(reviewId, reviewRequest);
+    }
+
+    @Operation(summary = "상품 리뷰 삭제",
+        description = "리뷰 id와 일치하는 리뷰를 삭제합니다")
+    @DeleteMapping("/{reviewId}")
+    public ApiResponse<?> deleteReview(
+        @PathVariable("reviewId") Long reviewId
+    ){
+        return reviewService.deleteReview(reviewId);
     }
 }
