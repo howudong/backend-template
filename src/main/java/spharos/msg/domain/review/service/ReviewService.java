@@ -1,6 +1,5 @@
 package spharos.msg.domain.review.service;
 
-import static org.hibernate.query.sqm.tree.SqmNode.log;
 import static spharos.msg.global.api.code.status.ErrorStatus.REVIEW_SAVE_FAIL;
 import static spharos.msg.global.api.code.status.ErrorStatus.REVIEW_UPDATE_FAIL;
 import static spharos.msg.global.api.code.status.SuccessStatus.REVIEW_SAVE_SUCCESS;
@@ -11,10 +10,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import spharos.msg.domain.orders.entity.OrderDetail;
 import spharos.msg.domain.product.entity.Product;
 import spharos.msg.domain.product.repository.ProductRepository;
-import spharos.msg.domain.review.dto.ReviewRequestDto;
+import spharos.msg.domain.review.dto.ReviewRequest;
 import spharos.msg.domain.review.entity.Review;
 import spharos.msg.domain.review.repository.ReviewRepository;
 import spharos.msg.domain.users.entity.Users;
@@ -31,7 +29,7 @@ public class ReviewService {
     private final UsersRepository usersRepository;
 
     @Transactional
-    public ApiResponse<?> saveReview(Long productId, ReviewRequestDto reviewRequestDto, String userUuid){
+    public ApiResponse<?> saveReview(Long productId, ReviewRequest.createDto reviewRequest, String userUuid){
         try {//상품 객체 가져오기
             Optional<Product> productOptional = productRepository.findById(productId);
             if (productOptional.isPresent()) {
@@ -43,8 +41,8 @@ public class ReviewService {
                 //리뷰 객체 생성
                 Review review = Review.builder()
                     .product(product)
-                    .reviewStar(reviewRequestDto.getReviewStar())
-                    .reviewComment(reviewRequestDto.getReviewContent())
+                    .reviewStar(reviewRequest.getReviewStar())
+                    .reviewComment(reviewRequest.getReviewContent())
                     .userId(userId)
                     .build();
                 //저장
@@ -59,15 +57,15 @@ public class ReviewService {
     }
 
     @Transactional
-    public ApiResponse<?> updateReview(Long reviewId, ReviewRequestDto reviewRequestDto){
+    public ApiResponse<?> updateReview(Long reviewId, ReviewRequest.updateDto reviewRequest){
         try {
-            //리뷰 객체 가져오기
+            //id로 기존 리뷰 찾기
             Optional<Review> reviewOptional = reviewRepository.findById(reviewId);
             if (reviewOptional.isPresent()) {
                 Review existingReview = reviewOptional.get();
 
                 //리뷰 수정
-                existingReview.updateReview(reviewRequestDto.getReviewContent(),reviewRequestDto.getReviewStar());
+                existingReview.updateReview(reviewRequest.getReviewContent(), reviewRequest.getReviewStar());
 
                 return ApiResponse.of(REVIEW_UPDATE_SUCCESS, null);
             }

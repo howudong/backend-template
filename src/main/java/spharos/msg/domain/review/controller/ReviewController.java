@@ -1,8 +1,6 @@
 package spharos.msg.domain.review.controller;
 
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import spharos.msg.domain.review.dto.ReviewRequestDto;
+import spharos.msg.domain.review.dto.ReviewRequest;
 import spharos.msg.domain.review.service.ReviewService;
 import spharos.msg.global.api.ApiResponse;
 
@@ -31,11 +29,10 @@ public class ReviewController {
     @PostMapping("/{productId}")
     public ApiResponse<?> saveReview(
         @PathVariable("productId") Long productId,
-        @RequestBody ReviewRequestDto reviewRequestDto,
+        @RequestBody ReviewRequest.createDto reviewRequest,
         @AuthenticationPrincipal UserDetails userDetails
     ) {
-        log.info("컨트롤러호출");
-    return reviewService.saveReview(productId,reviewRequestDto,userDetails.getUsername());
+    return reviewService.saveReview(productId, reviewRequest,userDetails.getUsername());
     }
 
     @Operation(summary = "상품 리뷰 수정",
@@ -43,8 +40,8 @@ public class ReviewController {
     @PatchMapping("/{reviewId}")
     public ApiResponse<?> updateReview(
         @PathVariable("reviewId") Long reviewId,
-        @RequestBody ReviewRequestDto reviewRequestDto
+        @RequestBody ReviewRequest.updateDto reviewRequest
     ){
-        return reviewService.updateReview(reviewId,reviewRequestDto);
+        return reviewService.updateReview(reviewId, reviewRequest);
     }
 }
