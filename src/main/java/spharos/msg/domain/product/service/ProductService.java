@@ -11,9 +11,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import spharos.msg.domain.product.dto.ProductDetailInfoDto;
+import spharos.msg.domain.product.dto.ProductDetailReponse;
 import spharos.msg.domain.product.dto.ProductResponse;
+import spharos.msg.domain.product.entity.DeliveryFeeInfo;
 import spharos.msg.domain.product.entity.Product;
+import spharos.msg.domain.product.repository.DeliveryFeeInfoRepository;
 import spharos.msg.domain.product.repository.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,6 +27,7 @@ import spharos.msg.global.api.ApiResponse;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final DeliveryFeeInfoRepository deliveryFeeInfoRepository;
 
     //Home화면 상품 조회
     public ProductResponse.HomeCosmeRandomFoodDto getHomeCosmeRandomFood() {
@@ -77,22 +80,29 @@ public class ProductService {
 
         //id로 상품 조회
         Optional<Product> productOptional = productRepository.findById(productId);
+        //배송지 정보 객체 가져오기
+        Optional<DeliveryFeeInfo> deliveryFeeInfoOptional = deliveryFeeInfoRepository.findByProductId(
+            productId);
         //해당 객체가 존재 하는지 확인 후, Dto 매핑
-        if (productOptional.isPresent()) {
+        if (productOptional.isPresent() && deliveryFeeInfoOptional.isPresent()) {
             Product product = productOptional.get();
+            DeliveryFeeInfo deliveryFeeInfo = deliveryFeeInfoOptional.get();
 
-            return ApiResponse.of(PRODUCT_DETAIL_READ_SUCCESS,ProductDetailInfoDto.builder()
-                .productId(product.getId())
-                .productName(product.getProductName())
-                .productPrice(product.getProductPrice())
-                .productBrand(product.getProductBrand())
-                .defaultImageIndex(product.getDefaultImageIndex())
-                .discountRate(product.getDiscountRate())
-                .productStars(product.getProductSalesInfo().getProductStars())
-                .productReviewCount(product.getProductSalesInfo().getReviewCount())
-                .build());
+            return ApiResponse.of(PRODUCT_DETAIL_READ_SUCCESS,
+                ProductDetailReponse.ProductDetailDto.builder()
+                    .productId(product.getId())
+                    .productName(product.getProductName())
+                    .productBrand(product.getProductBrand())
+                    .productPrice(product.getProductPrice())
+                    .productStars(product.getProductSalesInfo().getProductStars())
+                    .productDeliveryFee(deliveryFeeInfo.getDeliveryFee())
+                    .minDeliveryFee(product.getMinDeliveryFee())
+                    .productReviewCount(product.getProductSalesInfo().getReviewCount())
+                    .discountRate(product.getDiscountRate())
+                    .defaultImageIndex(product.getDefaultImageIndex())
+                    .build());
         }
-        return ApiResponse.onFailure(NOT_EXIST_PRODUCT,null);
+        return ApiResponse.onFailure(NOT_EXIST_PRODUCT, null);
     }
 
 
