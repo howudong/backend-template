@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import spharos.msg.domain.orders.entity.OrderDetail;
 import spharos.msg.domain.product.entity.Product;
 import spharos.msg.domain.users.entity.Users;
@@ -13,6 +14,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class Review extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,5 +48,10 @@ public class Review extends BaseEntity {
         this.userId = userId;
         this.orderDetail = orderDetail;
         this.product = product;
+    }
+
+    public void updateReview(String reviewComment, BigDecimal reviewStar) {
+        this.reviewComment = reviewComment;
+        this.reviewStar = reviewStar;
     }
 }

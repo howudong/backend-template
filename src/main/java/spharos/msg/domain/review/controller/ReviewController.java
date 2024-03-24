@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,5 +36,15 @@ public class ReviewController {
     ) {
         log.info("컨트롤러호출");
     return reviewService.saveReview(productId,reviewRequestDto,userDetails.getUsername());
+    }
+
+    @Operation(summary = "상품 리뷰 수정",
+    description = "리뷰 id와 일치하는 리뷰의 별점과 내용을 수정합니다")
+    @PatchMapping("/{reviewId}")
+    public ApiResponse<?> updateReview(
+        @PathVariable("reviewId") Long reviewId,
+        @RequestBody ReviewRequestDto reviewRequestDto
+    ){
+        return reviewService.updateReview(reviewId,reviewRequestDto);
     }
 }
