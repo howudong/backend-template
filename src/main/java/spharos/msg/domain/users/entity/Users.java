@@ -2,6 +2,7 @@ package spharos.msg.domain.users.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -57,7 +58,8 @@ public class Users extends BaseEntity implements UserDetails {
     private Long baseAddressId;
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Address> addresses;
+    @Builder.Default
+    private List<Address> addresses = new ArrayList<>();
 
     public static Users signUpDtoToEntity(SignUpRequestDto signUpRequestDto) {
         signUpRequestDto.setPassword(passwordToHash(signUpRequestDto.getPassword()));
@@ -71,6 +73,10 @@ public class Users extends BaseEntity implements UserDetails {
             .uuid(UUID.randomUUID().toString())
             .baseAddressId(0L)
             .build();
+    }
+
+    public void addAddress(Address address) {
+        this.addresses.add(address);
     }
 
     @Override

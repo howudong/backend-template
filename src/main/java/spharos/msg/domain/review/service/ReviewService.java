@@ -46,6 +46,7 @@ public class ReviewService {
             reviewRepository.save(review);
             return ApiResponse.of(REVIEW_SAVE_SUCCESS, null);
         } catch (Exception e) {
+            log.info("에러발생 "+e.getMessage());
             return ApiResponse.onFailure(REVIEW_SAVE_FAIL, null);
         }
     };

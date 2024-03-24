@@ -8,8 +8,6 @@ spring:
     redis:
       host: ${REDIS_DB_ADDRESS}
       port: ${REDIS_PORT}
-    #EX) host: 123.0.0.1
-    #port) 1234
 
   jpa:
     hibernate:

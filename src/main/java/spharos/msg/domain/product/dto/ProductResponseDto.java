@@ -7,6 +7,7 @@ import java.util.List;
 import lombok.Setter;
 
 @Data
+@Builder
 @Setter(AccessLevel.NONE)
 public class ProductResponseDto {
     @Data

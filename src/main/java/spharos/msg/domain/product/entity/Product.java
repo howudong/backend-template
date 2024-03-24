@@ -38,7 +38,7 @@ public class Product extends BaseEntity {
 
     @NotNull
     @Column(columnDefinition = "integer default 0")
-    private Integer defaultImageIndex;
+    private Short defaultImageIndex;
 
     @NotNull
     @Column(columnDefinition = "integer default 0")

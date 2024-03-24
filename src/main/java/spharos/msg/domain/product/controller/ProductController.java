@@ -5,15 +5,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import spharos.msg.domain.product.dto.ProductDetailInfoDto;
 import spharos.msg.domain.product.service.ProductService;
 import spharos.msg.global.api.ApiResponse;
 import spharos.msg.global.api.code.status.ErrorStatus;
-import spharos.msg.global.security.JwtTokenProvider;
 
 @RequiredArgsConstructor
 @RestController
@@ -33,7 +32,6 @@ public class ProductController {
         @RequestParam("param") String state,
         @RequestParam("index") int index
     ) {
-        log.info("홈화면 상품 조회 api 호출");
         if (FIRST_STATE.equals(state) && index == 0) {
             return ApiResponse.onSuccess(productService.getHomeCosmeRandomFood());
         } else if (SECOND_STATE.equals(state)) {
@@ -41,5 +39,10 @@ public class ProductController {
         }
         return ApiResponse.onFailure(ErrorStatus.PRODUCT_ERROR.getStatus(),
             ErrorStatus.PRODUCT_ERROR.getMessage(), null);
+    }
+
+    @GetMapping("/product/{productId}")
+    public ApiResponse<?> getProductDetails(@PathVariable("productId") Long product_id) {
+        return productService.getProductDetail(product_id);
     }
 }
