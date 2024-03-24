@@ -1,7 +1,7 @@
 name: Deploy Containers
 on:
   push:
-    branches: [ "main", "dev", "feature/#36" ]
+    branches: [ "main" ]
 
 jobs:
   push-changed-image:
@@ -112,9 +112,10 @@ jobs:
   pull-and-deploy:
     runs-on: ubuntu-latest
     needs: [ push-changed-image,recreate-spring-image,recreate-redis-image ]
+    if: always()
     steps:
       - name: executing remote ssh commands using key
-        uses: appleboy/ssh-action@v1.0.7
+        uses: appleboy/ssh-action@v1.0.3
         env:
           DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
           DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
