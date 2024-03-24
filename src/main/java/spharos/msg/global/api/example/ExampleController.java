@@ -24,7 +24,9 @@ public class ExampleController {
     @GetMapping("/login")
     public ApiResponse<ExampleResponse.TestDto> testAPI2() {
         ExampleResponse.TestDto dto = ExampleConverter.toExampleTestDto();
-        return ApiResponse.of(SuccessStatus.LOGIN_SUCCESS, dto);
+        //return ApiResponse.of(SuccessStatus.LOGIN_SUCCESS, dto);
+        //Login_Success 통합/간편 구분하여 해당 내용 주석 처리
+        return ApiResponse.of(SuccessStatus.LOGIN_SUCCESS_UNION, dto);
     }
 
     @GetMapping
