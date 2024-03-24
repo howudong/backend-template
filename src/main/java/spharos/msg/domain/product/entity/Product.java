@@ -38,7 +38,7 @@ public class Product extends BaseEntity {
 
     @NotNull
     @Column(columnDefinition = "integer default 0")
-    private Integer defaultImageIndex;
+    private Short defaultImageIndex;
 
     @NotNull
     @Column(columnDefinition = "integer default 0")
@@ -52,4 +52,7 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "vendor_id")
     private Vendor vendor;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_sales_info_id")
+    private ProductSalesInfo productSalesInfo;
 }

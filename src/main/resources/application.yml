@@ -4,11 +4,12 @@ spring:
     username: ${DB_USER}
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
-  redis:
-    host: ${REDIS_DB_ADDRESS}
-    port: ${REDIS_PORT}
-    #EX) host: 123.0.0.1
-    #port) 1234
+  data:
+    redis:
+      host: ${REDIS_DB_ADDRESS}
+      port: ${REDIS_PORT}
+      #EX) host: 123.0.0.1
+      #port) 1234
 
   jpa:
     hibernate:
@@ -43,5 +44,5 @@ springdoc:
 
 JWT:
   SECRET_KEY: ${SECRET_KEY}
-  access-token-expiration: 30000
+  access-token-expiration: 3000000
   refresh-token-expiration: 8640000
