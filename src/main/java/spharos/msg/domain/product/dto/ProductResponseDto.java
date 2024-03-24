@@ -9,7 +9,7 @@ import lombok.Setter;
 @Data
 @Setter(AccessLevel.NONE)
 public class ProductResponseDto {
-
+    @Data
     @Builder
     public static class HomeCosmeRandomFood {
 
@@ -17,7 +17,7 @@ public class ProductResponseDto {
         private List<ProductInfoDto> randomList;
         private List<ProductInfoDto> foodList;
     }
-
+    @Data
     @Builder
     public static class HomeFashion {
 

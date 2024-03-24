@@ -23,13 +23,12 @@ import spharos.msg.global.api.ApiResponse;
 @Slf4j
 public class ReviewService {
 
-    private ReviewRepository reviewRepository;
-    private ProductRepository productRepository;
-    private UsersRepository usersRepository;
+    private final ReviewRepository reviewRepository;
+    private final ProductRepository productRepository;
+    private final UsersRepository usersRepository;
 
     @Transactional
     public ApiResponse<?> saveReview(Long productId, ReviewRequestDto reviewRequestDto, String userUuid){
-        log.info("서비스호출");
         try {//상품 객체 가져오기
             Optional<Product> productOptional = productRepository.findById(productId);
             Product product = productOptional.get();
