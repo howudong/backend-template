@@ -47,7 +47,7 @@ public class LikesService {
 
         return ApiResponse.of(SuccessStatus.LIKES_DELETE_SUCCESS, null);
     }
-    //좋아요 상품 목록 조회
+
     @Transactional
     public ApiResponse<?> getProductLikeList(String userUuid) {
         Users users = usersRepository.findByUuid(userUuid).orElseThrow();
