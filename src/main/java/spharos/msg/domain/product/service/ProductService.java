@@ -18,13 +18,19 @@ import spharos.msg.domain.product.dto.ProductDetailReponse.ReviewDetail;
 import spharos.msg.domain.product.dto.ProductResponse;
 import spharos.msg.domain.product.entity.DeliveryFeeInfo;
 import spharos.msg.domain.product.entity.Product;
+import spharos.msg.domain.product.entity.ProductDetailImage;
+import spharos.msg.domain.product.entity.ProductImage;
 import spharos.msg.domain.product.entity.ProductOption;
 import spharos.msg.domain.product.repository.DeliveryFeeInfoRepository;
+import spharos.msg.domain.product.repository.ProductDetailImageRepository;
+import spharos.msg.domain.product.repository.ProductImageRepository;
 import spharos.msg.domain.product.repository.ProductOptionRepository;
 import spharos.msg.domain.product.repository.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import spharos.msg.domain.review.entity.Review;
+import spharos.msg.domain.review.entity.ReviewImage;
+import spharos.msg.domain.review.repository.ReviewImageRepository;
 import spharos.msg.domain.review.repository.ReviewRepository;
 import spharos.msg.global.api.ApiResponse;
 
@@ -37,6 +43,9 @@ public class ProductService {
     private final ProductOptionRepository productOptionRepository;
     private final CategoryProductRepository categoryProductRepository;
     private final ReviewRepository reviewRepository;
+    private final ProductImageRepository productImageRepository;
+    private final ProductDetailImageRepository productDetailImageRepository;
+    private final ReviewImageRepository reviewImageRepository;
 
     //Home화면 상품 조회
     public ProductResponse.HomeCosmeRandomFoodDto getHomeCosmeRandomFood() {
@@ -96,6 +105,11 @@ public class ProductService {
             CategoryProduct categoryProduct = categoryProductRepository.findByProduct(product);
             List<ProductOption> productOptions = productOptionRepository.findByProduct(product);
             List<Review> productReviews = reviewRepository.findByProduct(product);
+            List<ProductImage> productImages = productImageRepository.findByProduct(product);
+            List<ProductDetailImage> productDetailImages = productDetailImageRepository.findByProduct(product);
+
+            List<String> imageUrls = productImages.stream().map(ProductImage::getProductImageUrl).toList();
+            List<String> detailImageUrls = productDetailImages.stream().map(ProductDetailImage::getProductDetailImageUrl).toList();
 
             List<ProductDetailReponse.OptionDetail> options = productOptions.stream().map(productOption -> ProductDetailReponse.OptionDetail.builder()
                 .optionId(productOption.getProductOptionId())
@@ -104,13 +118,21 @@ public class ProductService {
                 .optionEtc(productOption.getOptionEtc().getProductEtc())
                 .build()).toList();
 
-            List<ReviewDetail> reviews = productReviews.stream().map(productReview -> ProductDetailReponse.ReviewDetail.builder()
-                .reviewId(productReview.getId())
-                .reviewStar(productReview.getReviewStar())
-                .reviewCreated(productReview.getCreatedAt())
-                .reviewContent(productReview.getReviewComment())
-                .reviewer(productReview.getUserId().toString())
-                .build()).toList();
+            List<ReviewDetail> reviews = productReviews.stream().map(productReview -> {
+
+                List<ReviewImage> reviewImages = reviewImageRepository.findByReview(productReview);
+                List<String> reviewImageUrls = reviewImages.stream().map(ReviewImage::getReviewImageUrl).toList();
+
+                return ProductDetailReponse.ReviewDetail.builder()
+                    .reviewId(productReview.getId())
+                    .reviewStar(productReview.getReviewStar())
+                    .reviewCreated(productReview.getCreatedAt())
+                    .reviewContent(productReview.getReviewComment())
+                    .reviewer(productReview.getUserId().toString())
+                    .reviewImgUrlList(reviewImageUrls)
+                    .build();
+            }
+        ).toList();
 
             return ApiResponse.of(PRODUCT_DETAIL_READ_SUCCESS,
                 ProductDetailReponse.ProductDetailDto.builder()
@@ -126,6 +148,8 @@ public class ProductService {
                     .productOptions(options)
                     .ProductCategoryName(categoryProduct.getCategory().getParent().getCategoryName())
                     .ProductCategoryNameMid(categoryProduct.getCategory().getCategoryName())
+                    .productImgUrlList(imageUrls)
+                    .productDetailImgUrlList(detailImageUrls)
                     .productReviewList(reviews)
                     .build());
         }

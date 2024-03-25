@@ -35,8 +35,6 @@ public class ProductDetailReponse {
         private Integer productDeliveryFee;
         @Schema(description = "무료배송 최소금액")
         private Integer minDeliveryFee;
-        @Schema(description = "리뷰 건수")
-        private Long reviewCount;
         @Schema(description = "상품 별점")
         private BigDecimal productStars;
         @Schema(description = "상품 옵션")
@@ -46,9 +44,9 @@ public class ProductDetailReponse {
         @Schema(description = "카테고리 중분류")
         private String ProductCategoryNameMid;
         @Schema(description = "상품 이미지 리스트")
-        private String productImgUrlList;
+        private List<String> productImgUrlList;
         @Schema(description = "상품 상세이미지 리스트")
-        private String productDetailImgUrlList;
+        private List<String> productDetailImgUrlList;
         @Schema(description = "상품 리뷰 개수")
         private Long productReviewCount;
         @Schema(description = "상품 리뷰 리스트")
@@ -57,10 +55,10 @@ public class ProductDetailReponse {
         @Builder
         private ProductDetailDto(Long productId, String productBrand, String productName, Integer productPrice,
             BigDecimal discountRate,
-            Short defaultImageIndex,  Integer productDeliveryFee, Integer minDeliveryFee, Long reviewCount,
+            Short defaultImageIndex,  Integer productDeliveryFee, Integer minDeliveryFee,
             BigDecimal productStars, List<OptionDetail> productOptions, String ProductCategoryName,
-            String ProductCategoryNameMid, String productImgUrlList,
-            String productDetailImgUrlList, Long productReviewCount, List<ReviewDetail> productReviewList) {
+            String ProductCategoryNameMid, List<String> productImgUrlList,
+            List<String> productDetailImgUrlList, Long productReviewCount, List<ReviewDetail> productReviewList) {
 
             this.productId = productId;
             this.productBrand = productBrand;
@@ -70,14 +68,13 @@ public class ProductDetailReponse {
             this.defaultImageIndex = defaultImageIndex;
             this.minDeliveryFee = minDeliveryFee;
             this.productDeliveryFee = productDeliveryFee;
-            this.reviewCount = reviewCount;
+            this.productReviewCount = productReviewCount;
             this.productStars = productStars;
             this.productOptions = productOptions;
             this.ProductCategoryName = ProductCategoryName;
             this.ProductCategoryNameMid = ProductCategoryNameMid;
             this.productImgUrlList = productImgUrlList;
             this.productDetailImgUrlList = productDetailImgUrlList;
-            this.productReviewCount = productReviewCount;
             this.productReviewList = productReviewList;
         }
     }
