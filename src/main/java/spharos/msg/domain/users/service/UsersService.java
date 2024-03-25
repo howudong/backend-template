@@ -81,6 +81,9 @@ public class UsersService {
 
     @Transactional
     public Users createUsers(SignUpRequestDto signUpRequestDto) {
+
+        signUpDuplicationCheck(signUpRequestDto);
+
         Users users = Users.signUpDtoToEntity(signUpRequestDto);
 
         Address address = Address.NewAddressDtoToEntity(

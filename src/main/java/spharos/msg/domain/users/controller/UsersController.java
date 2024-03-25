@@ -23,7 +23,6 @@ public class UsersController {
     @Operation(summary = "통합회원가입", description = "통합회원가입", tags = {"User Signup"})
     @PostMapping("/signup/union")
     public ApiResponse<?> signUpUnion(@RequestBody SignUpRequestDto signUpRequestDto) {
-        usersService.signUpDuplicationCheck(signUpRequestDto);
         usersService.createUsers(signUpRequestDto);
         return ApiResponse.of(SuccessStatus.SIGN_UP_SUCCESS_UNION, null);
     }
@@ -31,8 +30,8 @@ public class UsersController {
     @Operation(summary = "간편회원가입", description = "간편회원가입", tags = {"User Signup"})
     @PostMapping("/signup/easy")
     public ApiResponse<?> signUpEasy(@RequestBody SignUpRequestDto signUpRequestDto) {
-        //todo : signup 구현
-        return null;
+        usersService.createUsers(signUpRequestDto);
+        return ApiResponse.of(SuccessStatus.SIGN_UP_SUCCESS_EASY, null);
     }
 
     @Operation(summary = "로그인", description = "통합회원 로그인", tags = {"User Login"})
@@ -50,7 +49,7 @@ public class UsersController {
     @PostMapping("/login/easy")
     public ApiResponse<?> loginEasy(
         @RequestBody LoginRequestDto loginRequestDto) {
-        //todo : 간편 로그인 구현
+        //
         return null;
     }
 
