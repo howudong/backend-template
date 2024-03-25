@@ -11,14 +11,21 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import spharos.msg.domain.category.entity.CategoryProduct;
+import spharos.msg.domain.category.repository.CategoryProductRepository;
 import spharos.msg.domain.product.dto.ProductDetailReponse;
+import spharos.msg.domain.product.dto.ProductDetailReponse.ReviewDetail;
 import spharos.msg.domain.product.dto.ProductResponse;
 import spharos.msg.domain.product.entity.DeliveryFeeInfo;
 import spharos.msg.domain.product.entity.Product;
+import spharos.msg.domain.product.entity.ProductOption;
 import spharos.msg.domain.product.repository.DeliveryFeeInfoRepository;
+import spharos.msg.domain.product.repository.ProductOptionRepository;
 import spharos.msg.domain.product.repository.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;
+import spharos.msg.domain.review.entity.Review;
+import spharos.msg.domain.review.repository.ReviewRepository;
 import spharos.msg.global.api.ApiResponse;
 
 @Service
@@ -27,7 +34,9 @@ import spharos.msg.global.api.ApiResponse;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final DeliveryFeeInfoRepository deliveryFeeInfoRepository;
+    private final ProductOptionRepository productOptionRepository;
+    private final CategoryProductRepository categoryProductRepository;
+    private final ReviewRepository reviewRepository;
 
     //Home화면 상품 조회
     public ProductResponse.HomeCosmeRandomFoodDto getHomeCosmeRandomFood() {
@@ -80,13 +89,28 @@ public class ProductService {
 
         //id로 상품 조회
         Optional<Product> productOptional = productRepository.findById(productId);
-        //배송지 정보 객체 가져오기
-        Optional<DeliveryFeeInfo> deliveryFeeInfoOptional = deliveryFeeInfoRepository.findByProductId(
-            productId);
+
         //해당 객체가 존재 하는지 확인 후, Dto 매핑
-        if (productOptional.isPresent() && deliveryFeeInfoOptional.isPresent()) {
+        if (productOptional.isPresent()) {
             Product product = productOptional.get();
-            DeliveryFeeInfo deliveryFeeInfo = deliveryFeeInfoOptional.get();
+            CategoryProduct categoryProduct = categoryProductRepository.findByProduct(product);
+            List<ProductOption> productOptions = productOptionRepository.findByProduct(product);
+            List<Review> productReviews = reviewRepository.findByProduct(product);
+
+            List<ProductDetailReponse.OptionDetail> options = productOptions.stream().map(productOption -> ProductDetailReponse.OptionDetail.builder()
+                .optionId(productOption.getProductOptionId())
+                .optionColor(productOption.getOptionColor().getProductColor())
+                .optionSize(productOption.getOptionSize().getProductSize())
+                .optionEtc(productOption.getOptionEtc().getProductEtc())
+                .build()).toList();
+
+            List<ReviewDetail> reviews = productReviews.stream().map(productReview -> ProductDetailReponse.ReviewDetail.builder()
+                .reviewId(productReview.getId())
+                .reviewStar(productReview.getReviewStar())
+                .reviewCreated(productReview.getCreatedAt())
+                .reviewContent(productReview.getReviewComment())
+                .reviewer(productReview.getUserId().toString())
+                .build()).toList();
 
             return ApiResponse.of(PRODUCT_DETAIL_READ_SUCCESS,
                 ProductDetailReponse.ProductDetailDto.builder()
@@ -95,11 +119,14 @@ public class ProductService {
                     .productBrand(product.getProductBrand())
                     .productPrice(product.getProductPrice())
                     .productStars(product.getProductSalesInfo().getProductStars())
-                    .productDeliveryFee(deliveryFeeInfo.getDeliveryFee())
+                    .productDeliveryFee(product.getDeliveryFee())
                     .minDeliveryFee(product.getMinDeliveryFee())
                     .productReviewCount(product.getProductSalesInfo().getReviewCount())
                     .discountRate(product.getDiscountRate())
-                    .defaultImageIndex(product.getDefaultImageIndex())
+                    .productOptions(options)
+                    .ProductCategoryName(categoryProduct.getCategory().getParent().getCategoryName())
+                    .ProductCategoryNameMid(categoryProduct.getCategory().getCategoryName())
+                    .productReviewList(reviews)
                     .build());
         }
         return ApiResponse.onFailure(NOT_EXIST_PRODUCT, null);

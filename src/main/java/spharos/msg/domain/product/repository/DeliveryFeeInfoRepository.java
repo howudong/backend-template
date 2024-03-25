@@ -6,6 +6,4 @@ import spharos.msg.domain.product.entity.DeliveryFeeInfo;
 
 public interface DeliveryFeeInfoRepository extends JpaRepository<DeliveryFeeInfo, Long> {
 
-    Optional<DeliveryFeeInfo> findByProductId(Long productId);
-
 }

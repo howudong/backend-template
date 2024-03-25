@@ -41,13 +41,13 @@ public class ProductResponse {
         @Schema(description = "상품 이미지")
         private String image;
         @Schema(description = "상품 별점")
-        private Short productStar;
+        private BigDecimal productStar;
         @Schema(description = "상품 할인율")
         private BigDecimal discountRate;
 
         @Builder
         private ProductInfo(Long productId, String productName, Integer productPrice, String image,
-            Short productStar, BigDecimal discountRate) {
+            BigDecimal productStar, BigDecimal discountRate) {
 
             this.productId = productId;
             this.productName = productName;
