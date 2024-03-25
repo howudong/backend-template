@@ -19,7 +19,6 @@ public class SearchRepositoryImpl implements SearchRepository {
         QProduct product = QProduct.product;
         return jpaQueryFactory
             .selectFrom(product)
-            .leftJoin(product.categoryProducts)
             .where(
                 product.productName.contains(keyword)
                     .or(product.productBrand.contains(keyword))
