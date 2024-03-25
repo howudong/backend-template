@@ -26,4 +26,14 @@ public class SearchResponse {
         BigDecimal productStar;
         BigDecimal discountRate;
     }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    @Getter
+    public static class SearchInputDto {
+
+        String productName;
+    }
+
 }

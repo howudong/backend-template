@@ -29,4 +29,19 @@ public class SearchRepositoryImpl implements SearchRepository {
             .limit(SEARCH_PRODUCT_SIZE)
             .fetch();
     }
+
+    @Override
+    public List<Product> searchAllKeyword(String keyword) {
+        QProduct product = QProduct.product;
+        return jpaQueryFactory
+            .selectFrom(product)
+            .where(
+                product.productName.eq(keyword)
+                    .or(product.productName.contains(keyword))
+            )
+            .distinct()
+            .limit(SEARCH_PRODUCT_SIZE)
+            .fetch();
+    }
+
 }

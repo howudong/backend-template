@@ -8,4 +8,6 @@ import spharos.msg.domain.product.entity.Product;
 public interface SearchRepository {
 
     List<Product> searchAllProduct(String keyword, int index);
+
+    List<Product> searchAllKeyword(String keyword);
 }

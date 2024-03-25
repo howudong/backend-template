@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import spharos.msg.domain.product.entity.Product;
+import spharos.msg.domain.search.dto.SearchResponse.SearchInputDto;
 import spharos.msg.domain.search.dto.SearchResponse.SearchProductDto;
 import spharos.msg.domain.search.repository.SearchRepository;
 
@@ -24,6 +25,14 @@ public class SearchService {
             .toList();
     }
 
+    public List<SearchInputDto> findExpectedKeywords(String keyword) {
+        List<Product> products = searchRepository.searchAllKeyword(keyword);
+        return products
+            .stream()
+            .map(this::toSearchInputDto)
+            .toList();
+    }
+
     private SearchProductDto toSearchProductDto(Product product) {
         return SearchProductDto.builder()
             .productId(product.getId())
@@ -36,6 +45,13 @@ public class SearchService {
             // TODO: isLike 테이블이 어떻게 될지 모르기 때문에 일단 정적으로 넣어
             .isLike(false)
             .productStar(new BigDecimal("4.5")) //TODO: 아직 없어서 정적으로 넣어둠.
+            .build();
+    }
+
+    private SearchInputDto toSearchInputDto(Product e) {
+        return SearchInputDto
+            .builder()
+            .productName(e.getProductName())
             .build();
     }
 
