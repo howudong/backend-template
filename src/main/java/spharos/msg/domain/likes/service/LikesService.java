@@ -42,6 +42,7 @@ public class LikesService {
     public ApiResponse<?> deleteLikeProduct(Long productId, String userUuid) {
         Product product = productRepository.findById(productId).orElseThrow();
         Users users = usersRepository.findByUuid(userUuid).orElseThrow();
+
         Likes likes = likesRepository.findByUsersAndProduct(users, product).orElseThrow();
         likesRepository.delete(likes);
 
@@ -57,5 +58,14 @@ public class LikesService {
                         .stream()
                         .map(LikesResponseDto::new)
                         .collect(Collectors.toList()));
+    }
+
+    @Transactional
+    public ApiResponse<?> getProductLike(String userUuid, Long productId) {
+        Users users = usersRepository.findByUuid(userUuid).orElseThrow();
+        Product product = productRepository.findById(productId).orElseThrow();
+
+        return ApiResponse.of(SuccessStatus.LIKES_LIST_GET_SUCCESS,
+                likesRepository.existsByUsersAndProduct(users,product));
     }
 }

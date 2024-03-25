@@ -40,4 +40,13 @@ public class LikesController {
     ) {
         return likesService.getProductLikeList(userDetails.getUsername());
     }
+    @Operation(summary = "개별 상품 좋아요 유무 조회",
+            description = "상품 아이디와 사용자 정보를 받아서 해당 상품의 좋아요 유무를 조회합니다.")
+    @GetMapping("/{productId}")
+    private ApiResponse<?> getProductLike(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable Long productId
+    ){
+        return likesService.getProductLike(userDetails.getUsername(),productId);
+    }
 }
