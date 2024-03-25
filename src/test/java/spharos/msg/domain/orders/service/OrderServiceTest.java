@@ -1,7 +1,9 @@
 package spharos.msg.domain.orders.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import java.util.List;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import spharos.msg.domain.orders.dto.OrderRequest.OrderDto;
+import spharos.msg.domain.orders.dto.OrderResponse.OrderUserDto;
 import spharos.msg.domain.orders.entity.Orders;
 import spharos.msg.domain.orders.repository.OrderRepository;
 import spharos.msg.domain.users.entity.Address;
@@ -49,17 +52,14 @@ class OrderServiceTest {
             .addressPhoneNumber("01092312316")
             .address("부산남구용")
             .build();
-        addressRepository.save(
-            address
-        );
+        addressRepository.save(address);
         usersRepository.save(
             Users.builder()
                 .userName("test")
-                .addresses(List.of(address))
                 .email("tjdvy963@naver.com")
                 .loginId("abcdsd")
                 .uuid("uuid")
-                .baseAddressId(0L)
+                .baseAddressId(1L)
                 .password("1234")
                 .phoneNumber("01092312316")
                 .build()
@@ -72,28 +72,25 @@ class OrderServiceTest {
         //given
         OrderDto orderDto = new OrderDto();
         //when
-        Assertions.assertThatThrownBy(
-                () -> orderService.saveOrder(List.of(orderDto), "s"))
+        assertThatThrownBy(
+            () -> orderService.saveOrder(List.of(orderDto), "s"))
             .isInstanceOf(OrderException.class);
         //then
     }
 
     @Test
-    @DisplayName("주소를 찾을 수 없다면 OrderException이 발생한다.")
-    void 주소_예외_발생_테스트() {
-        //given
-        OrderDto orderDto = new OrderDto();
-        //when
-        Assertions.assertThatThrownBy(
-                () -> orderService.saveOrder(List.of(orderDto), "uuid"))
+    @DisplayName("주문자 정보 조회시 uuid에 해당하는 유저가 없다면 OrderException 발생")
+    void 유저_없음_예외_테스트() {
+        assertThatThrownBy(
+            () -> orderService.findOrderUser("no"))
             .isInstanceOf(OrderException.class);
-        //then
     }
 
     @Test
-    @DisplayName("주소를 찾을 수 없다면 OrderException이 발생한다.")
-    void 정상_생성_테스트() {
-
+    @DisplayName("주문자 정보 조회시 모든 정보가 일치해야한다.")
+    void 주문자_정보_조회_성공_테스트() {
+        OrderUserDto orderUserDto = orderService.findOrderUser("uuid");
+        assertThat(orderUserDto.toString()).contains(
+            "uuid", "tjdvy963@naver.com", "abcdsd", "01092312316");
     }
-
 }
