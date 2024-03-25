@@ -14,6 +14,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import spharos.msg.global.api.code.status.ErrorStatus;
+import spharos.msg.global.api.exception.JwtTokenException;
+
+import static spharos.msg.domain.users.service.UsersService.BEARER;
 
 @Slf4j
 @Service
@@ -22,8 +26,17 @@ public class JwtTokenProvider {
 
     private final Environment env;
 
+    /**
+     * "Bearer " + token, "Bearer " 삭제 후, uuid 반환하게 됩니다.
+     * Bearer 없을 시, JwtTokenException Exception 호출
+     * @param "Bearer " + token
+     * @return Token's Uuid
+     */
     public String getUuid(String token) {
-        return extractClaim(token, Claims::getSubject);
+        if (!token.startsWith(BEARER)) {
+            throw new JwtTokenException(ErrorStatus.TOKEN_VALIDATION_ERROR);
+        }
+        return extractClaim(token.substring(7), Claims::getSubject);
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {

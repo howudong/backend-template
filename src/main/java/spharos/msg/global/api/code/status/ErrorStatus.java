@@ -27,6 +27,7 @@ public enum ErrorStatus implements BaseErrorCode {
     LOGIN_ID_PW_VALIDATION(HttpStatus.BAD_REQUEST, "USER404", "통합 로그인 실패"),
     TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, "USER404", "토큰이 만료되었습니다."),
     REISSUE_TOKEN_FAIL(HttpStatus.BAD_REQUEST, "USER405", "토큰 재발급 실패"),
+    TOKEN_VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "USER406", "잘못된 토큰 값 입니다"),
 
     INVALID_ORDER(HttpStatus.BAD_REQUEST, "ORDER400", "잘못된 주문 요청입니다"),
     ORDER_PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "ORDER401", "주문 상품을 찾을 수 없습니다"),
@@ -38,7 +39,11 @@ public enum ErrorStatus implements BaseErrorCode {
 
     ALREADY_HAD_COUPON(HttpStatus.FORBIDDEN,"COUPON701","이미 보유중인 쿠폰입니다."),
     ALREADY_USED_COUPON(HttpStatus.FORBIDDEN,"COUPON701","이미 사용한 쿠폰입니다."),
+    NOT_CART_OWNER(HttpStatus.FORBIDDEN,"CART801","장바구니 주인이 아닙니다."),
 
+    REVIEW_SAVE_FAIL(HttpStatus.BAD_REQUEST, "REVIEW400","상품 리뷰 작성 실패"),
+    REVIEW_UPDATE_FAIL(HttpStatus.BAD_REQUEST, "REVIEW400","상품 리뷰 수정 실패"),
+    REVIEW_DELETE_FAIL(HttpStatus.BAD_REQUEST,"REVIEW400","상품 리뷰 삭제 실패"),
     EXAMPLE_EXCEPTION(HttpStatus.BAD_REQUEST, "EXAMPLE400", "샘플 에러 메시지입니다");
 
 

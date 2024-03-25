@@ -41,7 +41,7 @@ springdoc:
 
 JWT:
   SECRET_KEY: ${SECRET_KEY}
-  access-token-expiration: 30000
+  access-token-expiration: 3000000
   refresh-token-expiration: 8640000
 
 server:

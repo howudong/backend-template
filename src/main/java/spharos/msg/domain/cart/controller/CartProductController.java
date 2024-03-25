@@ -7,8 +7,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import spharos.msg.domain.cart.dto.CartProductQuantityDto;
-import spharos.msg.domain.cart.dto.CartProductRequestDto;
 import spharos.msg.domain.cart.service.CartProductService;
+import spharos.msg.domain.cart.service.CartProductUpdateService;
 import spharos.msg.global.api.ApiResponse;
 
 @RestController
@@ -17,6 +17,7 @@ import spharos.msg.global.api.ApiResponse;
 @Tag(name = "CartProduct", description = "장바구니 API")
 public class CartProductController {
     private final CartProductService cartProductService;
+    private final CartProductUpdateService cartProductUpdateService;
 
     @Operation(summary = "장바구니 담기",
             description = "옵션에 해당되는 상품을 장바구니에 추가합니다.")
@@ -38,16 +39,57 @@ public class CartProductController {
         return cartProductService.getCart(userDetails.getUsername());
     }
 
-    @Operation(summary = "장바구니 수정",
-            description = "장바구니에 담긴 상품 옵션/수량을 수정합니다.")
-    @PatchMapping("/{cartId}")
-    public ApiResponse<?> updateCart(
-            @RequestBody CartProductRequestDto cartProductRequestDto,
+    @Operation(summary = "장바구니 옵션 수정",
+            description = "장바구니에 담긴 상품의 옵션을 수정합니다.")
+    @PatchMapping("/option/{cartId}")
+    public ApiResponse<?> updateCartProductOption(
+            @PathVariable Long cartId,
+            @RequestParam("productOptionId") Long productOptionId,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        return cartProductUpdateService.updateCartProductOption(productOptionId, cartId, userDetails.getUsername());
+    }
+
+    @Operation(summary = "장바구니 수량 추가",
+            description = "장바구니에 담긴 상품의 수량을 늘립니다.")
+    @PatchMapping("/add/{cartId}")
+    public ApiResponse<?> addCartProductQuantity(
             @PathVariable Long cartId,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
-        return cartProductService.updateCart(cartProductRequestDto, cartId, userDetails.getUsername());
+        return cartProductUpdateService.addCartProductQuantity(cartId, userDetails.getUsername());
     }
+
+    @Operation(summary = "장바구니 수량 감소",
+            description = "장바구니에 담긴 상품의 수량을 줄입니다.")
+    @PatchMapping("/minus/{cartId}")
+    public ApiResponse<?> minusCartProductQuantity(
+            @PathVariable Long cartId,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        return cartProductUpdateService.minusCartProductQuantity(cartId, userDetails.getUsername());
+    }
+
+    @Operation(summary = "장바구니 체크 수정",
+            description = "장바구니에 담긴 상품을 체크합니다.")
+    @PatchMapping("/check/{cartId}")
+    public ApiResponse<?> checkCartProduct(
+            @PathVariable Long cartId,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        return cartProductUpdateService.checkCartProduct(cartId, userDetails.getUsername());
+    }
+
+    @Operation(summary = "장바구니 체크 수정",
+            description = "장바구니에 담긴 상품을 체크해제합니다.")
+    @PatchMapping("/not-check/{cartId}")
+    public ApiResponse<?> notCheckCartProduct(
+            @PathVariable Long cartId,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        return cartProductUpdateService.notCheckCartProduct(cartId, userDetails.getUsername());
+    }
+
 
     @Operation(summary = "장바구니 삭제",
             description = "장바구니에 담긴 상품을 삭제합니다.")

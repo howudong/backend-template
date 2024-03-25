@@ -1,10 +1,13 @@
 package spharos.msg.domain.users.entity;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import jakarta.persistence.*;
-
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,10 +17,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import spharos.msg.domain.users.dto.SignUpRequestDto;
 import spharos.msg.global.entity.BaseEntity;
 
@@ -57,7 +56,8 @@ public class Users extends BaseEntity implements UserDetails {
     private Long baseAddressId;
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Address> addresses;
+    @Builder.Default
+    private List<Address> addresses = new ArrayList<>();
 
     public static Users signUpDtoToEntity(SignUpRequestDto signUpRequestDto) {
         signUpRequestDto.setPassword(passwordToHash(signUpRequestDto.getPassword()));
@@ -71,6 +71,10 @@ public class Users extends BaseEntity implements UserDetails {
             .uuid(UUID.randomUUID().toString())
             .baseAddressId(0L)
             .build();
+    }
+
+    public void addAddress(Address address) {
+        this.addresses.add(address);
     }
 
     @Override
@@ -97,6 +101,9 @@ public class Users extends BaseEntity implements UserDetails {
         return this.password;
     }
 
+    /**
+     * @return uuid를 반환함
+     */
     @Override
     public String getUsername() {
         return this.uuid;
