@@ -25,20 +25,19 @@ public class LikesService {
     //상품에 좋아요 등록
     @Transactional
     public ApiResponse<?> likeProduct(Long productId, String userUuid) {
-        //todo 로그인 안되어 있으면 로그인 페이지로 이동
         Product product = productRepository.findById(productId).orElseThrow();
         Users users = usersRepository.findByUuid(userUuid).orElseThrow();
 
         Likes like = Likes.builder()
                 .product(product)
                 .users(users)
-                .isLike(true)
                 .build();
         likesRepository.save(like);
 
         return ApiResponse.of(SuccessStatus.LIKES_SUCCESS, null);
     }
 
+    //좋아요 삭제
     @Transactional
     public ApiResponse<?> deleteLikeProduct(Long productId, String userUuid) {
         Product product = productRepository.findById(productId).orElseThrow();
@@ -48,7 +47,7 @@ public class LikesService {
 
         return ApiResponse.of(SuccessStatus.LIKES_DELETE_SUCCESS, null);
     }
-
+    //좋아요 상품 목록 조회
     @Transactional
     public ApiResponse<?> getProductLikeList(String userUuid) {
         Users users = usersRepository.findByUuid(userUuid).orElseThrow();

@@ -10,12 +10,11 @@ public class LikesResponseDto {
     private Long productId;
     private String productName;
     private int productPrice;
-    private boolean isLike;
+    //별점, 댓글 수,할인율
 
     public LikesResponseDto(Likes likes) {
         this.productId = likes.getProduct().getId();
         this.productName = likes.getProduct().getProductName();
         this.productPrice = likes.getProduct().getProductPrice();
-        this.isLike = likes.isLike();
     }
 }
