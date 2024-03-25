@@ -1,16 +1,10 @@
 package spharos.msg.domain.users.entity;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -62,6 +56,7 @@ public class Users extends BaseEntity implements UserDetails {
     private Long baseAddressId;
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<Address> addresses = new ArrayList<>();
 
     public static Users signUpDtoToEntity(SignUpRequestDto signUpRequestDto) {
@@ -76,6 +71,10 @@ public class Users extends BaseEntity implements UserDetails {
             .uuid(UUID.randomUUID().toString())
             .baseAddressId(0L)
             .build();
+    }
+
+    public void addAddress(Address address) {
+        this.addresses.add(address);
     }
 
     @Override

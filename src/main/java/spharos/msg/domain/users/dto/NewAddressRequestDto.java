@@ -23,7 +23,7 @@ public class NewAddressRequestDto {
     private Users users;
 
     public static NewAddressRequestDto signUpDtoToDto(
-        SignUpRequestDto signUpRequestDto, Users savedUser) {
+        SignUpRequestDto signUpRequestDto, Users users) {
         return NewAddressRequestDto
             .builder()
             .addressName(UsersService.BASIC_ADDRESS_NAME)
@@ -31,7 +31,7 @@ public class NewAddressRequestDto {
             .mobileNumber(signUpRequestDto.getPhoneNumber())
             .addressPhoneNumber(signUpRequestDto.getPhoneNumber())
             .address(signUpRequestDto.getAddress())
-            .users(savedUser)
+            .users(users)
             .build();
     }
 }
