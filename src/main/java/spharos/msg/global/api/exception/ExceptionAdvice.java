@@ -45,13 +45,13 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
             request);
     }
 
-//    @ExceptionHandler
-//    public ResponseEntity<Object> commonException(Exception e, WebRequest request) {
-//        ErrorStatus errorStatus = ErrorStatus.INTERNAL_SERVER_ERROR;
-//        ApiResponse<Object> responseBody = createResponseBody(errorStatus, null);
-//        return super.handleExceptionInternal(
-//            e, responseBody, HttpHeaders.EMPTY, errorStatus.getHttpStatus(), request);
-//    }
+    @ExceptionHandler
+    public ResponseEntity<Object> commonException(Exception e, WebRequest request) {
+        ErrorStatus errorStatus = ErrorStatus.INTERNAL_SERVER_ERROR;
+        ApiResponse<Object> responseBody = createResponseBody(errorStatus, null);
+        return super.handleExceptionInternal(
+            e, responseBody, HttpHeaders.EMPTY, errorStatus.getHttpStatus(), request);
+    }
 
     /**
      * 주문 예외 발생
