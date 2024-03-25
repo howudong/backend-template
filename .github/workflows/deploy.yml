@@ -103,7 +103,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./Dockerfile_spring
+          file: ./Dockerfile_redis
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/msg_redis:latest
           cache-from: type=gha
