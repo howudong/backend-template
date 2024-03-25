@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import spharos.msg.domain.users.dto.KakaoLoginRequestDto;
 import spharos.msg.domain.users.dto.LoginRequestDto;
 import spharos.msg.domain.users.dto.SignUpRequestDto;
 import spharos.msg.domain.users.entity.Users;
@@ -37,8 +38,8 @@ public class UsersController {
     @Operation(summary = "로그인", description = "통합회원 로그인", tags = {"User Login"})
     @PostMapping("login/union")
     public ApiResponse<?> loginUnion(
-        @RequestBody LoginRequestDto loginRequestDto,
-        HttpServletResponse response
+            @RequestBody LoginRequestDto loginRequestDto,
+            HttpServletResponse response
     ) {
         Users loginUsers = usersService.login(loginRequestDto);
         usersService.createTokenAndCreateHeaders(response, loginUsers);
@@ -48,14 +49,17 @@ public class UsersController {
     @Operation(summary = "로그인", description = "간편회원 로그인", tags = {"User Login"})
     @PostMapping("/login/easy")
     public ApiResponse<?> loginEasy(
-        @RequestBody LoginRequestDto loginRequestDto) {
-        //
-        return null;
+            @RequestBody KakaoLoginRequestDto kakaoLoginRequestDto,
+            HttpServletResponse response) {
+        Users kakaoLogin = usersService.Kakaologin(kakaoLoginRequestDto);
+        usersService.createTokenAndCreateHeaders(response, kakaoLogin);
+
+        return ApiResponse.of(SuccessStatus.LOGIN_SUCCESS_EASY, null);
     }
 
     @Operation(summary = "로그아웃", description = "로그인 회원 로그아웃", tags = {"User Logout"})
     @PatchMapping("/logout")
-    public ApiResponse<?> logout(@RequestBody String uuid){
+    public ApiResponse<?> logout(@RequestBody String uuid) {
         usersService.userLogout(uuid);
         return ApiResponse.of(SuccessStatus.LOGOUT_SUCCESS, null);
     }

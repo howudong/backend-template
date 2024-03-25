@@ -6,6 +6,7 @@ import spharos.msg.domain.users.entity.Users;
 
 import java.util.List;
 
-public interface UsersCouponRepository extends JpaRepository<UserCoupon,Long> {
+public interface UsersCouponRepository extends JpaRepository<UserCoupon, Long> {
+
     List<UserCoupon> findByUsers(Users users);
 }

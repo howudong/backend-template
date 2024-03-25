@@ -1,8 +1,10 @@
 package spharos.msg.domain.users.service;
 
+import static spharos.msg.global.api.code.status.ErrorStatus.ALREADY_EXIST_EMAIL;
 import static spharos.msg.global.api.code.status.ErrorStatus.LOGIN_ID_NOT_FOUND;
 import static spharos.msg.global.api.code.status.ErrorStatus.LOGIN_ID_PW_VALIDATION;
-import static spharos.msg.global.api.code.status.ErrorStatus.SIGN_IN_ID_DUPLICATION;
+import static spharos.msg.global.api.code.status.ErrorStatus.SIGN_UP_EASY_FAIL;
+import static spharos.msg.global.api.code.status.ErrorStatus.SIGN_UP_UNION_FAIL;
 
 
 import jakarta.servlet.http.Cookie;
@@ -15,12 +17,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import spharos.msg.domain.users.dto.KakaoLoginRequestDto;
 import spharos.msg.domain.users.dto.KakaoSignUpRequestDto;
 import spharos.msg.domain.users.dto.LoginRequestDto;
 import spharos.msg.domain.users.dto.NewAddressRequestDto;
 import spharos.msg.domain.users.dto.SignUpRequestDto;
 import spharos.msg.domain.users.entity.Address;
 import spharos.msg.domain.users.entity.Users;
+import spharos.msg.domain.users.repository.KakaoUsersRepository;
 import spharos.msg.domain.users.repository.UsersRepository;
 import spharos.msg.global.api.code.status.ErrorStatus;
 import spharos.msg.global.api.exception.JwtTokenException;
@@ -34,6 +38,7 @@ import spharos.msg.global.security.JwtTokenProvider;
 public class UsersService {
 
     private final UsersRepository usersRepository;
+    private final KakaoUsersRepository kakaoUsersRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
     private final RedisService redisService;
@@ -52,15 +57,25 @@ public class UsersService {
 
     @Transactional(readOnly = true)
     public void signUpDuplicationCheck(SignUpRequestDto signUpRequestDto) {
+        ErrorStatus errorStatus = SIGN_UP_UNION_FAIL;
+        if (Boolean.TRUE.equals(signUpRequestDto.getIsEasy())) {
+            errorStatus = SIGN_UP_EASY_FAIL;
+        }
         if (usersRepository.findByLoginId(signUpRequestDto.getLoginId()).isPresent()) {
-            throw new UsersException(SIGN_IN_ID_DUPLICATION);
+            throw new UsersException(errorStatus);
+        }
+
+        //이메일과회원 이름은 유일한 값이어야됨
+        if (usersRepository.findKakaoUsersByUserNameAndEmail(signUpRequestDto.getUsername(),
+                signUpRequestDto.getEmail()).isPresent()) {
+            throw new UsersException(ALREADY_EXIST_EMAIL);
         }
     }
 
     @Transactional(readOnly = true)
     public Users login(LoginRequestDto loginRequestDto) {
         Users users = usersRepository.findByLoginId(loginRequestDto.getLoginId())
-            .orElseThrow(() -> new UsersException(LOGIN_ID_NOT_FOUND));
+                .orElseThrow(() -> new UsersException(LOGIN_ID_NOT_FOUND));
 
         //비밀번호 검증
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -68,13 +83,23 @@ public class UsersService {
             throw new UsersException(LOGIN_ID_PW_VALIDATION);
         }
 
-        //적합한 인증 provider 찾기
         authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(
-                users.getUsername(),
-                loginRequestDto.getPassword()
-            )
+                new UsernamePasswordAuthenticationToken(
+                        users.getUsername(),
+                        loginRequestDto.getPassword()
+                )
         );
+
+        return users;
+    }
+
+    @Transactional(readOnly = true)
+    public Users Kakaologin(KakaoLoginRequestDto kakaoLoginRequestDto) {
+        Users users = usersRepository.findKakaoUsersByUserNameAndEmail(
+                        kakaoLoginRequestDto.getUsername(), kakaoLoginRequestDto.getEmail())
+                .orElseThrow(() -> new UsersException(ErrorStatus.EASY_LOGIN_ID_NOT_FOUND));
+        kakaoUsersRepository.findKakaoUsersByUserUuid(users.getUuid())
+                .orElseThrow(() -> new UsersException(ErrorStatus.EASY_LOGIN_ID_NOT_FOUND));
 
         return users;
     }
@@ -87,7 +112,7 @@ public class UsersService {
         Users users = Users.signUpDtoToEntity(signUpRequestDto);
 
         Address address = Address.NewAddressDtoToEntity(
-            NewAddressRequestDto.signUpDtoToDto(signUpRequestDto, users));
+                NewAddressRequestDto.signUpDtoToDto(signUpRequestDto, users));
 
         users.addAddress(address);
 
@@ -96,7 +121,7 @@ public class UsersService {
 
         if (Boolean.TRUE.equals(signUpRequestDto.getIsEasy())) {
             kakaoUsersService.createKakaoUsers(
-                KakaoSignUpRequestDto.uuidToDto(users.getUuid()));
+                    KakaoSignUpRequestDto.uuidToDto(users.getUuid()));
         }
 
         return users;
@@ -111,7 +136,7 @@ public class UsersService {
 
     public String createAccessToken(Users users) {
         return BEARER + " " + jwtTokenProvider.generateToken(users, accessTokenExpiration,
-            "Access");
+                "Access");
     }
 
     public void createTokenAndCreateHeaders(HttpServletResponse response, Users users) {
@@ -129,7 +154,7 @@ public class UsersService {
     }
 
     private void doResponseCookieAndHeader(
-        HttpServletResponse response, String refreshToken, String accessToken) {
+            HttpServletResponse response, String refreshToken, String accessToken) {
         response.addHeader(ACCESS_TOKEN, accessToken);
         Cookie cookie = new Cookie(REFRESH_TOKEN, refreshToken);
         cookie.setSecure(true);
@@ -155,7 +180,7 @@ public class UsersService {
             }
 
             return usersRepository.findByUuid(uuid)
-                .orElseThrow(() -> new JwtTokenException(ErrorStatus.REISSUE_TOKEN_FAIL));
+                    .orElseThrow(() -> new JwtTokenException(ErrorStatus.REISSUE_TOKEN_FAIL));
         } catch (Exception e) {
             throw new JwtTokenException(ErrorStatus.REISSUE_TOKEN_FAIL);
         }
@@ -167,7 +192,7 @@ public class UsersService {
         }
     }
 
-    public void deleteUsers(String uuid){
+    public void deleteUsers(String uuid) {
         Users users = usersRepository.findByUuid(uuid).orElseThrow();
         usersRepository.deleteById(users.getId());
     }

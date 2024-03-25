@@ -25,8 +25,8 @@ public class KakaoUsers extends BaseEntity {
 
     public static KakaoUsers kakaoSignUpDtoToEntity(KakaoSignUpRequestDto kakaoSignUpRequestDto) {
         return KakaoUsers
-            .builder()
-            .userUuid(kakaoSignUpRequestDto.getUserUuid())
-            .build();
+                .builder()
+                .userUuid(kakaoSignUpRequestDto.getUserUuid())
+                .build();
     }
 }

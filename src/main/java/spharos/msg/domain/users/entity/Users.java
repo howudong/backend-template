@@ -62,15 +62,15 @@ public class Users extends BaseEntity implements UserDetails {
     public static Users signUpDtoToEntity(SignUpRequestDto signUpRequestDto) {
         signUpRequestDto.setPassword(passwordToHash(signUpRequestDto.getPassword()));
         return Users
-            .builder()
-            .loginId(signUpRequestDto.getLoginId())
-            .password(signUpRequestDto.getPassword())
-            .userName(signUpRequestDto.getUsername())
-            .email(signUpRequestDto.getEmail())
-            .phoneNumber(signUpRequestDto.getPhoneNumber())
-            .uuid(UUID.randomUUID().toString())
-            .baseAddressId(0L)
-            .build();
+                .builder()
+                .loginId(signUpRequestDto.getLoginId())
+                .password(signUpRequestDto.getPassword())
+                .userName(signUpRequestDto.getUsername())
+                .email(signUpRequestDto.getEmail())
+                .phoneNumber(signUpRequestDto.getPhoneNumber())
+                .uuid(UUID.randomUUID().toString())
+                .baseAddressId(0L)
+                .build();
     }
 
     public void addAddress(Address address) {
@@ -80,11 +80,11 @@ public class Users extends BaseEntity implements UserDetails {
     @Override
     public String toString() {
         return "Users{" +
-            "id=" + id +
-            ", loginId='" + loginId + '\'' +
-            ", uuid='" + uuid + '\'' +
-            ", password='" + password + '\'' +
-            '}';
+                "id=" + id +
+                ", loginId='" + loginId + '\'' +
+                ", uuid='" + uuid + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 
     public static String passwordToHash(String password) {
