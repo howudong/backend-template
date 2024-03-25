@@ -31,6 +31,21 @@ public class ReviewService {
     private final UsersRepository usersRepository;
 
     @Transactional
+    public ApiResponse<?> getReviewDetail(Long reviewId) {
+        try {//리뷰 객체가져오기
+            Optional<Review> reviewOptional = reviewRepository.findById(reviewId);
+            if (reviewOptional.isPresent()){
+                Review review = reviewOptional.get();
+
+                return
+            }
+            return
+        } catch (Exception e) {
+            return
+        }
+    }
+
+    @Transactional
     public ApiResponse<?> saveReview(Long productId, ReviewRequest.createDto reviewRequest, String userUuid){
         try {//상품 객체 가져오기
             Optional<Product> productOptional = productRepository.findById(productId);
