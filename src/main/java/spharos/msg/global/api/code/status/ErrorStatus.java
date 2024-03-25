@@ -30,6 +30,8 @@ public enum ErrorStatus implements BaseErrorCode {
     TOKEN_VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "USER407", "잘못된 토큰 값 입니다"),
     EASY_LOGIN_ID_NOT_FOUND(HttpStatus.BAD_REQUEST, "USER408", "간편 로그인 실패"),
     ALREADY_EXIST_EMAIL(HttpStatus.BAD_REQUEST, "USER409", "이미 사용중인 Email 입니다"),
+    ALREADY_EASY_USER(HttpStatus.BAD_REQUEST, "USER410", "이미 간편 회원 입니다."),
+    IS_NOT_EASY_USER(HttpStatus.BAD_REQUEST, "USER411", "간편 회원이 아닙니다."),
 
     INVALID_ORDER(HttpStatus.BAD_REQUEST, "ORDER400", "잘못된 주문 요청입니다"),
     ORDER_PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "ORDER401", "주문 상품을 찾을 수 없습니다"),

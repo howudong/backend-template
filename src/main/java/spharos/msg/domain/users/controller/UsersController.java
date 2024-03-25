@@ -24,6 +24,7 @@ public class UsersController {
     @Operation(summary = "통합회원가입", description = "통합회원가입", tags = {"User Signup"})
     @PostMapping("/signup/union")
     public ApiResponse<?> signUpUnion(@RequestBody SignUpRequestDto signUpRequestDto) {
+        signUpRequestDto.setIsEasy(false);
         usersService.createUsers(signUpRequestDto);
         return ApiResponse.of(SuccessStatus.SIGN_UP_SUCCESS_UNION, null);
     }
@@ -31,7 +32,8 @@ public class UsersController {
     @Operation(summary = "간편회원가입", description = "간편회원가입", tags = {"User Signup"})
     @PostMapping("/signup/easy")
     public ApiResponse<?> signUpEasy(@RequestBody SignUpRequestDto signUpRequestDto) {
-        usersService.createUsers(signUpRequestDto);
+        signUpRequestDto.setIsEasy(true);
+        usersService.createEasyAndUnionUsers(signUpRequestDto);
         return ApiResponse.of(SuccessStatus.SIGN_UP_SUCCESS_EASY, null);
     }
 
@@ -51,9 +53,8 @@ public class UsersController {
     public ApiResponse<?> loginEasy(
             @RequestBody KakaoLoginRequestDto kakaoLoginRequestDto,
             HttpServletResponse response) {
-        Users kakaoLogin = usersService.Kakaologin(kakaoLoginRequestDto);
-        usersService.createTokenAndCreateHeaders(response, kakaoLogin);
-
+        Users loginUsers = usersService.easyLogin(kakaoLoginRequestDto);
+        usersService.createTokenAndCreateHeaders(response, loginUsers);
         return ApiResponse.of(SuccessStatus.LOGIN_SUCCESS_EASY, null);
     }
 
