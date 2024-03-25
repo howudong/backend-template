@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import spharos.msg.domain.cart.dto.CartProductOptionResponseDto;
 import spharos.msg.domain.cart.dto.CartProductQuantityDto;
-import spharos.msg.domain.cart.dto.CartProductRequestDto;
 import spharos.msg.domain.cart.dto.CartProductResponseDto;
 import spharos.msg.domain.cart.entity.CartProduct;
 import spharos.msg.domain.cart.repository.CartProductRepository;
@@ -55,18 +54,6 @@ public class CartProductService {
     }
 
     @Transactional
-    public ApiResponse<?> updateCart(CartProductRequestDto cartProductRequestDto, Long cartId, String userUuid) {
-        CartProduct cartProduct = cartProductRepository.findById(cartId).orElseThrow();
-        ProductOption productOption = productOptionRepository.findById(cartProductRequestDto.getProductOptionId()).orElseThrow();
-        Users users = usersRepository.findByUuid(userUuid).orElseThrow();
-
-        cartProduct.updateCartProduct(cartProductRequestDto, productOption);
-
-        return ApiResponse.of(SuccessStatus.CART_PRODUCT_UPDATE_SUCCESS,
-                new CartProductResponseDto(cartProduct));
-    }
-
-    @Transactional
     public ApiResponse<?> deleteCart(Long cartId, String userUuid) {
         CartProduct cartProduct = cartProductRepository.findById(cartId).orElseThrow();
         Users users = usersRepository.findByUuid(userUuid).orElseThrow();
@@ -103,5 +90,4 @@ public class CartProductService {
         cartProductRepository.save(cartProduct);
         return ApiResponse.of(SuccessStatus.CART_PRODUCT_ADD_SUCCESS, null);
     }
-
 }
