@@ -17,6 +17,8 @@ import spharos.msg.domain.users.service.UsersService;
 import spharos.msg.global.api.ApiResponse;
 import spharos.msg.global.api.code.status.SuccessStatus;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -29,7 +31,7 @@ public class TokenController {
     @PostMapping
     public ApiResponse<?> reissueToken(
         @RequestBody ReissueRequestDto reissueRequestDto,
-        @RequestHeader(name = "Authorization") String refreshToken,
+        @RequestHeader(AUTHORIZATION) String refreshToken,
         HttpServletResponse response
     ) {
         Users findUsers = usersService.checkRefreshTokenValidation(
