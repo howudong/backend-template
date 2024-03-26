@@ -5,6 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SignUpResponseDto {
-    //todo : 테이터 추가되면 추가
+public class KakaoLoginRequestDto {
+
+    public String username;
+    public String email;
 }

@@ -23,15 +23,15 @@ public class NewAddressRequestDto {
     private Users users;
 
     public static NewAddressRequestDto signUpDtoToDto(
-        SignUpRequestDto signUpRequestDto, Users users) {
+            SignUpRequestDto signUpRequestDto, Users users) {
         return NewAddressRequestDto
-            .builder()
-            .addressName(UsersService.BASIC_ADDRESS_NAME)
-            .recipient(signUpRequestDto.getUsername())
-            .mobileNumber(signUpRequestDto.getPhoneNumber())
-            .addressPhoneNumber(signUpRequestDto.getPhoneNumber())
-            .address(signUpRequestDto.getAddress())
-            .users(users)
-            .build();
+                .builder()
+                .addressName(UsersService.BASIC_ADDRESS_NAME)
+                .recipient(signUpRequestDto.getUsername())
+                .mobileNumber(signUpRequestDto.getPhoneNumber())
+                .addressPhoneNumber(signUpRequestDto.getPhoneNumber())
+                .address(signUpRequestDto.getAddress())
+                .users(users)
+                .build();
     }
 }
