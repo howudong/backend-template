@@ -3,6 +3,8 @@ package spharos.msg.domain.users.service;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -149,26 +151,9 @@ public class UsersService {
         response.addCookie(cookie);
     }
 
-    public Users checkRefreshTokenValidation(String givenRefreshToken, String uuid) {
-
-        //Token 값 자체 유효성 검사
-        if (givenRefreshToken == null || !givenRefreshToken.startsWith(BEARER + " ")) {
-            throw new JwtTokenException(ErrorStatus.REISSUE_TOKEN_FAIL);
-        }
-
-        String jwt = givenRefreshToken.substring(7);
-
-        try {
-            String findRefreshToken = redisService.getRefreshToken(uuid);
-            if (!findRefreshToken.matches(jwt)) {
-                throw new JwtTokenException(ErrorStatus.REISSUE_TOKEN_FAIL);
-            }
-
-            return usersRepository.findByUuid(uuid)
-                    .orElseThrow(() -> new JwtTokenException(ErrorStatus.REISSUE_TOKEN_FAIL));
-        } catch (Exception e) {
-            throw new JwtTokenException(ErrorStatus.REISSUE_TOKEN_FAIL);
-        }
+    public Users getUsersByUuid(String uuid){
+        return usersRepository.findByUuid(uuid).orElseThrow(
+                () -> new JwtTokenException(ErrorStatus.REISSUE_TOKEN_FAIL));
     }
 
     public void userLogout(String uuid) {
