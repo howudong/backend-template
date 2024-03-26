@@ -78,9 +78,8 @@ public class UsersService {
 
             if (Boolean.TRUE.equals(signUpRequestDto.getIsEasy())) {
                 throw new UsersException(ErrorStatus.SIGN_UP_EASY_FAIL);
-            } else {
-                throw new UsersException(ErrorStatus.SIGN_UP_UNION_FAIL);
             }
+            throw new UsersException(ErrorStatus.SIGN_UP_UNION_FAIL);
         }
 
         Users users = Users.signUpDtoToEntity(signUpRequestDto);
