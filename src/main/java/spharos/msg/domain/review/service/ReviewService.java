@@ -35,18 +35,28 @@ public class ReviewService {
 
     @Transactional
     public ApiResponse<?> getReviewDetail(Long reviewId) {
-        try {//리뷰 객체가져오기
+        try {
+            //리뷰 객체 가져 오기
             Optional<Review> reviewOptional = reviewRepository.findById(reviewId);
             if (reviewOptional.isPresent()) {
                 Review review = reviewOptional.get();
-                ReviewResponse.ReviewDetail reviewInfo = ReviewResponse.ReviewDetail.builder()
+                Optional<Users> usersOptional = usersRepository.findById(review.getUserId());
+                String userName;
+
+                if (usersOptional.isPresent()) {
+                    Users users = usersOptional.get();
+                    userName = users.getUsername(); //추후 사용자 이름이 들어가도록 수정 필요
+                } else {
+                    userName = "탈퇴한 회원입니다";
+                }
+
+                return ApiResponse.of(REVIEW_READ_SUCCESS,ReviewResponse.ReviewDetail.builder()
                     .reviewId(review.getId())
                     .reviewStar(review.getReviewStar())
                     .reviewCreatedat(review.getCreatedAt())
                     .reviewContent(review.getReviewComment())
-                    .reviewer(review.getUserId().toString()) //추후 사용자이름으로 수정
-                    .build();
-                return ApiResponse.of(REVIEW_READ_SUCCESS,null);
+                    .reviewer(userName)
+                    .build());
             }
             return ApiResponse.onFailure(REVIEW_READ_FAIL,null);
         } catch (Exception e) {

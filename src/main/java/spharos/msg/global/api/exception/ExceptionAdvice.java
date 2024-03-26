@@ -47,6 +47,9 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<Object> commonException(Exception e, WebRequest request) {
+        //미처 처리 못한 Exception 전부 이쪽으로 넘와와서 확인용 Log 하나 생성
+        log.info("No Handling Exception is = {}", e.getMessage());
+
         ErrorStatus errorStatus = ErrorStatus.INTERNAL_SERVER_ERROR;
         ApiResponse<Object> responseBody = createResponseBody(errorStatus, null);
         return super.handleExceptionInternal(

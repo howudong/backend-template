@@ -51,13 +51,13 @@ public class Address {
 
     public static Address NewAddressDtoToEntity(NewAddressRequestDto newAddressRequestDto) {
         return Address
-            .builder()
-            .addressName(newAddressRequestDto.getAddressName())
-            .recipient(newAddressRequestDto.getRecipient())
-            .mobileNumber(newAddressRequestDto.getMobileNumber())
-            .addressPhoneNumber(newAddressRequestDto.getAddressPhoneNumber())
-            .address(newAddressRequestDto.getAddress())
-            .users(newAddressRequestDto.getUsers())
-            .build();
+                .builder()
+                .addressName(newAddressRequestDto.getAddressName())
+                .recipient(newAddressRequestDto.getRecipient())
+                .mobileNumber(newAddressRequestDto.getMobileNumber())
+                .addressPhoneNumber(newAddressRequestDto.getAddressPhoneNumber())
+                .address(newAddressRequestDto.getAddress())
+                .users(newAddressRequestDto.getUsers())
+                .build();
     }
 }
