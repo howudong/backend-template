@@ -23,9 +23,10 @@ public enum SuccessStatus implements BaseCode {
     CART_PRODUCT_DELETE_SUCCESS(HttpStatus.OK, "CART304", "장바구니 삭제 성공"),
     CART_PRODUCT_OPTION_SUCCESS(HttpStatus.OK, "CART305", "장바구니 옵션 조회 성공"),
 
-    LIKES_SUCCESS(HttpStatus.CREATED, "LIKES401", "좋아요 등록 성공"),
-    LIKES_DELETE_SUCCESS(HttpStatus.CREATED, "LIKES402", "좋아요 해제 성공"),
-    LIKES_LIST_GET_SUCCESS(HttpStatus.CREATED, "LIKES403", "좋아요 목록 조회 성공"),
+    LIKES_SUCCESS(HttpStatus.CREATED, "LIKES201", "좋아요 등록 성공"),
+    LIKES_DELETE_SUCCESS(HttpStatus.CREATED, "LIKES200", "좋아요 해제 성공"),
+    LIKES_LIST_GET_SUCCESS(HttpStatus.CREATED, "LIKES200", "좋아요 목록 조회 성공"),
+    LIKES_GET_SUCCESS(HttpStatus.OK,"LIKES200","좋아요 유무 조회 성공") ,
 
     COUPON_LIST_GET_SUCCESS(HttpStatus.OK, "COUPON501", "다운 가능 쿠폰 목록 조회 성공"),
     COUPON_DOWNLOAD_SUCCESS(HttpStatus.OK, "COUPON502", "쿠폰 다운로드 성공"),
