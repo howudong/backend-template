@@ -3,6 +3,7 @@ package spharos.msg.domain.users.service;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import spharos.msg.domain.users.dto.KakaoLoginRequestDto;
 import spharos.msg.domain.users.dto.LoginRequestDto;
-import spharos.msg.domain.users.dto.NewAddressRequestDto;
 import spharos.msg.domain.users.dto.SignUpRequestDto;
 import spharos.msg.domain.users.entity.Address;
 import spharos.msg.domain.users.entity.Users;
@@ -73,29 +73,46 @@ public class UsersService {
 
     @Transactional
     public Users createUsers(SignUpRequestDto signUpRequestDto) {
-        if (usersRepository.findByEmail(signUpRequestDto.getEmail()).isPresent()) {
-            log.info("이미 등록된 E-Mail 입니다");
+//        if (usersRepository.findByEmail(signUpRequestDto.getEmail()).isPresent()) {
+//            log.info("이미 등록된 E-Mail 입니다");
+//
+//            if (Boolean.TRUE.equals(signUpRequestDto.getIsEasy())) {
+//                throw new UsersException(ErrorStatus.SIGN_UP_EASY_FAIL);
+//            }
+//            throw new UsersException(ErrorStatus.SIGN_UP_UNION_FAIL);
+//        }
 
-            if (Boolean.TRUE.equals(signUpRequestDto.getIsEasy())) {
-                throw new UsersException(ErrorStatus.SIGN_UP_EASY_FAIL);
-            }
-            throw new UsersException(ErrorStatus.SIGN_UP_UNION_FAIL);
-        }
+        //Users users = Users.signUpDtoToEntity(signUpRequestDto);
+        Users newUser = Users
+                .builder()
+                .loginId(signUpRequestDto.getLoginId())
+                .password(signUpRequestDto.getPassword())
+                .userName(signUpRequestDto.getUsername())
+                .email(signUpRequestDto.getEmail())
+                .phoneNumber(signUpRequestDto.getPhoneNumber())
+                .uuid(UUID.randomUUID().toString())
+                .baseAddressId(0L)
+                .build();
+        newUser.passwordToHash(signUpRequestDto.getPassword());
 
-        Users users = Users.signUpDtoToEntity(signUpRequestDto);
+        Address newAddress = Address
+                .builder()
+                .addressName(BASIC_ADDRESS_NAME)
+                .recipient(signUpRequestDto.getUsername())
+                .mobileNumber(signUpRequestDto.getPhoneNumber())
+                .addressPhoneNumber(signUpRequestDto.getPhoneNumber())
+                .address(signUpRequestDto.getAddress())
+                .users(newUser)
+                .build();
 
-        Address address = Address.NewAddressDtoToEntity(
-                NewAddressRequestDto.signUpDtoToDto(signUpRequestDto, users));
+        newUser.addAddress(newAddress);
 
-        users.addAddress(address);
+        usersRepository.save(newUser);
+        addressService.createNewAddress(newAddress);
 
-        usersRepository.save(users);
-        addressService.createNewAddress(address);
-
-        return users;
+        return newUser;
     }
 
-    //토큰 생성 후, redis에 저장
     public String createRefreshToken(Users users) {
         String token = jwtTokenProvider.generateToken(users, refreshTokenExpiration, "Refresh");
         redisService.saveRefreshToken(users.getUuid(), token, refreshTokenExpiration);

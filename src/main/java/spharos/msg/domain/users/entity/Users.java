@@ -59,20 +59,6 @@ public class Users extends BaseEntity implements UserDetails {
     @Builder.Default
     private List<Address> addresses = new ArrayList<>();
 
-    public static Users signUpDtoToEntity(SignUpRequestDto signUpRequestDto) {
-        signUpRequestDto.setPassword(passwordToHash(signUpRequestDto.getPassword()));
-        return Users
-                .builder()
-                .loginId(signUpRequestDto.getLoginId())
-                .password(signUpRequestDto.getPassword())
-                .userName(signUpRequestDto.getUsername())
-                .email(signUpRequestDto.getEmail())
-                .phoneNumber(signUpRequestDto.getPhoneNumber())
-                .uuid(UUID.randomUUID().toString())
-                .baseAddressId(0L)
-                .build();
-    }
-
     public void addAddress(Address address) {
         this.addresses.add(address);
     }
@@ -87,8 +73,13 @@ public class Users extends BaseEntity implements UserDetails {
                 '}';
     }
 
-    public static String passwordToHash(String password) {
-        return new BCryptPasswordEncoder().encode(password);
+    /**
+     * 현재 P/W를 단방향 암호화 시킨다.
+     */
+//    public static String passwordToHash(String password) {
+//        return new BCryptPasswordEncoder().encode(password);
+    public void passwordToHash(String password) {
+        this.password = new BCryptPasswordEncoder().encode(password);
     }
 
     @Override

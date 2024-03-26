@@ -21,10 +21,12 @@ public class UsersController {
 
     private final UsersService usersService;
 
+    //todo: (이메일 인증 or 이메일 중복확인) API
+    //todo: 아이디 중복 확인 API
+
     @Operation(summary = "통합회원가입", description = "통합회원가입", tags = {"User Signup"})
     @PostMapping("/signup/union")
     public ApiResponse<?> signUpUnion(@RequestBody SignUpRequestDto signUpRequestDto) {
-        signUpRequestDto.setIsEasy(false);
         usersService.createUsers(signUpRequestDto);
         return ApiResponse.of(SuccessStatus.SIGN_UP_SUCCESS_UNION, null);
     }

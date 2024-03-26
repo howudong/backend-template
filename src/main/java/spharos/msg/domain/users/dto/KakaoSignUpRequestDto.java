@@ -14,11 +14,4 @@ import lombok.Setter;
 public class KakaoSignUpRequestDto {
 
     private String userUuid;
-
-    public static KakaoSignUpRequestDto uuidToDto(String uuid) {
-        return KakaoSignUpRequestDto
-                .builder()
-                .userUuid(uuid)
-                .build();
-    }
 }
