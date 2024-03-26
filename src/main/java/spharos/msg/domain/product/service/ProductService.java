@@ -3,6 +3,7 @@ package spharos.msg.domain.product.service;
 import static spharos.msg.global.api.code.status.ErrorStatus.NOT_EXIST_PRODUCT;
 import static spharos.msg.global.api.code.status.SuccessStatus.PRODUCT_DETAIL_READ_SUCCESS;
 
+import jakarta.persistence.criteria.CriteriaBuilder.In;
 import jakarta.transaction.Transactional;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +48,7 @@ public class ProductService {
     private final ProductDetailImageRepository productDetailImageRepository;
     private final ReviewImageRepository reviewImageRepository;
 
-    //Home화면 상품 조회
+    //Home화면 상품 조회 중 뷰티,랜덤,음식 상품 불러오기
     public ProductResponse.HomeCosmeRandomFoodDto getHomeCosmeRandomFood() {
 
         List<Product> beautyProducts = productRepository.findProductsByCategoryName("뷰티");
@@ -57,17 +58,17 @@ public class ProductService {
         List<ProductResponse.ProductInfo> beautys = beautyProducts.stream()
             .limit(6)
             .map(this::mapToProductInfoDto)
-            .collect(Collectors.toList());
+            .toList();
 
         List<ProductResponse.ProductInfo> randoms = randomProducts.stream()
             .limit(12)
             .map(this::mapToProductInfoDto)
-            .collect(Collectors.toList());
+            .toList();
 
         List<ProductResponse.ProductInfo> foods = foodProducts.stream()
             .limit(12)
             .map(this::mapToProductInfoDto)
-            .collect(Collectors.toList());
+            .toList();
 
         return ProductResponse.HomeCosmeRandomFoodDto.builder()
             .cosmeticList(beautys)
@@ -76,9 +77,12 @@ public class ProductService {
             .build();
     }
 
+    //Home화면 상품 조회 중 패션 상품 불러오기
     public ProductResponse.HomeFashionDto getHomeFashion(int index) {
+        // 한 페이지에 들어갈 상품의 개수
+        int SIZE = 16;
         //pageble 객체 생성
-        Pageable pageable = PageRequest.of(index, 16);
+        Pageable pageable = PageRequest.of(index, SIZE);
         //index 기반 패션 상품들 조회
         Page<Product> fashionProductsPage = productRepository.findFashionProducts(pageable);
         List<Product> fashionProducts = fashionProductsPage.getContent();
@@ -86,53 +90,39 @@ public class ProductService {
         // 조회된 상품들 ProductInfoDto 리스트로 변환
         List<ProductResponse.ProductInfo> fashions = fashionProducts.stream()
             .map(this::mapToProductInfoDto)
-            .collect(Collectors.toList());
+            .toList();
 
         return ProductResponse.HomeFashionDto.builder()
             .fashionList(fashions)
             .build();
     }
 
+    //id로 상품의 상세 정보 불러오기
     @Transactional
     public ApiResponse<?> getProductDetail(Long productId) {
 
         //id로 상품 조회
         Optional<Product> productOptional = productRepository.findById(productId);
 
-        //해당 객체가 존재 하는지 확인 후, Dto 매핑
         if (productOptional.isPresent()) {
+            //상품 객체 불러오기
             Product product = productOptional.get();
+            //상품과 대응되는 카테고리, 옵션, 리뷰들, 이미지들, 상세이미지들 불러오기
             CategoryProduct categoryProduct = categoryProductRepository.findByProduct(product);
             List<ProductOption> productOptions = productOptionRepository.findByProduct(product);
             List<Review> productReviews = reviewRepository.findByProduct(product);
             List<ProductImage> productImages = productImageRepository.findByProduct(product);
             List<ProductDetailImage> productDetailImages = productDetailImageRepository.findByProduct(product);
 
+            //이미지 및 상세이미지들은 url이 담긴 리스트로 변환
             List<String> imageUrls = productImages.stream().map(ProductImage::getProductImageUrl).toList();
             List<String> detailImageUrls = productDetailImages.stream().map(ProductDetailImage::getProductDetailImageUrl).toList();
 
-            List<ProductDetailReponse.OptionDetail> options = productOptions.stream().map(productOption -> ProductDetailReponse.OptionDetail.builder()
-                .optionId(productOption.getProductOptionId())
-                .optionColor(productOption.getOptionColor().getProductColor())
-                .optionSize(productOption.getOptionSize().getProductSize())
-                .optionEtc(productOption.getOptionEtc().getProductEtc())
-                .build()).toList();
+            //옵션은 옵션 객체가 담긴 리스트로 변환
+            List<ProductDetailReponse.OptionDetail> options = convertOptions(productOptions);
 
-            List<ReviewDetail> reviews = productReviews.stream().map(productReview -> {
-
-                List<ReviewImage> reviewImages = reviewImageRepository.findByReview(productReview);
-                List<String> reviewImageUrls = reviewImages.stream().map(ReviewImage::getReviewImageUrl).toList();
-
-                return ProductDetailReponse.ReviewDetail.builder()
-                    .reviewId(productReview.getId())
-                    .reviewStar(productReview.getReviewStar())
-                    .reviewCreated(productReview.getCreatedAt())
-                    .reviewContent(productReview.getReviewComment())
-                    .reviewer(productReview.getUserId().toString())
-                    .reviewImgUrlList(reviewImageUrls)
-                    .build();
-            }
-        ).toList();
+            //리뷰는 리뷰 객체가 담긴 리스트로 변환
+            List<ProductDetailReponse.ReviewDetail> reviews = convertReviews(productReviews);
 
             return ApiResponse.of(PRODUCT_DETAIL_READ_SUCCESS,
                 ProductDetailReponse.ProductDetailDto.builder()
@@ -156,7 +146,6 @@ public class ProductService {
         return ApiResponse.onFailure(NOT_EXIST_PRODUCT, null);
     }
 
-
     //product를 ProductInfo 형식으로 매핑하는 메서드
     private ProductResponse.ProductInfo mapToProductInfoDto(Product product) {
         return ProductResponse.ProductInfo.builder()
@@ -165,5 +154,38 @@ public class ProductService {
             .productPrice(product.getProductPrice())
             .discountRate(product.getDiscountRate())
             .build();
+    }
+
+    private List<ProductDetailReponse.OptionDetail> convertOptions(List<ProductOption> productOptions) {
+        return productOptions.stream().map(productOption -> {
+            String optionColor = productOption.getOptionColor() != null ? productOption.getOptionColor().getProductColor() : null;
+            String optionSize = productOption.getOptionSize() != null ? productOption.getOptionSize().getProductSize() : null;
+            String optionEtc = productOption.getOptionEtc() != null ? productOption.getOptionEtc().getProductEtc() : null;
+
+            return ProductDetailReponse.OptionDetail.builder()
+                .optionId(productOption.getProductOptionId())
+                .optionColor(optionColor)
+                .optionSize(optionSize)
+                .optionEtc(optionEtc)
+                .build();
+        }).toList();
+    }
+
+    private List<ProductDetailReponse.ReviewDetail> convertReviews(List<Review> productReviews) {
+        return productReviews.stream().map(productReview -> {
+                // 상품 리뷰로 상품 리뷰 이미지들 불러와서 리스트로 변환
+                List<ReviewImage> reviewImages = reviewImageRepository.findByReview(productReview);
+                List<String> reviewImageUrls = reviewImages.stream().map(ReviewImage::getReviewImageUrl).toList();
+                // 최종적으로 리뷰 객체 매핑
+                return ProductDetailReponse.ReviewDetail.builder()
+                    .reviewId(productReview.getId())
+                    .reviewStar(productReview.getReviewStar())
+                    .reviewCreated(productReview.getCreatedAt())
+                    .reviewContent(productReview.getReviewComment())
+                    .reviewer(productReview.getUserId().toString())
+                    .reviewImgUrlList(reviewImageUrls)
+                    .build();
+            }
+        ).toList();
     }
 }
