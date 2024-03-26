@@ -27,7 +27,18 @@ public class UsersController {
     private final UsersService usersService;
 
     //todo: (이메일 인증 or 이메일 중복확인) API
+    @Operation(summary = "이메일 인증", description = "이메일 인증 및 중복확인을 진행 합니다.")
+    @PostMapping("") //todo:
+    public ApiResponse<?> authenticateEmail() {
+        return null;
+    }
+
     //todo: 아이디 중복 확인 API
+    @Operation(summary = "아이디 중복확인", description = "입력받은 아이디의 중복 여부를 확인합니다.")
+    @PostMapping("") //todo: path 및 입력 어떻게 받을 것인지 확인.
+    public ApiResponse<?> duplicateLoginId() {
+        return null;
+    }
 
     @Operation(summary = "통합회원가입", description = "통합회원 회원가입")
     @PostMapping("/signup/union")
@@ -39,7 +50,6 @@ public class UsersController {
     @Operation(summary = "간편회원가입", description = "간편회원 회원가입")
     @PostMapping("/signup/easy")
     public ApiResponse<?> signUpEasy(@RequestBody SignUpRequestDto signUpRequestDto) {
-        signUpRequestDto.setIsEasy(true);
         usersService.createEasyAndUnionUsers(signUpRequestDto);
         return ApiResponse.of(SuccessStatus.SIGN_UP_SUCCESS_EASY, null);
     }

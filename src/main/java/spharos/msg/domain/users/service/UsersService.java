@@ -75,16 +75,6 @@ public class UsersService {
 
     @Transactional
     public Users createUsers(SignUpRequestDto signUpRequestDto) {
-//        if (usersRepository.findByEmail(signUpRequestDto.getEmail()).isPresent()) {
-//            log.info("이미 등록된 E-Mail 입니다");
-//
-//            if (Boolean.TRUE.equals(signUpRequestDto.getIsEasy())) {
-//                throw new UsersException(ErrorStatus.SIGN_UP_EASY_FAIL);
-//            }
-//            throw new UsersException(ErrorStatus.SIGN_UP_UNION_FAIL);
-//        }
-
-        //Users users = Users.signUpDtoToEntity(signUpRequestDto);
         Users newUser = Users
                 .builder()
                 .loginId(signUpRequestDto.getLoginId())
@@ -151,6 +141,7 @@ public class UsersService {
         response.addCookie(cookie);
     }
 
+    @Transactional(readOnly = true)
     public Users getUsersByUuid(String uuid){
         return usersRepository.findByUuid(uuid).orElseThrow(
                 () -> new JwtTokenException(ErrorStatus.REISSUE_TOKEN_FAIL));
@@ -177,6 +168,7 @@ public class UsersService {
 
     @Transactional
     public void createEasyAndUnionUsers(SignUpRequestDto signUpRequestDto) {
+        //KakaoService 어떻게 해결하지..?
         if (!isUsers(signUpRequestDto)) {
             log.info("간편회원가입 중, 가입된 회원이 아니라 통합회원가입 진행");
             this.createUsers(signUpRequestDto);
