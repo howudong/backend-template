@@ -56,6 +56,6 @@ public class LikesService {
                 likesRepository.findByUsers(users)
                         .stream()
                         .map(likes -> new LikesResponseDto(likes,likesRepository.existsByUsersAndProduct(users,likes.getProduct())))
-                        .collect(Collectors.toList()));
+                        .toList());
     }
 }
