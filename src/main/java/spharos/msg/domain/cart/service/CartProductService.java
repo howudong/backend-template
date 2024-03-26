@@ -54,16 +54,14 @@ public class CartProductService {
     }
 
     @Transactional
-    public ApiResponse<?> deleteCart(Long cartId, String userUuid) {
+    public ApiResponse<?> deleteCart(Long cartId) {
         CartProduct cartProduct = cartProductRepository.findById(cartId).orElseThrow();
-        Users users = usersRepository.findByUuid(userUuid).orElseThrow();
         cartProductRepository.delete(cartProduct);
-
         return ApiResponse.of(SuccessStatus.CART_PRODUCT_DELETE_SUCCESS, null);
     }
 
     @Transactional(readOnly = true)
-    public ApiResponse<?> getCartOption(Long productId, String userUuid) {
+    public ApiResponse<?> getCartOption(Long productId) {
         Product product = productRepository.findById(productId).orElseThrow();
 
         return ApiResponse.of(SuccessStatus.CART_PRODUCT_OPTION_SUCCESS,
