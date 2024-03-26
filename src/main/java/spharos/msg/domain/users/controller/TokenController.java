@@ -30,13 +30,13 @@ public class TokenController {
     @Operation(summary = "Security", description = "Token 재발급", tags = {"Token"})
     @PostMapping
     public ApiResponse<?> reissueToken(
-        @RequestBody ReissueRequestDto reissueRequestDto,
-        @RequestHeader(AUTHORIZATION) String refreshToken,
-        HttpServletResponse response
+            @RequestBody ReissueRequestDto reissueRequestDto,
+            @RequestHeader(AUTHORIZATION) String refreshToken,
+            HttpServletResponse response
     ) {
         Users findUsers = usersService.checkRefreshTokenValidation(
-            URLDecoder.decode(refreshToken, StandardCharsets.UTF_8),
-            reissueRequestDto.getUuid());
+                URLDecoder.decode(refreshToken, StandardCharsets.UTF_8),
+                reissueRequestDto.getUuid());
 
         usersService.createTokenAndCreateHeaders(response, findUsers);
 

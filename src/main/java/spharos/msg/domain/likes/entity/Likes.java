@@ -19,10 +19,6 @@ public class Likes extends BaseEntity {
     @Column(name = "like_id")
     private Long id;
 
-    @NotNull
-    @Column(columnDefinition = "boolean default false")
-    private boolean isLike;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private Users users;
@@ -32,9 +28,8 @@ public class Likes extends BaseEntity {
     private Product product;
 
     @Builder
-    public Likes(Users users, Product product, boolean isLike) {
+    public Likes(Users users, Product product) {
         this.users = users;
         this.product = product;
-        this.isLike = isLike;
     }
 }

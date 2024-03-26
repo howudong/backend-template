@@ -17,8 +17,8 @@ public class KakaoSignUpRequestDto {
 
     public static KakaoSignUpRequestDto uuidToDto(String uuid) {
         return KakaoSignUpRequestDto
-            .builder()
-            .userUuid(uuid)
-            .build();
+                .builder()
+                .userUuid(uuid)
+                .build();
     }
 }
