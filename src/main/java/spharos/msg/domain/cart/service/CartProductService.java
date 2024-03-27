@@ -68,17 +68,25 @@ public class CartProductService {
                 productOptionRepository.findByProduct(product)
                         .stream()
                         .map(CartProductOptionResponseDto::new)
-                        .collect(Collectors.toList()));
+                        .toList());
     }
 
     private ApiResponse<?> addCart(Users users, Long productOptionId, ProductOption productOption, Integer productQuantity) {
         List<CartProduct> cartProducts = cartProductRepository.findByUsers(users);
+        //이미 장바구니에 담긴 상품의 경우 개수 더해서 save하기
         for (CartProduct cartProduct : cartProducts) {
             if (cartProduct.getProductOption().getProductOptionId().equals(productOptionId)) {
-                cartProduct.addCartProductQuantity(productQuantity);
+                cartProductRepository.save(CartProduct.builder()
+                        .id(cartProduct.getId())
+                        .cartProductQuantity(cartProduct.getCartProductQuantity()+productQuantity)
+                        .productOption(cartProduct.getProductOption())
+                        .cartIsChecked(cartProduct.getCartIsChecked())
+                        .users(cartProduct.getUsers())
+                        .build());
                 return ApiResponse.of(SuccessStatus.CART_PRODUCT_ADD_SUCCESS, null);
             }
         }
+        //새롭게 담는 상품의 경우 새로 생성하기
         CartProduct cartProduct = CartProduct.builder()
                 .cartProductQuantity(productQuantity)
                 .cartIsChecked(false)
