@@ -17,14 +17,13 @@ import org.springframework.stereotype.Service;
 import spharos.msg.global.api.code.status.ErrorStatus;
 import spharos.msg.global.api.exception.JwtTokenException;
 
-import static spharos.msg.domain.users.service.UsersService.BEARER;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class JwtTokenProvider {
 
     private final Environment env;
+    public static final String BEARER = "Bearer";
 
     /**
      * "Bearer " + token, "Bearer " 삭제 후, uuid 반환하게 됩니다.
