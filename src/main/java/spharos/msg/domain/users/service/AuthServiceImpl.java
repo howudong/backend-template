@@ -83,12 +83,24 @@ public class AuthServiceImpl implements AuthService{
 
     private String createRefreshToken(Users users) {
         String token = jwtTokenProvider.generateToken(users, refreshTokenExpiration, REFRESH_TOKEN);
-        redisService.saveRefreshToken(users.getUuid(), token, refreshTokenExpiration);
+        String uuid = users.getUuid();
+
+        if(Boolean.TRUE.equals(redisService.isRefreshTokenExist(uuid))){
+            redisService.deleteRefreshToken(uuid);
+        }
+
+        redisService.saveRefreshToken(uuid, token, refreshTokenExpiration);
         return BEARER + "%20" + token;
     }
 
     private String createAccessToken(Users users) {
         String token = jwtTokenProvider.generateToken(users, accessTokenExpiration, ACCESS_TOKEN);
         return BEARER + " " + token;
+    }
+
+    public void logout(String uuid) {
+        if (Boolean.TRUE.equals(redisService.isRefreshTokenExist(uuid))) {
+            redisService.deleteRefreshToken(uuid);
+        }
     }
 }

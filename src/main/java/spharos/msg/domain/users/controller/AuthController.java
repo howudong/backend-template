@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import spharos.msg.domain.users.dto.in.LoginRequestDto;
 import spharos.msg.domain.users.dto.in.SignUpRequestDto;
+import spharos.msg.domain.users.dto.out.LoginOutDto;
 import spharos.msg.domain.users.service.AuthService;
 import spharos.msg.global.api.ApiResponse;
 import spharos.msg.global.api.code.status.SuccessStatus;
@@ -36,18 +37,20 @@ public class AuthController {
     //로그인
     @Operation(summary = "로그인", description = "통합회원 로그인")
     @PostMapping("/login/union")
-    public ApiResponse<?> loginUnion(
+    public ApiResponse<LoginOutDto> loginUnion(
             @RequestBody LoginRequestDto loginRequestDto
     ) {
-        //todo : service 추가
-        return ApiResponse.of(SuccessStatus.LOGIN_SUCCESS_UNION, null);
+        LoginOutDto login = authService.login(loginRequestDto);
+        return ApiResponse.of(SuccessStatus.LOGIN_SUCCESS_UNION, login);
     }
 
     //로그아웃
     @Operation(summary = "로그아웃", description = "로그인 회원 로그아웃")
     @PatchMapping("/logout")
-    public ApiResponse<?> logout(@RequestBody String uuid) {
-        //todo : service 추가
+    public ApiResponse<?> logout(
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        authService.logout(userDetails.getUsername());
         return ApiResponse.of(SuccessStatus.LOGOUT_SUCCESS, null);
     }
 
@@ -61,5 +64,4 @@ public class AuthController {
         //todo : service 추가
         return ApiResponse.of(SuccessStatus.TOKEN_REISSUE_COMPLETE, null);
     }
-    //
 }

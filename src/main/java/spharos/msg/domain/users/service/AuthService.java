@@ -8,4 +8,5 @@ import spharos.msg.domain.users.dto.out.LoginOutDto;
 public interface AuthService {
     SignUpOutDto signUp(SignUpRequestDto signUpRequestDto);
     LoginOutDto login(LoginRequestDto loginRequestDto);
+    void logout(String uuid);
 }
