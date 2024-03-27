@@ -23,8 +23,7 @@ public enum ErrorStatus implements BaseErrorCode {
 
     SIGN_UP_UNION_FAIL(HttpStatus.BAD_REQUEST, "USER401", "통합 회원가입 실패"),
     SIGN_UP_EASY_FAIL(HttpStatus.BAD_REQUEST, "USER402", "간편 회원가입 실패"),
-    LOGIN_ID_NOT_FOUND(HttpStatus.BAD_REQUEST, "USER403", "통합 로그인 실패"),
-    LOGIN_ID_PW_VALIDATION(HttpStatus.BAD_REQUEST, "USER404", "통합 로그인 실패"),
+    LOG_IN_UNION_FAIL(HttpStatus.BAD_REQUEST, "USER403", "통합 로그인 실패"),
     TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, "USER405", "토큰이 만료되었습니다."),
     REISSUE_TOKEN_FAIL(HttpStatus.BAD_REQUEST, "USER406", "토큰 재발급 실패"),
     TOKEN_VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "USER407", "잘못된 토큰 값 입니다"),

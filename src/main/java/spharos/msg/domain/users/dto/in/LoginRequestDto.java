@@ -1,4 +1,4 @@
-package spharos.msg.domain.users.dto;
+package spharos.msg.domain.users.dto.in;
 
 import lombok.Getter;
 import lombok.Setter;
