@@ -24,13 +24,13 @@ public class UserOAuthList {
     @Column(name = "oauth_name")
     private String OAuthName;
 
-    @Column(name = "user_uuid")
-    private String user_uuid;
+    @Column(name = "uuid")
+    private String uuid;
 
     @Builder
-    public UserOAuthList(String OAuthId, String OAuthName, String user_uuid) {
+    public UserOAuthList(String OAuthId, String OAuthName, String uuid) {
         this.OAuthId = OAuthId;
         this.OAuthName = OAuthName;
-        this.user_uuid = user_uuid;
+        this.uuid = uuid;
     }
 }

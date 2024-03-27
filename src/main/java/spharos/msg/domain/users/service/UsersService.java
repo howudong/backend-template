@@ -4,7 +4,6 @@ package spharos.msg.domain.users.service;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,9 +12,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import spharos.msg.domain.users.dto.in.EmailAuthRequestDto;
-import spharos.msg.domain.users.dto.in.EmailRequestDto;
+import spharos.msg.domain.users.dto.in.EmailSendRequestDto;
 import spharos.msg.domain.users.dto.out.EmailOutDto;
-import spharos.msg.domain.users.entity.Users;
 import spharos.msg.domain.users.repository.UsersRepository;
 import spharos.msg.global.api.code.status.ErrorStatus;
 import spharos.msg.global.api.exception.UsersException;
@@ -38,11 +36,11 @@ public class UsersService {
     @Value("${spring.mail.stringSize}")
     private int stringSize;
 
-    public EmailOutDto sendMail(EmailRequestDto emailRequestDto){
+    public EmailOutDto sendMail(EmailSendRequestDto emailSendRequestDto){
         MimeMessage message = mailSender.createMimeMessage();
         String secretKey = createKey();
         try{
-            String email = emailRequestDto.getEmail();
+            String email = emailSendRequestDto.getEmail();
 
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message, true, "UTF-8");
             mimeMessageHelper.setFrom(username);
@@ -83,7 +81,7 @@ public class UsersService {
     }
 
     //Email 중복 확인
-    public void duplicateCheckEmail(EmailRequestDto emailRequestDto)
+    public void duplicateCheckEmail(EmailSendRequestDto emailRequestDto)
     {
         if(userRepository.existsByEmail(emailRequestDto.getEmail())){
             throw new UsersException(ErrorStatus.ALREADY_EXIST_EMAIL);
