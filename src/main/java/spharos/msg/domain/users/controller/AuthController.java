@@ -1,15 +1,19 @@
 package spharos.msg.domain.users.controller;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import spharos.msg.domain.users.dto.in.LoginRequestDto;
 import spharos.msg.domain.users.dto.in.SignUpRequestDto;
@@ -20,7 +24,7 @@ import spharos.msg.global.api.code.status.SuccessStatus;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/Auth")
+@RequestMapping("/api/v1/auth")
 @Tag(name = "Auth", description = "Auth 관련 API")
 public class AuthController {
 
@@ -46,7 +50,7 @@ public class AuthController {
 
     //로그아웃
     @Operation(summary = "로그아웃", description = "로그인 회원 로그아웃")
-    @PatchMapping("/logout")
+    @DeleteMapping("/logout")
     public ApiResponse<?> logout(
             @AuthenticationPrincipal UserDetails userDetails
     ) {
@@ -56,12 +60,11 @@ public class AuthController {
 
     //토큰 재발급
     @Operation(summary = "Reissue Token", description = "Access Token 재발급")
-    @PostMapping
+    @GetMapping("/reissue")
     public ApiResponse<?> reissueToken(
-            @AuthenticationPrincipal UserDetails userDetails,
-            HttpServletResponse response
+            @RequestHeader(AUTHORIZATION) String token
     ) {
-        //todo : service 추가
+        authService.reissueToken(token);
         return ApiResponse.of(SuccessStatus.TOKEN_REISSUE_COMPLETE, null);
     }
 }

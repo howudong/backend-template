@@ -8,6 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Service;
 import spharos.msg.domain.users.dto.in.LoginRequestDto;
 import spharos.msg.domain.users.dto.out.LoginOutDto;
+import spharos.msg.domain.users.dto.out.ReissueOutDto;
 import spharos.msg.domain.users.dto.out.SignUpOutDto;
 import spharos.msg.domain.users.dto.in.SignUpRequestDto;
 import spharos.msg.domain.users.entity.Users;
@@ -102,5 +103,11 @@ public class AuthServiceImpl implements AuthService{
         if (Boolean.TRUE.equals(redisService.isRefreshTokenExist(uuid))) {
             redisService.deleteRefreshToken(uuid);
         }
+    }
+
+    @Override
+    public ReissueOutDto reissueToken(String token) {
+        //todo : reissueToken 구현 필요
+        return null;
     }
 }

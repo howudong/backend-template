@@ -24,7 +24,7 @@ public class UsersController {
 
     //todo: 아이디 중복 확인 API
     @Operation(summary = "아이디 중복확인", description = "입력받은 아이디의 중복 여부를 확인합니다.")
-    @PostMapping("") //todo: path 및 입력 어떻게 받을 것인지 확인.
+    @GetMapping("") //todo: path 및 입력 어떻게 받을 것인지 확인.
     public ApiResponse<?> duplicateLoginId() {
         return null;
     }
