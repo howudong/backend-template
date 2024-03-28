@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
+import spharos.msg.domain.users.dto.in.DuplicationCheckRequestDto;
 import spharos.msg.domain.users.dto.in.LoginRequestDto;
 import spharos.msg.domain.users.dto.out.LoginOutDto;
 import spharos.msg.domain.users.dto.out.ReissueOutDto;
-import spharos.msg.domain.users.dto.out.SignUpOutDto;
 import spharos.msg.domain.users.dto.in.SignUpRequestDto;
 import spharos.msg.domain.users.entity.Users;
 import spharos.msg.domain.users.repository.UsersRepository;
@@ -36,7 +36,7 @@ public class AuthServiceImpl implements AuthService{
     private long refreshTokenExpiration;
 
     @Override
-    public SignUpOutDto signUp(SignUpRequestDto signUpRequestDto) {
+    public void signUp(SignUpRequestDto signUpRequestDto) {
         String uuid = UUID.randomUUID().toString();
         Users user = new Users(uuid);
         user.passwordToHash(signUpRequestDto.getPassword());
@@ -51,9 +51,6 @@ public class AuthServiceImpl implements AuthService{
                 .uuid(user.getUuid())
                 .address(signUpRequestDto.getAddress())
                 .build());
-
-        //모델매퍼 사용해서 Dto로 변경
-        return null;
     }
 
     @Override
@@ -109,5 +106,12 @@ public class AuthServiceImpl implements AuthService{
     public ReissueOutDto reissueToken(String token) {
         //todo : reissueToken 구현 필요
         return null;
+    }
+
+    @Override
+    public void duplicateCheckLoginId(DuplicationCheckRequestDto duplicationCheckRequestDto) {
+        if(usersRepository.existsByLoginId(duplicationCheckRequestDto.getLoginId())){
+            throw new UsersException(ErrorStatus.SIGN_UP_UNION_FAIL);
+        }
     }
 }

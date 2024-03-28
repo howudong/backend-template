@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import spharos.msg.domain.users.dto.in.DuplicationCheckRequestDto;
 import spharos.msg.domain.users.dto.in.LoginRequestDto;
 import spharos.msg.domain.users.dto.in.SignUpRequestDto;
 import spharos.msg.domain.users.dto.out.LoginOutDto;
@@ -66,5 +66,15 @@ public class AuthController {
     ) {
         authService.reissueToken(token);
         return ApiResponse.of(SuccessStatus.TOKEN_REISSUE_COMPLETE, null);
+    }
+
+    //아이디 중복 확인
+    @Operation(summary = "아이디 중복확인", description = "입력받은 아이디의 중복 여부를 확인합니다.")
+    @PostMapping("/check-duplicate-id")
+    public ApiResponse<?> duplicateCheckLoginId(
+            @RequestBody DuplicationCheckRequestDto duplicationCheckRequestDto
+    ) {
+        authService.duplicateCheckLoginId(duplicationCheckRequestDto);
+        return ApiResponse.of(SuccessStatus.DUPLICATION_CHECK_SUCCESS, null);
     }
 }

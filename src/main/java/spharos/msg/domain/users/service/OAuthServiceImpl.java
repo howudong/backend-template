@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import spharos.msg.domain.users.dto.in.EasySignUpRequestDto;
-import spharos.msg.domain.users.dto.out.EasySignUpOutDto;
 import spharos.msg.domain.users.entity.UserOAuthList;
 import spharos.msg.domain.users.entity.Users;
 import spharos.msg.domain.users.repository.UserOAuthListRepository;
@@ -23,7 +22,7 @@ public class OAuthServiceImpl implements OAuthService {
     @Override
     public void easySignUp(EasySignUpRequestDto easySignUpRequestDto) {
         Users users = userRepository.findByEmail(easySignUpRequestDto.getEmail()).orElseThrow(
-                () -> new UsersException(ErrorStatus.SIGN_UP_EASY_FAIL) //todo :
+                () -> new UsersException(ErrorStatus.NOT_UNION_USER)
         );
 
         if(Boolean.TRUE.equals(userOAuthListRepository.existsByUuid(users.getUuid()))){

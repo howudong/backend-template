@@ -19,5 +19,4 @@ public class AddressRequestDto {
     private String mobileNumber;
     private String addressPhoneNumber;
     private String address;
-    private Users users;
 }
