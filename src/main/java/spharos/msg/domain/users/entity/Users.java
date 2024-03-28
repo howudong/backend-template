@@ -56,6 +56,12 @@ public class Users extends BaseEntity implements UserDetails {
     @Column(name = "address")
     private String address;
 
+    /**
+     * 기본 배송지 Index (default 0)
+     */
+    @Column(columnDefinition = "bigint default 0")
+    private Long baseAddressId;
+
     @Builder
     public Users(String loginId, String uuid, String password, String phoneNumber, String email,
             String userName, String address) {
@@ -66,6 +72,7 @@ public class Users extends BaseEntity implements UserDetails {
         this.email = email;
         this.userName = userName;
         this.address = address;
+        this.baseAddressId = 0L;
     }
 
 
