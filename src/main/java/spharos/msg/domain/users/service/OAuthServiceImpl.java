@@ -31,12 +31,11 @@ public class OAuthServiceImpl implements OAuthService {
 
         if (Boolean.TRUE.equals(userOAuthListRepository.existsByUuid(users.getUuid()))) {
             log.info("기존 가입된 회원이라 바로 로그인 처리");
-            LoginOutDto login = easyLogin(EasyLoginRequestDto
+            return easyLogin(EasyLoginRequestDto
                     .builder()
                     .OAuthId(easySignUpRequestDto.getOauth_id())
                     .OAuthName(easySignUpRequestDto.getOauth_name())
                     .build());
-            return login;
         } else {
             UserOAuthList userOAuthList = UserOAuthList
                     .builder()

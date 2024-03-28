@@ -71,8 +71,7 @@ public class OrderService {
 
     private Address tryGetAddress(Users user) {
         return addressRepository
-            //.findById(user.getBaseAddressId())
-                .findById(0L)
+                .findById(user.getId())
             .orElseThrow(
                 () -> new OrderException(ErrorStatus.ORDER_ADDRESS_NOT_FOUND));
     }
