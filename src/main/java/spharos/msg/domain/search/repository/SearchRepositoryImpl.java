@@ -30,7 +30,7 @@ public class SearchRepositoryImpl implements SearchRepository {
 
         Long totalSize = getTotalSize(keyword, categoryProduct, product, category);
         List<SearchProductDto> searchProductDtos = getSearchProductIds(
-            keyword, (long) index, categoryProduct, product, category);
+            keyword, index, categoryProduct, product, category);
 
         boolean isLast = (index + 1) * SEARCH_PRODUCT_SIZE >= totalSize;
 
@@ -60,6 +60,7 @@ public class SearchRepositoryImpl implements SearchRepository {
             .distinct()
             .offset(index * SEARCH_PRODUCT_SIZE)
             .limit(SEARCH_PRODUCT_SIZE)
+            .orderBy(product.productName.desc())
             .fetch();
     }
 
