@@ -1,4 +1,4 @@
-package spharos.msg.domain.users.dto.in;
+package spharos.msg.domain.users.dto.request;
 
 import jakarta.validation.constraints.Email;
 import lombok.Getter;

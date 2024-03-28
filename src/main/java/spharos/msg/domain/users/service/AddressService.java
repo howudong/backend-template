@@ -3,7 +3,7 @@ package spharos.msg.domain.users.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import spharos.msg.domain.users.dto.in.AddressRequestDto;
+import spharos.msg.domain.users.dto.request.AddressRequestDto;
 import spharos.msg.domain.users.entity.Address;
 import spharos.msg.domain.users.entity.Users;
 import spharos.msg.domain.users.repository.AddressRepository;

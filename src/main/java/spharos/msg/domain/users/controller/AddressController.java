@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import spharos.msg.domain.users.dto.in.AddressRequestDto;
+import spharos.msg.domain.users.dto.request.AddressRequestDto;
 import spharos.msg.domain.users.service.AddressService;
 import spharos.msg.global.api.ApiResponse;
 import spharos.msg.global.api.code.status.SuccessStatus;

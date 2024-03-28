@@ -1,11 +1,10 @@
-package spharos.msg.domain.users.dto.in;
+package spharos.msg.domain.users.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import spharos.msg.domain.users.entity.Users;
 
 @Getter
 @Setter

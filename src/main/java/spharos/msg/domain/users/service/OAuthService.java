@@ -1,8 +1,8 @@
 package spharos.msg.domain.users.service;
 
-import spharos.msg.domain.users.dto.in.EasyLoginRequestDto;
-import spharos.msg.domain.users.dto.in.EasySignUpRequestDto;
-import spharos.msg.domain.users.dto.out.LoginOutDto;
+import spharos.msg.domain.users.dto.request.EasyLoginRequestDto;
+import spharos.msg.domain.users.dto.request.EasySignUpRequestDto;
+import spharos.msg.domain.users.dto.response.LoginOutDto;
 
 public interface OAuthService {
 

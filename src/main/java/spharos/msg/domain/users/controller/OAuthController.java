@@ -7,12 +7,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import spharos.msg.domain.users.dto.in.EasyLoginRequestDto;
-import spharos.msg.domain.users.dto.in.EasySignUpRequestDto;
-import spharos.msg.domain.users.dto.out.LoginOutDto;
+import spharos.msg.domain.users.dto.request.EasyLoginRequestDto;
+import spharos.msg.domain.users.dto.request.EasySignUpRequestDto;
+import spharos.msg.domain.users.dto.response.LoginOutDto;
 import spharos.msg.domain.users.service.OAuthServiceImpl;
 import spharos.msg.global.api.ApiResponse;
-import spharos.msg.global.api.code.status.ErrorStatus;
 import spharos.msg.global.api.code.status.SuccessStatus;
 
 

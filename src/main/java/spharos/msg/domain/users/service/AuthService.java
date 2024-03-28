@@ -1,10 +1,10 @@
 package spharos.msg.domain.users.service;
 
-import spharos.msg.domain.users.dto.in.DuplicationCheckRequestDto;
-import spharos.msg.domain.users.dto.in.LoginRequestDto;
-import spharos.msg.domain.users.dto.out.ReissueOutDto;
-import spharos.msg.domain.users.dto.in.SignUpRequestDto;
-import spharos.msg.domain.users.dto.out.LoginOutDto;
+import spharos.msg.domain.users.dto.request.DuplicationCheckRequestDto;
+import spharos.msg.domain.users.dto.request.LoginRequestDto;
+import spharos.msg.domain.users.dto.response.ReissueOutDto;
+import spharos.msg.domain.users.dto.request.SignUpRequestDto;
+import spharos.msg.domain.users.dto.response.LoginOutDto;
 
 public interface AuthService {
 
