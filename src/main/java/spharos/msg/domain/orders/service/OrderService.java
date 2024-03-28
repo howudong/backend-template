@@ -29,6 +29,20 @@ public class OrderService {
     private final AddressRepository addressRepository;
     private final ProductOptionRepository productOptionRepository;
 
+    public OrderResponse.OrderUserDto findOrderUser(String uuid) {
+        Users user = tryGetUser(uuid);
+        String address = tryGetAddress(user).getAddress();
+
+        return OrderResponse.OrderUserDto
+            .builder()
+            .loginId(user.getLoginId())
+            .email(user.getEmail())
+            .username(user.getUsername())
+            .phoneNumber(user.getPhoneNumber())
+            .address(address)
+            .build();
+    }
+
     @Transactional
     public OrderResponse.OrderProductDto saveOrder(List<OrderRequest.OrderDto> orderDtos,
         String uuid) {

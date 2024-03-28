@@ -1,11 +1,13 @@
 package spharos.msg.domain.users.entity;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import jakarta.persistence.*;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,10 +17,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import spharos.msg.domain.users.dto.SignUpRequestDto;
 import spharos.msg.global.entity.BaseEntity;
 
@@ -64,15 +62,15 @@ public class Users extends BaseEntity implements UserDetails {
     public static Users signUpDtoToEntity(SignUpRequestDto signUpRequestDto) {
         signUpRequestDto.setPassword(passwordToHash(signUpRequestDto.getPassword()));
         return Users
-            .builder()
-            .loginId(signUpRequestDto.getLoginId())
-            .password(signUpRequestDto.getPassword())
-            .userName(signUpRequestDto.getUsername())
-            .email(signUpRequestDto.getEmail())
-            .phoneNumber(signUpRequestDto.getPhoneNumber())
-            .uuid(UUID.randomUUID().toString())
-            .baseAddressId(0L)
-            .build();
+                .builder()
+                .loginId(signUpRequestDto.getLoginId())
+                .password(signUpRequestDto.getPassword())
+                .userName(signUpRequestDto.getUsername())
+                .email(signUpRequestDto.getEmail())
+                .phoneNumber(signUpRequestDto.getPhoneNumber())
+                .uuid(UUID.randomUUID().toString())
+                .baseAddressId(0L)
+                .build();
     }
 
     public void addAddress(Address address) {
@@ -82,11 +80,11 @@ public class Users extends BaseEntity implements UserDetails {
     @Override
     public String toString() {
         return "Users{" +
-            "id=" + id +
-            ", loginId='" + loginId + '\'' +
-            ", uuid='" + uuid + '\'' +
-            ", password='" + password + '\'' +
-            '}';
+                "id=" + id +
+                ", loginId='" + loginId + '\'' +
+                ", uuid='" + uuid + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 
     public static String passwordToHash(String password) {
@@ -103,6 +101,9 @@ public class Users extends BaseEntity implements UserDetails {
         return this.password;
     }
 
+    /**
+     * @return uuid를 반환함
+     */
     @Override
     public String getUsername() {
         return this.uuid;
