@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import spharos.msg.domain.users.dto.in.EasyLoginRequestDto;
 import spharos.msg.domain.users.dto.in.EasySignUpRequestDto;
+import spharos.msg.domain.users.dto.out.LoginOutDto;
 import spharos.msg.domain.users.service.OAuthServiceImpl;
 import spharos.msg.global.api.ApiResponse;
 import spharos.msg.global.api.code.status.SuccessStatus;
@@ -32,8 +34,10 @@ public class OAuthController {
 
     @Operation(summary = "간편 회원로그인", description = "간편회원 로그인")
     @PostMapping("/login/easy")
-    public ApiResponse<?> loginEasy() {
-        //todo :
-        return ApiResponse.of(SuccessStatus.LOGIN_SUCCESS_EASY, null);
+    public ApiResponse<?> loginEasy(
+            @RequestBody EasyLoginRequestDto easyLoginRequestDto
+    ) {
+        LoginOutDto login = oAuthService.easyLogin(easyLoginRequestDto);
+        return ApiResponse.of(SuccessStatus.LOGIN_SUCCESS_EASY, login);
     }
 }

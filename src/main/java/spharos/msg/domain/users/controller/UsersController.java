@@ -24,7 +24,7 @@ public class UsersController {
 
     @Operation(summary = "이메일 발송",
             description = "이메일 중복 확인 후, 이메일 인증을 위한 이메일을 발송 합니다.")
-    @PostMapping("/send-mail") //todo:
+    @PostMapping("/send-mail")
     public ApiResponse<EmailOutDto> sendEmail(
             @RequestBody EmailSendRequestDto emailSendRequestDto
     ) {
@@ -35,11 +35,13 @@ public class UsersController {
 
     @Operation(summary = "이메일 인증 확인",
             description = "입력받은 SecretKey로 인증을 진행 합니다.")
-    @PostMapping("/authenticate-email") //todo:
+    @PostMapping("/authenticate-email")
     public ApiResponse<?> authenticateEmail(
             @RequestBody EmailAuthRequestDto emailAuthRequestDto
     ) {
         usersService.authenticateEmail(emailAuthRequestDto);
         return ApiResponse.of(SuccessStatus.EMAIL_AUTH_SUCCESS, null);
     }
+
+    //todo: 회원삭제. 회원 삭제시, OAuth 사용자도 삭제 처리 필요
 }

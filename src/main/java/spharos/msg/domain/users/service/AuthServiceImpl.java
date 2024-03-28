@@ -27,14 +27,6 @@ public class AuthServiceImpl implements AuthService{
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisService redisService;
 
-    public static final String BEARER = "Bearer";
-    public static final String ACCESS_TOKEN = "accessToken";
-    public static final String REFRESH_TOKEN = "refreshToken";
-    @Value("${JWT.access-token-expiration}")
-    private long accessTokenExpiration;
-    @Value("${JWT.refresh-token-expiration}")
-    private long refreshTokenExpiration;
-
     @Override
     public void signUp(SignUpRequestDto signUpRequestDto) {
         String uuid = UUID.randomUUID().toString();
@@ -66,34 +58,17 @@ public class AuthServiceImpl implements AuthService{
         );
 
         //create token
-        String accessToken = createAccessToken(findUser);
-        String refreshToken = createRefreshToken(findUser);
+        String accessToken = jwtTokenProvider.createAccessToken(findUser);
+        String refreshToken = jwtTokenProvider.createRefreshToken(findUser);
 
         return LoginOutDto
                 .builder()
                 .uuid(findUser.getUuid())
-                .accessToken(refreshToken)
+                .refreshToken(refreshToken)
                 .accessToken(accessToken)
                 .name(findUser.getUsername())
                 .email(findUser.getEmail())
                 .build();
-    }
-
-    private String createRefreshToken(Users users) {
-        String token = jwtTokenProvider.generateToken(users, refreshTokenExpiration, REFRESH_TOKEN);
-        String uuid = users.getUuid();
-
-        if(Boolean.TRUE.equals(redisService.isRefreshTokenExist(uuid))){
-            redisService.deleteRefreshToken(uuid);
-        }
-
-        redisService.saveRefreshToken(uuid, token, refreshTokenExpiration);
-        return BEARER + "%20" + token;
-    }
-
-    private String createAccessToken(Users users) {
-        String token = jwtTokenProvider.generateToken(users, accessTokenExpiration, ACCESS_TOKEN);
-        return BEARER + " " + token;
     }
 
     public void logout(String uuid) {
