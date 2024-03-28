@@ -18,6 +18,7 @@ import spharos.msg.domain.users.dto.in.DuplicationCheckRequestDto;
 import spharos.msg.domain.users.dto.in.LoginRequestDto;
 import spharos.msg.domain.users.dto.in.SignUpRequestDto;
 import spharos.msg.domain.users.dto.out.LoginOutDto;
+import spharos.msg.domain.users.dto.out.ReissueOutDto;
 import spharos.msg.domain.users.service.AuthService;
 import spharos.msg.global.api.ApiResponse;
 import spharos.msg.global.api.code.status.SuccessStatus;
@@ -25,7 +26,7 @@ import spharos.msg.global.api.code.status.SuccessStatus;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
-@Tag(name = "Auth", description = "Auth 관련 API")
+@Tag(name = "Auth", description = "사용자 인증 관련 API")
 public class AuthController {
 
     private final AuthService authService;
@@ -62,10 +63,10 @@ public class AuthController {
     @Operation(summary = "Reissue Token", description = "Access Token 재발급")
     @GetMapping("/reissue")
     public ApiResponse<?> reissueToken(
-            @RequestHeader(AUTHORIZATION) String token
+            @AuthenticationPrincipal UserDetails userDetails
     ) {
-        authService.reissueToken(token);
-        return ApiResponse.of(SuccessStatus.TOKEN_REISSUE_COMPLETE, null);
+        ReissueOutDto reissueOutDto = authService.reissueToken(userDetails.getUsername());
+        return ApiResponse.of(SuccessStatus.TOKEN_REISSUE_COMPLETE, reissueOutDto);
     }
 
     //아이디 중복 확인

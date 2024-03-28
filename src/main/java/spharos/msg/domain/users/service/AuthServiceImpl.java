@@ -2,7 +2,6 @@ package spharos.msg.domain.users.service;
 
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,7 @@ import spharos.msg.global.security.JwtTokenProvider;
 
 @Service
 @RequiredArgsConstructor
-public class AuthServiceImpl implements AuthService{
+public class AuthServiceImpl implements AuthService {
 
     private final UsersRepository usersRepository;
     private final AuthenticationManager authenticationManager;
@@ -66,7 +65,7 @@ public class AuthServiceImpl implements AuthService{
                 .uuid(findUser.getUuid())
                 .refreshToken(refreshToken)
                 .accessToken(accessToken)
-                .name(findUser.getUsername())
+                .name(findUser.readUserName())
                 .email(findUser.getEmail())
                 .build();
     }
@@ -78,15 +77,22 @@ public class AuthServiceImpl implements AuthService{
     }
 
     @Override
-    public ReissueOutDto reissueToken(String token) {
-        //todo : reissueToken 구현 필요
-        return null;
+    public ReissueOutDto reissueToken(String uuid) {
+        Users findUser = usersRepository.findByUuid(uuid).orElseThrow(
+                () -> new UsersException(ErrorStatus.REISSUE_TOKEN_FAIL));
+        String accessToken = jwtTokenProvider.createAccessToken(findUser);
+        String refreshToken = jwtTokenProvider.createRefreshToken(findUser);
+        return ReissueOutDto
+                .builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 
     @Override
     public void duplicateCheckLoginId(DuplicationCheckRequestDto duplicationCheckRequestDto) {
-        if(usersRepository.existsByLoginId(duplicationCheckRequestDto.getLoginId())){
-            throw new UsersException(ErrorStatus.SIGN_UP_UNION_FAIL);
+        if (usersRepository.existsByLoginId(duplicationCheckRequestDto.getLoginId())) {
+            throw new UsersException(ErrorStatus.DUPLICATION_LOGIN_ID);
         }
     }
 }

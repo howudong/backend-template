@@ -24,14 +24,19 @@ public class OAuthServiceImpl implements OAuthService {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
-    public void easySignUp(EasySignUpRequestDto easySignUpRequestDto) {
+    public LoginOutDto easySignUp(EasySignUpRequestDto easySignUpRequestDto) {
         Users users = userRepository.findByEmail(easySignUpRequestDto.getEmail()).orElseThrow(
                 () -> new UsersException(ErrorStatus.NOT_UNION_USER)
         );
 
         if (Boolean.TRUE.equals(userOAuthListRepository.existsByUuid(users.getUuid()))) {
-            log.info("기존회원이고 간편회원도 맞아서 로그인 처리해버림");
-            //todo : 바로 간편 로그인 처리
+            log.info("기존 가입된 회원이라 바로 로그인 처리");
+            LoginOutDto login = easyLogin(EasyLoginRequestDto
+                    .builder()
+                    .OAuthId(easySignUpRequestDto.getOauth_id())
+                    .OAuthName(easySignUpRequestDto.getOauth_name())
+                    .build());
+            return login;
         } else {
             UserOAuthList userOAuthList = UserOAuthList
                     .builder()
@@ -42,6 +47,7 @@ public class OAuthServiceImpl implements OAuthService {
 
             userOAuthListRepository.save(userOAuthList);
         }
+        return null;
     }
 
     @Override
@@ -71,7 +77,7 @@ public class OAuthServiceImpl implements OAuthService {
                 .uuid(findUser.getUuid())
                 .refreshToken(refreshToken)
                 .accessToken(accessToken)
-                .name(findUser.getUsername())
+                .name(findUser.readUserName())
                 .email(findUser.getEmail())
                 .build();
     }

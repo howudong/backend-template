@@ -31,6 +31,6 @@ public class AddressController {
             @AuthenticationPrincipal UserDetails userDetails
     ) {
         addressService.createAddress(addressRequestDto, userDetails.getUsername());
-        return ApiResponse.of(SuccessStatus.LOGIN_SUCCESS_UNION, null);
+        return ApiResponse.of(SuccessStatus.DELIVERY_ADDRESS_ADD_SUCCESS, null);
     }
 }

@@ -7,6 +7,8 @@ import spharos.msg.domain.users.entity.UserOAuthList;
 
 @Repository
 public interface UserOAuthListRepository extends JpaRepository<UserOAuthList, Long> {
+
     Boolean existsByUuid(String uuid);
+
     Optional<UserOAuthList> findByOAuthIdAndOAuthName(String OAuthId, String OAuthOAuthName);
 }

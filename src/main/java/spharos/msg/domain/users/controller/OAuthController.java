@@ -12,13 +12,14 @@ import spharos.msg.domain.users.dto.in.EasySignUpRequestDto;
 import spharos.msg.domain.users.dto.out.LoginOutDto;
 import spharos.msg.domain.users.service.OAuthServiceImpl;
 import spharos.msg.global.api.ApiResponse;
+import spharos.msg.global.api.code.status.ErrorStatus;
 import spharos.msg.global.api.code.status.SuccessStatus;
 
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/oauth")
-@Tag(name = "OAuth", description = "OAuth 인증 관련 API")
+@Tag(name = "OAuth", description = "간편 로그인 관련 API")
 public class OAuthController {
 
     private final OAuthServiceImpl oAuthService;
@@ -28,8 +29,8 @@ public class OAuthController {
     public ApiResponse<?> signUpEasy(
             @RequestBody EasySignUpRequestDto easySignUpRequestDto
     ) {
-        oAuthService.easySignUp(easySignUpRequestDto);
-        return ApiResponse.of(SuccessStatus.SIGN_UP_SUCCESS_EASY, null);
+        LoginOutDto login = oAuthService.easySignUp(easySignUpRequestDto);
+        return ApiResponse.of(SuccessStatus.SIGN_UP_SUCCESS_EASY, login);
     }
 
     @Operation(summary = "간편 회원로그인", description = "간편회원 로그인")

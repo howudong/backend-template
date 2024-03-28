@@ -36,10 +36,10 @@ public class UsersService {
     @Value("${spring.mail.stringSize}")
     private int stringSize;
 
-    public EmailOutDto sendMail(EmailSendRequestDto emailSendRequestDto){
+    public EmailOutDto sendMail(EmailSendRequestDto emailSendRequestDto) {
         MimeMessage message = mailSender.createMimeMessage();
         String secretKey = createKey();
-        try{
+        try {
             String email = emailSendRequestDto.getEmail();
 
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message, true, "UTF-8");
@@ -49,7 +49,7 @@ public class UsersService {
             mimeMessageHelper.setText("인증번호 : " + secretKey);
             mailSender.send(message);
 
-            if(redisService.isEmailSecretKeyExist(email)){
+            if (redisService.isEmailSecretKeyExist(email)) {
                 redisService.deleteEmailSecretKey(email);
             }
             redisService.saveEmailSecretKey(email, secretKey, expiration);
@@ -72,22 +72,20 @@ public class UsersService {
                 .toString();
     }
 
-    public void authenticateEmail(EmailAuthRequestDto emailAuthRequestDto){
+    public void authenticateEmail(EmailAuthRequestDto emailAuthRequestDto) {
         String findSecretKey = redisService.getEmailSecretKey(emailAuthRequestDto.getEmail());
-        if(!Objects.equals(findSecretKey, emailAuthRequestDto.getSecretKey())){
+        if (!Objects.equals(findSecretKey, emailAuthRequestDto.getSecretKey())) {
             throw new UsersException(ErrorStatus.EMAIL_VALIDATE_FAIL);
         }
         redisService.deleteEmailSecretKey(emailAuthRequestDto.getEmail());
     }
 
     //Email 중복 확인
-    public void duplicateCheckEmail(EmailSendRequestDto emailRequestDto)
-    {
-        if(userRepository.existsByEmail(emailRequestDto.getEmail())){
+    public void duplicateCheckEmail(EmailSendRequestDto emailRequestDto) {
+        if (userRepository.existsByEmail(emailRequestDto.getEmail())) {
             throw new UsersException(ErrorStatus.ALREADY_EXIST_EMAIL);
         }
     }
-
 
 //    public void createTokenAndCreateHeaders(HttpServletResponse response, Users users) {
 //
