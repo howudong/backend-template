@@ -50,7 +50,7 @@ public class SearchRepositoryImpl implements SearchRepository {
 
     private List<SearchProductDto> getSearchProductIds(String keyword, long index,
         QCategoryProduct categoryProduct, QProduct product, QCategory category) {
-        return jpaQueryFactory
+        List<SearchProductDto> searchProductDtos = jpaQueryFactory
             .select(Projections.constructor(
                 SearchProductDto.class, product.id))
             .from(categoryProduct)
@@ -60,8 +60,11 @@ public class SearchRepositoryImpl implements SearchRepository {
             .distinct()
             .offset(index * SEARCH_PRODUCT_SIZE)
             .limit(SEARCH_PRODUCT_SIZE)
-            .orderBy(product.productName.desc())
             .fetch();
+
+        searchProductDtos.sort((p1, p2) ->
+            p1.getProductId().compareTo(p2.getProductId()));
+        return searchProductDtos;
     }
 
     private BooleanExpression isContainsNameOrBrandOrCategory(String keyword, QProduct product,
