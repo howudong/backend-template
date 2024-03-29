@@ -14,6 +14,18 @@ spring:
     redis:
       host: ${REDIS_DB_ADDRESS}
       port: ${REDIS_PORT}
+  mail:
+    host: smtp.naver.com
+    port: 465
+    username: 'ksu9801@naver.com'
+    password: 'malja1122414'
+    expiration: 180000
+    stringSize: 6
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.ssl.enable: true
+      mail.smtp.ssl.trust: smtp.naver.com
+
 
 logging:
   level:
