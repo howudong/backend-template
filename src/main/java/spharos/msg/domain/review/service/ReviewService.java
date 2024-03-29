@@ -98,7 +98,6 @@ public class ReviewService {
                     .reviewStar(reviewRequest.getReviewStar())
                     .reviewComment(reviewRequest.getReviewContent())
                     .userId(review.getUserId())
-                    .createdAt(review.getCreatedAt())
                     .build()
             );
             return ApiResponse.of(REVIEW_UPDATE_SUCCESS, null);
