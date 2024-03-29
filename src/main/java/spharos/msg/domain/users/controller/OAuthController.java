@@ -2,6 +2,7 @@ package spharos.msg.domain.users.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,7 +29,7 @@ public class OAuthController {
     public ApiResponse<?> signUpEasy(
             @RequestBody EasySignUpRequestDto easySignUpRequestDto
     ) {
-        LoginOutDto login = oAuthService.easySignUp(easySignUpRequestDto);
+        Optional<LoginOutDto> login = oAuthService.easySignUp(easySignUpRequestDto);
         return ApiResponse.of(SuccessStatus.SIGN_UP_SUCCESS_EASY, login);
     }
 

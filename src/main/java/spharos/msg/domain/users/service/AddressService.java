@@ -3,6 +3,7 @@ package spharos.msg.domain.users.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import spharos.msg.domain.users.dto.request.AddressRequestDto;
 import spharos.msg.domain.users.entity.Address;
 import spharos.msg.domain.users.entity.Users;
@@ -19,6 +20,7 @@ public class AddressService {
     private final AddressRepository addressRepository;
     private final UsersRepository usersRepository;
 
+    @Transactional
     public void createAddress(AddressRequestDto addressRequestDto, String uuid) {
         Users users = usersRepository.findByUuid(uuid).orElseThrow(
                 () -> new UsersException(ErrorStatus.DELIVERY_ADDRESS_ADD_FAIL)

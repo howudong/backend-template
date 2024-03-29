@@ -1,19 +1,16 @@
 package spharos.msg.domain.users.dto.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ReissueOutDto {
 
     private String refreshToken;
     private String accessToken;
-
-    @Builder
-    public ReissueOutDto(String refreshToken, String accessToken) {
-        this.refreshToken = refreshToken;
-        this.accessToken = accessToken;
-    }
 }

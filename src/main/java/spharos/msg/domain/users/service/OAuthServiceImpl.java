@@ -1,5 +1,6 @@
 package spharos.msg.domain.users.service;
 
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,29 +27,28 @@ public class OAuthServiceImpl implements OAuthService {
 
     @Transactional
     @Override
-    public LoginOutDto easySignUp(EasySignUpRequestDto easySignUpRequestDto) {
+    public Optional<LoginOutDto> easySignUp(EasySignUpRequestDto easySignUpRequestDto) {
         Users users = userRepository.findByEmail(easySignUpRequestDto.getEmail()).orElseThrow(
                 () -> new UsersException(ErrorStatus.NOT_UNION_USER)
         );
 
         if (Boolean.TRUE.equals(userOAuthListRepository.existsByUuid(users.getUuid()))) {
             log.info("기존 가입된 회원이라 바로 로그인 처리");
-            return easyLogin(EasyLoginRequestDto
+            return Optional.of(easyLogin(EasyLoginRequestDto
                     .builder()
                     .OAuthId(easySignUpRequestDto.getOauth_id())
                     .OAuthName(easySignUpRequestDto.getOauth_name())
-                    .build());
-        } else {
-            UserOAuthList userOAuthList = UserOAuthList
-                    .builder()
-                    .OAuthId(easySignUpRequestDto.getOauth_id())
-                    .OAuthName(easySignUpRequestDto.getOauth_name())
-                    .uuid(users.getUuid())
-                    .build();
-
-            userOAuthListRepository.save(userOAuthList);
+                    .build()));
         }
-        return null;
+        UserOAuthList userOAuthList = UserOAuthList
+                .builder()
+                .OAuthId(easySignUpRequestDto.getOauth_id())
+                .OAuthName(easySignUpRequestDto.getOauth_name())
+                .uuid(users.getUuid())
+                .build();
+
+        userOAuthListRepository.save(userOAuthList);
+        return Optional.empty();
     }
 
     @Transactional(readOnly = true)

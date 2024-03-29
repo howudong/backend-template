@@ -67,7 +67,7 @@ public class UsersService {
         int rightLimit = 'z';
         Random random = new Random();
         return random.ints(leftLimit, rightLimit + 1)
-                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                .filter(i -> (i <= '9' || i >= 'A') && (i <= 'Z' || i >= 'a'))
                 .limit(stringSize)
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                 .toString();

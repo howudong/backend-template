@@ -1,16 +1,15 @@
 package spharos.msg.domain.users.dto.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class EmailOutDto {
-    String secretKey;
 
-    @Builder
-    public EmailOutDto(String secretKey) {
-        this.secretKey = secretKey;
-    }
+    String secretKey;
 }
