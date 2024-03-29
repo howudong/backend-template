@@ -17,8 +17,8 @@ spring:
   mail:
     host: smtp.naver.com
     port: 465
-    username: 'ksu9801@naver.com'
-    password: 'malja1122414'
+    username: ${EMAIL_ID}
+    password: ${EMAIL_PW}
     expiration: 180000
     stringSize: 6
     properties:
