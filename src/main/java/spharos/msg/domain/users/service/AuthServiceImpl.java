@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import spharos.msg.domain.users.dto.request.DuplicationCheckRequestDto;
 import spharos.msg.domain.users.dto.request.LoginRequestDto;
 import spharos.msg.domain.users.dto.response.LoginOutDto;
@@ -26,6 +27,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisService redisService;
 
+    @Transactional
     @Override
     public void signUp(SignUpRequestDto signUpRequestDto) {
         String uuid = UUID.randomUUID().toString();
@@ -44,6 +46,7 @@ public class AuthServiceImpl implements AuthService {
                 .build());
     }
 
+    @Transactional(readOnly = true)
     @Override
     public LoginOutDto login(LoginRequestDto loginRequestDto) {
         Users findUser = usersRepository.findByLoginId(loginRequestDto.getLoginId())
@@ -76,6 +79,7 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+    @Transactional(readOnly = true)
     @Override
     public ReissueOutDto reissueToken(String uuid) {
         Users findUser = usersRepository.findByUuid(uuid).orElseThrow(
@@ -89,6 +93,7 @@ public class AuthServiceImpl implements AuthService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public void duplicateCheckLoginId(DuplicationCheckRequestDto duplicationCheckRequestDto) {
         if (usersRepository.existsByLoginId(duplicationCheckRequestDto.getLoginId())) {

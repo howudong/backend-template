@@ -3,6 +3,7 @@ package spharos.msg.domain.users.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import spharos.msg.domain.users.dto.request.EasyLoginRequestDto;
 import spharos.msg.domain.users.dto.request.EasySignUpRequestDto;
 import spharos.msg.domain.users.dto.response.LoginOutDto;
@@ -23,6 +24,7 @@ public class OAuthServiceImpl implements OAuthService {
     private final UserOAuthListRepository userOAuthListRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
+    @Transactional
     @Override
     public LoginOutDto easySignUp(EasySignUpRequestDto easySignUpRequestDto) {
         Users users = userRepository.findByEmail(easySignUpRequestDto.getEmail()).orElseThrow(
@@ -49,6 +51,7 @@ public class OAuthServiceImpl implements OAuthService {
         return null;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public LoginOutDto easyLogin(EasyLoginRequestDto easyLoginRequestDto) {
         UserOAuthList userOAuthList = userOAuthListRepository.findByOAuthIdAndOAuthName(
