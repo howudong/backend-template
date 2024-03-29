@@ -85,7 +85,6 @@ public class Users extends BaseEntity implements UserDetails {
         return this.userName;
     }
 
-
     public Users(String uuid) {
         this.uuid = uuid;
     }
